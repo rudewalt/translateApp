@@ -1,6 +1,6 @@
 package com.ivan.translateapp.data;
 
-import com.ivan.translateapp.data.dto.SupportedLanguagesDTO;
+import com.ivan.translateapp.data.net.yandex.dto.SupportedLanguagesDTO;
 import com.ivan.translateapp.data.net.yandex.YandexTranslateApiInterface;
 import com.ivan.translateapp.data.net.yandex.YandexTranslateApiModule;
 

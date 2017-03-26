@@ -1,4 +1,4 @@
-package com.ivan.translateapp.data.dto;
+package com.ivan.translateapp.data.net.yandex.dto;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;

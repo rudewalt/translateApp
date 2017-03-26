@@ -1,9 +1,9 @@
 package com.ivan.translateapp.data.net.yandex;
 
 
-import com.ivan.translateapp.data.dto.LanguageDTO;
-import com.ivan.translateapp.data.dto.SupportedLanguagesDTO;
-import com.ivan.translateapp.data.dto.TranslateResultDTO;
+import com.ivan.translateapp.data.net.yandex.dto.LanguageDTO;
+import com.ivan.translateapp.data.net.yandex.dto.SupportedLanguagesDTO;
+import com.ivan.translateapp.data.net.yandex.dto.TranslateResultDTO;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;

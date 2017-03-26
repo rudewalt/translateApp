@@ -37,10 +37,9 @@ public class YandexTranslateApiModule {
 
         Retrofit.Builder builder = new Retrofit.Builder().
                 baseUrl(BASE_URL)
+                .client(httpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
-
-        builder.client(httpClient);
 
         YandexTranslateApiInterface apiInterface = builder.build()
                 .create(YandexTranslateApiInterface.class);

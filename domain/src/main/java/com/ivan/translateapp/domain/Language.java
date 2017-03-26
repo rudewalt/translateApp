@@ -5,4 +5,29 @@ package com.ivan.translateapp.domain;
  */
 
 public class Language {
+    public String title;
+    public String language;
+
+    public Language(String title, String language){
+        this.title = title;
+        this.language = language;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
+    }
+
+
 }

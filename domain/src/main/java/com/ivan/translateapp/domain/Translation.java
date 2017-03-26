@@ -8,7 +8,26 @@ public class Translation {
 
     private String text;
     private String translated;
-    private String direction;
+    private String fromLanguage;
+    private String toLanguage;
+
+    public String getFromLanguage() {
+        return fromLanguage;
+    }
+
+    public void setFromLanguage(String fromLanguage) {
+        this.fromLanguage = fromLanguage;
+    }
+
+
+    public String getToLanguage() {
+        return toLanguage;
+    }
+
+    public void setToLanguage(String toLanguage) {
+        this.toLanguage = toLanguage;
+    }
+
 
     public String getText() {
         return text;
@@ -25,15 +44,5 @@ public class Translation {
     public void setTranslated(String translated) {
         this.translated = translated;
     }
-
-    public String getDirection() {
-        return direction;
-    }
-
-    public void setDirection(String direction) {
-        this.direction = direction;
-    }
-
-
 
 }

@@ -1,13 +1,14 @@
-package com.ivan.translateapp.data.dto;
-
-import com.google.gson.annotations.Expose;
-import com.google.gson.annotations.SerializedName;
+package com.ivan.translateapp.data.net.yandex.dto;
 
 /**
  * Created by Ivan on 26.03.2017.
  */
 
-public class TranslateResultDTO {
+import com.google.gson.annotations.Expose;
+import com.google.gson.annotations.SerializedName;
+
+public class LanguageDTO {
+
     @SerializedName("code")
     @Expose
     private Integer code;
@@ -30,4 +31,5 @@ public class TranslateResultDTO {
     public void setLang(String lang) {
         this.lang = lang;
     }
+
 }
