@@ -2,7 +2,7 @@ package com.ivan.translateapp.data;
 
 import android.support.test.runner.AndroidJUnit4;
 
-import com.ivan.translateapp.data.net.yandex.YandexTranslateApiInterface;
+import com.ivan.translateapp.data.net.yandex.IYandexTranslateApiInterface;
 import com.ivan.translateapp.data.net.yandex.YandexTranslateApiModule;
 
 import org.junit.Test;
@@ -18,7 +18,7 @@ public class ExampleInstrumentedTest {
     @Test
     public void useAppContext() throws Exception {
         // Context of the app under test.
-        YandexTranslateApiInterface apiInterface =  YandexTranslateApiModule.getApiInterface();
+        IYandexTranslateApiInterface apiInterface =  YandexTranslateApiModule.getApiInterface();
         apiInterface.getLanguages("ru");
     }
 }

@@ -1,7 +1,7 @@
 package com.ivan.translateapp.data;
 
 import com.ivan.translateapp.data.net.yandex.dto.SupportedLanguagesDTO;
-import com.ivan.translateapp.data.net.yandex.YandexTranslateApiInterface;
+import com.ivan.translateapp.data.net.yandex.IYandexTranslateApiInterface;
 import com.ivan.translateapp.data.net.yandex.YandexTranslateApiModule;
 
 import org.junit.Test;
@@ -16,7 +16,7 @@ import io.reactivex.Maybe;
 public class ExampleUnitTest {
     @Test
     public void addition_isCorrect() throws Exception {
-        YandexTranslateApiInterface apiInterface =  YandexTranslateApiModule.getApiInterface();
+        IYandexTranslateApiInterface apiInterface =  YandexTranslateApiModule.getApiInterface();
         Maybe<SupportedLanguagesDTO> response =  apiInterface.getLanguages("ui").firstElement();
     }
 }

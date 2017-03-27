@@ -11,7 +11,7 @@ import io.reactivex.Observable;
  * Created by Ivan on 26.03.2017.
  */
 
-public interface TranslateService {
+public interface ITranslateService {
 
     Observable<List<Language>> getLanguages(String ui);
 

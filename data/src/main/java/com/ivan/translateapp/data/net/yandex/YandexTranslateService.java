@@ -1,7 +1,6 @@
 package com.ivan.translateapp.data.net.yandex;
 
-import com.ivan.translateapp.data.net.TranslateService;
-import com.ivan.translateapp.data.net.yandex.dto.SupportedLanguagesDTO;
+import com.ivan.translateapp.data.net.ITranslateService;
 import com.ivan.translateapp.data.net.yandex.mapper.LanguageDTOMapper;
 import com.ivan.translateapp.data.net.yandex.mapper.SupportedLanguagesDTOMapper;
 import com.ivan.translateapp.data.net.yandex.mapper.TranslateResultDTOMapper;
@@ -13,14 +12,14 @@ import java.util.List;
 import io.reactivex.Observable;
 
 /**
- * Implementation of TranslateService
+ * Implementation of ITranslateService
  */
 
-public class YandexTranslateService implements TranslateService {
+public class YandexTranslateService implements ITranslateService {
     private static String UI = "ru";
 
     //TODO Inject with dagger 2
-    private YandexTranslateApiInterface apiInterface = YandexTranslateApiModule.getApiInterface();
+    private IYandexTranslateApiInterface apiInterface = YandexTranslateApiModule.getApiInterface();
     private LanguageDTOMapper languageDtoMapper = new LanguageDTOMapper();
     private SupportedLanguagesDTOMapper supportedLanguagesDTOMapper = new SupportedLanguagesDTOMapper();
     private TranslateResultDTOMapper translateResultDTOMapper = new TranslateResultDTOMapper();

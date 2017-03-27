@@ -15,7 +15,7 @@ import retrofit2.http.Query;
  * Created by Ivan on 25.03.2017.
  */
 
-public interface YandexTranslateApiInterface {
+public interface IYandexTranslateApiInterface {
 
     @GET("getLangs")
     Observable<SupportedLanguagesDTO> getLanguages(@Query("ui") String ui);

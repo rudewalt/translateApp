@@ -16,7 +16,7 @@ public class YandexTranslateApiModule {
 
     private static final String API_KEY = "trnsl.1.1.20170317T170351Z.34081ee0ccb0bc5a.0aa288afa818fd81d6fefc8ce938b0de8995cc6f";
 
-    public static YandexTranslateApiInterface getApiInterface() {
+    public static IYandexTranslateApiInterface getApiInterface() {
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
                 .addInterceptor(chain -> {
@@ -41,8 +41,8 @@ public class YandexTranslateApiModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
 
-        YandexTranslateApiInterface apiInterface = builder.build()
-                .create(YandexTranslateApiInterface.class);
+        IYandexTranslateApiInterface apiInterface = builder.build()
+                .create(IYandexTranslateApiInterface.class);
 
         return apiInterface;
     }
