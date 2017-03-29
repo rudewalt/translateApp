@@ -2,12 +2,81 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.MainFragment">
+    tools:context=".ui.main.view.MainFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
+        android:id="@+id/content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="match_parent">
 
+        <LinearLayout
+            android:id="@+id/selectLanguageContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Spinner
+                android:id="@+id/fromLanguage"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.5" />
+
+            <ImageButton
+                android:id="@+id/changeDirection"
+                android:layout_width="10dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.1"
+                android:background="@mipmap/ic_launcher_round"
+                android:elevation="0dp"/>
+
+            <Spinner
+                android:id="@+id/toLanguage"
+                android:layout_width="0dp"
+                android:layout_height="50dp"
+                android:layout_weight="0.5" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/textToTranslateContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/selectLanguageContainer"
+            android:layout_margin="15dp"
+            android:background="@drawable/translate_container_style">
+
+            <ImageButton
+                android:id="@+id/clearButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="10dp"
+                android:layout_marginTop="70dp"
+                android:background="@android:drawable/ic_menu_close_clear_cancel"
+                android:visibility="invisible" />
+
+            <EditText
+                android:id="@+id/textToTranslate"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_columnWeight="0"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:gravity="top"
+                android:hint="Введите текст для перевода"
+                android:lines="3"
+                android:padding="10dp"
+                android:scrollbars="vertical"
+                android:selectAllOnFocus="false"
+                tools:text="Lorem ipsum dolore. Errare humanum est. Dum spiro spero. Est east wwiawa la vida. El quento por favour" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/translateResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/textToTranslateContainer"
+            android:layout_margin="10dp" />
+
+    </RelativeLayout>
 </FrameLayout>
