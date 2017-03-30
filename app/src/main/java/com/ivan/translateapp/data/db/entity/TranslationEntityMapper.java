@@ -1,4 +1,4 @@
-package com.ivan.translateapp.data.entity;
+package com.ivan.translateapp.data.db.entity;
 
 import com.ivan.translateapp.domain.Translation;
 

@@ -54,13 +54,13 @@ dependencies {
     compile 'com.squareup.retrofit2:adapter-rxjava2:2.2.0'
     compile 'com.squareup.retrofit2:converter-gson:2.2.0'
 
-    compile 'com.pushtorefresh.storio:sqlite:1.12.3'
-    compile 'com.pushtorefresh.storio:sqlite-annotations:1.12.3'
+    //compile 'com.pushtorefresh.storio:sqlite:1.12.3'
+    //compile 'com.pushtorefresh.storio:sqlite-annotations:1.12.3'
 
     testCompile 'junit:junit:4.12'
 
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
-    annotationProcessor 'com.pushtorefresh.storio:sqlite-annotations-processor:1.12.3'
+    //annotationProcessor 'com.pushtorefresh.storio:sqlite-annotations-processor:1.12.3'
 
     provided 'javax.annotation:jsr250-api:1.0'
 }

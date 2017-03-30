@@ -1,5 +1,6 @@
 package com.ivan.translateapp.domain.interactor;
 
+
 import com.ivan.translateapp.data.repository.IHistoryRepository;
 import com.ivan.translateapp.data.repository.ITranslationRepository;
 import com.ivan.translateapp.domain.Language;
@@ -7,6 +8,8 @@ import com.ivan.translateapp.domain.Translation;
 
 import java.util.List;
 
+
+import io.reactivex.Observable;
 import io.reactivex.Single;
 
 /**
@@ -25,17 +28,20 @@ public class MainInteractor implements IMainInteractor {
     }
 
     @Override
-    public Single<List<Language>> getLanguages() {
-        return null;
+    public Observable<List<Language>> getLanguages() {
+
+        return
+            iTranslationRepository.getLanguages("ru");
     }
 
     @Override
-    public Single<Translation> translateText(String text) {
-        return null;
+    public Observable<Translation> translateText(String text, String toLanguage, String fromLanguage) {
+        return
+            iTranslationRepository.getTranslation(text,toLanguage,fromLanguage);
     }
 
     @Override
     public void addToFavourites(Translation translation) {
-
+        iHistoryRepository.addToFavourites(translation);
     }
 }

@@ -2,6 +2,8 @@ package com.ivan.translateapp.data.repository;
 
 import com.ivan.translateapp.domain.Translation;
 
+import java.util.List;
+
 import io.reactivex.Observable;
 
 /**
@@ -10,9 +12,9 @@ import io.reactivex.Observable;
 
 public interface IHistoryRepository {
 
-    Observable<Translation> getHistory();
+    Observable<List<Translation>> getHistory();
 
-    Observable<Translation> getFavourites();
+    Observable<List<Translation>> getFavourites();
 
     void add(Translation translation);
 

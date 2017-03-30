@@ -19,17 +19,23 @@ public class YandexTranslateService implements ITranslateService {
     private static String UI = "ru";
 
     //TODO Inject with dagger 2
-    private IYandexTranslateApiInterface apiInterface = YandexTranslateApiModule.getApiInterface();
-    private LanguageDTOMapper languageDtoMapper = new LanguageDTOMapper();
-    private SupportedLanguagesDTOMapper supportedLanguagesDTOMapper = new SupportedLanguagesDTOMapper();
-    private TranslateResultDTOMapper translateResultDTOMapper = new TranslateResultDTOMapper();
+    private IYandexTranslateApiInterface apiInterface;
+    private LanguageDTOMapper languageDtoMapper;
+    private SupportedLanguagesDTOMapper supportedLanguagesDTOMapper;
+    private TranslateResultDTOMapper translateResultDTOMapper;
 
     //TODO cache all network calls
 
     //TODO add error handling, check response code https://medium.com/@sasa_sekulic/quick-and-easy-guide-to-retrofit-2-0-setup-or-migration-with-rxjava-ab7a11bc17df#.odr8e3qq9
 
-    public YandexTranslateService() {
-
+    public YandexTranslateService(IYandexTranslateApiInterface apiInterface,
+                                  LanguageDTOMapper languageDtoMapper,
+                                  SupportedLanguagesDTOMapper supportedLanguagesDTOMapper,
+                                  TranslateResultDTOMapper translateResultDTOMapper) {
+        this.apiInterface = apiInterface;
+        this.languageDtoMapper = languageDtoMapper;
+        this.supportedLanguagesDTOMapper = supportedLanguagesDTOMapper;
+        this.translateResultDTOMapper = translateResultDTOMapper;
     }
 
     @Override

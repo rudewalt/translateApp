@@ -21,14 +21,17 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
+
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText(R.string.title_home);
+                    FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
+                    transaction1.replace(R.id.fragment_container, new MainFragment());
+                    transaction1.commit();
                     return true;
-                case R.id.navigation_dashboard:
-                    FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-                    transaction.replace(R.id.fragment_container, new HistoryFragment());
-                    transaction.commit();
+                case R.id.navigation_history:
+                    FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
+                    transaction2.replace(R.id.fragment_container, new HistoryFragment());
+                    transaction2.commit();
                     return true;
             }
             return false;

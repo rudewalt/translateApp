@@ -1,6 +1,5 @@
 package com.ivan.translateapp.data.db.tables;
 
-import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 
 /**
@@ -34,6 +33,7 @@ public class TranslationTable {
     public static final String COLUMN_IS_HIDDEN = "is_hidden";
 
 
+    @NonNull
     public static String getCreateTableQuery(){
         return "CREATE TABLE "+ TABLE +"("
                 + COLUMN_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "

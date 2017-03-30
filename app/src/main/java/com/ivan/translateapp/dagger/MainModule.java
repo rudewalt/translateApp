@@ -22,16 +22,6 @@ import dagger.Provides;
 public class MainModule {
 
     @Provides
-    public IHistoryRepository provideIHistoryRepository() {
-        return null;
-    }
-
-    @Provides
-    public ITranslationRepository provideITranslationRepository() {
-        return null;
-    }
-
-    @Provides
     public IMainInteractor provideIMainInteractor(ITranslationRepository iTranslationRepository, IHistoryRepository iHistoryRepository) {
         return new MainInteractor(iTranslationRepository, iHistoryRepository);
     }

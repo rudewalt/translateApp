@@ -15,9 +15,9 @@ import io.reactivex.Single;
 
 public interface IMainInteractor {
 
-    Single<List<Language>> getLanguages();
+    Observable<List<Language>> getLanguages();
 
-    Single<Translation> translateText(String text);
+    Observable<Translation> translateText(String text, String toLanguage, String fromLanguage);
 
     void addToFavourites(Translation translation);
 }

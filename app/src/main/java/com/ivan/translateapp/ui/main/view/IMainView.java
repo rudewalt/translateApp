@@ -12,13 +12,13 @@ public interface IMainView {
 
     void loadLanguages(List<Language> languages);
 
-    void setTranslatedText();
+    void setTranslatedText(String text);
 
     void setFromLanguage();
 
     void setToLanguage();
 
-    void setText();
+    void setText(String text);
 
     void saveToFavourites();
 

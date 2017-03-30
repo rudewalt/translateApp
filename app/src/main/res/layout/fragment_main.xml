@@ -27,7 +27,7 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="0.1"
                 android:background="@mipmap/ic_launcher_round"
-                android:elevation="0dp"/>
+                android:elevation="0dp" />
 
             <Spinner
                 android:id="@+id/toLanguage"
@@ -42,41 +42,58 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/selectLanguageContainer"
             android:layout_margin="15dp"
-            android:background="@drawable/translate_container_style">
-
-            <ImageButton
-                android:id="@+id/clearButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="70dp"
-                android:background="@android:drawable/ic_menu_close_clear_cancel"
-                android:visibility="invisible" />
+            android:background="@drawable/translate_container_style"
+            android:orientation="vertical">
 
             <EditText
                 android:id="@+id/textToTranslate"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_columnWeight="0"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="@dimen/activity_vertical_margin"
+                android:background="@drawable/edit_text_style"
                 android:gravity="top"
                 android:hint="Введите текст для перевода"
-                android:lines="3"
+                android:lines="4"
                 android:padding="10dp"
                 android:scrollbars="vertical"
                 android:selectAllOnFocus="false"
-                tools:text="Lorem ipsum dolore. Errare humanum est. Dum spiro spero. Est east wwiawa la vida. El quento por favour" />
+                tools:text="@string/sample_text" />
+
+            <ImageButton
+                android:id="@+id/clearButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:background="@android:drawable/ic_menu_close_clear_cancel"
+                android:visibility="invisible"
+                tools:visibility="visible"/>
 
         </LinearLayout>
 
-        <TextView
-            android:id="@+id/translateResult"
+        <LinearLayout
+            android:id="@+id/translateResultContainer"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_below="@id/textToTranslateContainer"
-            android:layout_margin="10dp" />
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/translatedText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:padding="@dimen/text_container_padding"
+                android:scrollbars="vertical"
+                tools:text="Человеку свойственно ошибаться. "/>
+
+            <ImageButton
+                android:id="@+id/addToFavourites"
+                android:layout_width="40dp"
+                android:layout_height="40dp" />
+        </LinearLayout>
+
 
     </RelativeLayout>
 </FrameLayout>
