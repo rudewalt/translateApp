@@ -1,13 +1,12 @@
 package com.ivan.translateapp.data.net;
 
-import android.app.Application;
 import android.content.Context;
 
 import com.ivan.translateapp.data.net.yandex.IYandexTranslateApiInterface;
 import com.ivan.translateapp.data.net.yandex.YandexTranslateService;
-import com.ivan.translateapp.data.net.yandex.mapper.LanguageDTOMapper;
-import com.ivan.translateapp.data.net.yandex.mapper.SupportedLanguagesDTOMapper;
-import com.ivan.translateapp.data.net.yandex.mapper.TranslateResultDTOMapper;
+import com.ivan.translateapp.data.net.yandex.mapper.LanguageResponseMapper;
+import com.ivan.translateapp.data.net.yandex.mapper.SupportedLanguagesResponseMapper;
+import com.ivan.translateapp.data.net.yandex.mapper.TranslationResponseMapper;
 
 import java.io.File;
 
@@ -30,7 +29,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 @Module
 public class NetworkModule {
     private static final int CACHE_SIZE = 10 * 1024 * 1024;
-    private static final String CACHE_PATH = "http";
+    private static final String CACHE_PATH = "httpCache";
     private static final String BASE_URL = "https://translate.yandex.net/api/v1.5/tr.json/";
 
     private static final String API_KEY = "trnsl.1.1.20170317T170351Z.34081ee0ccb0bc5a.0aa288afa818fd81d6fefc8ce938b0de8995cc6f";
@@ -39,30 +38,30 @@ public class NetworkModule {
 
     @Provides
     @Singleton
-    public SupportedLanguagesDTOMapper provideSupportedLanguagesDTOMapper(){
-        return new SupportedLanguagesDTOMapper();
+    public SupportedLanguagesResponseMapper provideSupportedLanguagesDTOMapper(){
+        return new SupportedLanguagesResponseMapper();
     }
 
     @Provides
     @Singleton
-    public TranslateResultDTOMapper provideTranslateResultDTOMapper(){
-        return new TranslateResultDTOMapper();
+    public TranslationResponseMapper provideTranslateResultDTOMapper(){
+        return new TranslationResponseMapper();
     }
 
     @Provides
     @Singleton
-    public LanguageDTOMapper provideLanguageDTOMapper(){
-        return new LanguageDTOMapper();
+    public LanguageResponseMapper provideLanguageDTOMapper(){
+        return new LanguageResponseMapper();
     }
 
     @Provides
     @Singleton
     public ITranslateService provideITranslateService(IYandexTranslateApiInterface apiInterface,
-                                                      LanguageDTOMapper languageDTOMapper,
-                                                      SupportedLanguagesDTOMapper supportedLanguagesDTOMapper,
-                                                      TranslateResultDTOMapper translateResultDTOMapper){
+                                                      LanguageResponseMapper languageResponseMapper,
+                                                      SupportedLanguagesResponseMapper supportedLanguagesResponseMapper,
+                                                      TranslationResponseMapper translationResponseMapper){
 
-        return new YandexTranslateService(apiInterface,languageDTOMapper,supportedLanguagesDTOMapper,translateResultDTOMapper);
+        return new YandexTranslateService(apiInterface, languageResponseMapper, supportedLanguagesResponseMapper, translationResponseMapper);
     }
 
     @Provides

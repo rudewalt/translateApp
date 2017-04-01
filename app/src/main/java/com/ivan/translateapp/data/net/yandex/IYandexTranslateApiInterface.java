@@ -1,9 +1,9 @@
 package com.ivan.translateapp.data.net.yandex;
 
 
-import com.ivan.translateapp.data.net.yandex.dto.LanguageDTO;
-import com.ivan.translateapp.data.net.yandex.dto.SupportedLanguagesDTO;
-import com.ivan.translateapp.data.net.yandex.dto.TranslateResultDTO;
+import com.ivan.translateapp.data.net.yandex.response.LanguageResponse;
+import com.ivan.translateapp.data.net.yandex.response.SupportedLanguagesResponse;
+import com.ivan.translateapp.data.net.yandex.response.TranslationResponse;
 
 import io.reactivex.Observable;
 import retrofit2.http.Body;
@@ -18,12 +18,12 @@ import retrofit2.http.Query;
 public interface IYandexTranslateApiInterface {
 
     @GET("getLangs")
-    Observable<SupportedLanguagesDTO> getLanguages(@Query("ui") String ui);
+    Observable<SupportedLanguagesResponse> getLanguages(@Query("ui") String ui);
 
     @POST("detect")
-    Observable<LanguageDTO> detectLanguage(@Body String text);
+    Observable<LanguageResponse> detectLanguage(@Body String text);
 
     @GET("translate")
-    Observable<TranslateResultDTO> translate(@Query("text") String text, @Query("lang") String translateDirection, @Query("options") Integer options);
+    Observable<TranslationResponse> translate(@Query("text") String text, @Query("lang") String translateDirection, @Query("options") Integer options);
 
 }

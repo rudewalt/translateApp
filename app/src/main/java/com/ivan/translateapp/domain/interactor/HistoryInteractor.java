@@ -21,21 +21,26 @@ public class HistoryInteractor implements IHistoryInteractor {
 
     @Override
     public Observable<List<Translation>> getHistory() {
-        return null;
+        return iHistoryRepository.getHistory();
     }
 
     @Override
     public Observable<List<Translation>> getFavourites() {
-        return null;
+        return iHistoryRepository.getFavourites();
     }
 
     @Override
     public void delete(Translation translation) {
-
+        iHistoryRepository.delete(translation);
     }
 
     @Override
     public void clearHistory() {
+        iHistoryRepository.clear();
+    }
 
+    @Override
+    public void deleteFromFavourites(Translation translation) {
+        iHistoryRepository.deleteFromFavourites(translation);
     }
 }

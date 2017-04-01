@@ -29,5 +29,8 @@ public class Language {
         this.language = language;
     }
 
-
+    @Override
+    public String toString(){
+        return title;
+    }
 }

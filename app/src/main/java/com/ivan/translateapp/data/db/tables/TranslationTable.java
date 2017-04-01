@@ -13,9 +13,6 @@ public class TranslationTable {
     public static final String TABLE = "Translations";
 
     @NonNull
-    public static final String COLUMN_ID = "id";
-
-    @NonNull
     public static final String COLUMN_CREATE_DATE = "create_date";
     @NonNull
     public static final String COLUMN_TEXT = "text";
@@ -36,14 +33,18 @@ public class TranslationTable {
     @NonNull
     public static String getCreateTableQuery(){
         return "CREATE TABLE "+ TABLE +"("
-                + COLUMN_ID + " INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT, "
+                + COLUMN_TEXT + " TEXT NOT NULL PRIMARY KEY, "
                 + COLUMN_CREATE_DATE + " TEXT NOT NULL, "
-                + COLUMN_TEXT + " TEXT NOT NULL, "
                 + COLUMN_TRANSLATED + " TEXT NOT NULL, "
                 + COLUMN_FROM_LANGUAGE + " TEXT NOT NULL, "
                 + COLUMN_TO_LANGUAGE  + " TEXT NOT NULL, "
                 + COLUMN_IS_FAVOURITE + " INTEGER NULL, "
                 + COLUMN_ADD_TO_FAVOURITE_DATE + " TEXT NULL, "
                 + COLUMN_IS_HIDDEN + " INTEGER)";
+    }
+
+    @NonNull
+    public static String getAllQuery(){
+        return "SELECT * FROM " + TABLE;
     }
 }

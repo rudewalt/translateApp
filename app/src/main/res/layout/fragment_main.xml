@@ -19,6 +19,7 @@
                 android:id="@+id/fromLanguage"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
+                android:dropDownWidth="match_parent"
                 android:layout_weight="0.5" />
 
             <ImageButton
@@ -33,6 +34,7 @@
                 android:id="@+id/toLanguage"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
+                android:dropDownWidth="match_parent"
                 android:layout_weight="0.5" />
         </LinearLayout>
 
@@ -42,7 +44,10 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/selectLanguageContainer"
             android:layout_margin="15dp"
-            android:background="@drawable/translate_container_style"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:clickable="true"
+            android:background="@drawable/translate_container"
             android:orientation="vertical">
 
             <EditText

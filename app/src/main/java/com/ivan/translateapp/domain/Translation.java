@@ -10,6 +10,18 @@ public class Translation {
     private String translated;
     private String fromLanguage;
     private String toLanguage;
+    private boolean isFavourite;
+
+    public Translation() {
+    }
+
+    public Translation(String text, String translated, String fromLanguage, String toLanguage, boolean isFavourite) {
+        this.text = text;
+        this.translated = translated;
+        this.fromLanguage = fromLanguage;
+        this.toLanguage = toLanguage;
+        this.isFavourite = isFavourite;
+    }
 
     public String getFromLanguage() {
         return fromLanguage;
@@ -43,6 +55,18 @@ public class Translation {
 
     public void setTranslated(String translated) {
         this.translated = translated;
+    }
+
+    public String getDirection() {
+        return String.format("%1$s-%2$s", fromLanguage, toLanguage);
+    }
+
+    public boolean isFavourite() {
+        return isFavourite;
+    }
+
+    public void setFavourite(boolean favourite) {
+        isFavourite = favourite;
     }
 
 }

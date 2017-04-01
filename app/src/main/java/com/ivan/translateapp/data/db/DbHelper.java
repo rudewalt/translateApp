@@ -2,6 +2,7 @@ package com.ivan.translateapp.data.db;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
@@ -13,7 +14,9 @@ import com.ivan.translateapp.data.db.tables.TranslationTable;
 import com.ivan.translateapp.domain.Translation;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 
 public class DbHelper extends SQLiteOpenHelper {
@@ -29,7 +32,7 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TranslationTable.getCreateTableQuery()); //history
+        db.execSQL(TranslationTable.getCreateTableQuery());
     }
 
     @Override
@@ -49,14 +52,33 @@ public class DbHelper extends SQLiteOpenHelper {
         Log.d(TAG,"Row inserted id" + id);
     }
 
-    public void find(Translation translation){
-        //String table, String[] columns, String selection,       String[] selectionArgs, String groupBy, String having,                String orderBy
-        //getReadableDatabase().query(false,TranslationTable.TABLE);
+    public List<TranslationEntity> get(){
+        List<TranslationEntity> result = new ArrayList<>();
+
+        Cursor cursor = getReadableDatabase().rawQuery(TranslationTable.getAllQuery(), new String[]{});
+        if(cursor.moveToFirst()) {
+            do {
+                TranslationEntity entity = new TranslationEntity(
+                        cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_TEXT)),
+                        cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_TRANSLATED)),
+                        cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_FROM_LANGUAGE)),
+                        cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_TO_LANGUAGE)),
+                        cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_CREATE_DATE)),
+                        cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_ADD_TO_FAVOURITE_DATE)),
+                        cursor.getInt(cursor.getColumnIndex(TranslationTable.COLUMN_IS_HIDDEN)),
+                        cursor.getInt(cursor.getColumnIndex(TranslationTable.COLUMN_IS_FAVOURITE))
+                );
+
+                result.add(entity);
+
+            } while (cursor.moveToNext());
+        }
+        return result;
     }
 
     private String getCurrentDateTime() {
         Calendar c = Calendar.getInstance();
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy");
+        SimpleDateFormat df = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         return df.format(c.getTime());
     }
 }

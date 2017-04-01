@@ -17,7 +17,7 @@ public interface IMainInteractor {
 
     Observable<List<Language>> getLanguages();
 
-    Observable<Translation> translateText(String text, String toLanguage, String fromLanguage);
+    Observable<Translation> translateText(String text, String fromLanguage, String toLanguage);
 
     void addToFavourites(Translation translation);
 }

@@ -17,5 +17,5 @@ public interface ITranslateService {
 
     Observable<Language> detectLanguage(String text);
 
-    Observable<Translation> translate(String text, String toLanguage, String fromLanguage);
+    Observable<Translation> translate(String text, String fromLanguage, String toLanguage);
 }

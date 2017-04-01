@@ -1,7 +1,5 @@
 package com.ivan.translateapp.data.cache;
 
-import com.ivan.translateapp.data.net.yandex.dto.SupportedLanguagesDTO;
-
 import io.reactivex.Observable;
 
 /**

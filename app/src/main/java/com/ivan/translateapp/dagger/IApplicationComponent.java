@@ -1,6 +1,5 @@
 package com.ivan.translateapp.dagger;
 
-import com.ivan.translateapp.data.db.DbModule;
 import com.ivan.translateapp.data.net.NetworkModule;
 
 import javax.inject.Singleton;
@@ -12,7 +11,7 @@ import dagger.Component;
  */
 
 @Singleton
-@Component(modules = {ApplicationModule.class, NetworkModule.class, DbModule.class, DataModule.class})
+@Component(modules = {ApplicationModule.class, NetworkModule.class, DataModule.class})
 public interface IApplicationComponent {
 
     IMainComponent plus(MainModule mainModule);

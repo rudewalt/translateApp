@@ -1,10 +1,12 @@
 package com.ivan.translateapp.data.repository;
 
 import com.ivan.translateapp.data.db.DbHelper;
+import com.ivan.translateapp.data.db.entity.TranslationEntityMapper;
 import com.ivan.translateapp.data.db.tables.TranslationTable;
 import com.ivan.translateapp.data.db.entity.TranslationEntity;
 import com.ivan.translateapp.domain.Translation;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -16,14 +18,19 @@ import io.reactivex.Observable;
 public class HistoryRepository implements IHistoryRepository {
 
     private DbHelper dbOpenHelper;
+    private TranslationEntityMapper translationEntityMapper;
 
-    public HistoryRepository(DbHelper dbOpenHelper){
+    public HistoryRepository(DbHelper dbOpenHelper, TranslationEntityMapper translationEntityMapper) {
         this.dbOpenHelper = dbOpenHelper;
+        this.translationEntityMapper = translationEntityMapper;
     }
 
     @Override
     public Observable<List<Translation>> getHistory() {
-        return null;
+        return
+                Observable.fromArray(dbOpenHelper.get())
+                        .map(this::mapToTranslation);
+
     }
 
     @Override
@@ -54,5 +61,14 @@ public class HistoryRepository implements IHistoryRepository {
     @Override
     public void deleteFromFavourites(Translation translation) {
 
+    }
+
+    private List<Translation> mapToTranslation(List<TranslationEntity> translationEntities) throws Exception {
+        List<Translation> translations = new ArrayList<Translation>();
+        for (TranslationEntity entity : translationEntities) {
+            translations.add(translationEntityMapper.apply(entity));
+        }
+
+        return translations;
     }
 }

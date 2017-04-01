@@ -1,4 +1,4 @@
-package com.ivan.translateapp.data.net.yandex.dto;
+package com.ivan.translateapp.data.net.yandex.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -12,7 +12,7 @@ import java.util.Map;
  * Created by Ivan on 26.03.2017.
  */
 
-public class SupportedLanguagesDTO {
+public class SupportedLanguagesResponse extends BaseResponse {
 
     @SerializedName("dirs")
     @Expose

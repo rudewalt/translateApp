@@ -18,7 +18,7 @@ public class TranslationEntityMapper implements Function<TranslationEntity, Tran
         translation.setTranslated(translationEntity.getTranslated());
         translation.setFromLanguage(translationEntity.getFromLanguage());
         translation.setToLanguage(translationEntity.getToLanguage());
-
+        translation.setFavourite(translationEntity.isFavourite());
         return translation;
     }
 }

@@ -1,4 +1,4 @@
-package com.ivan.translateapp.data.net.yandex.dto;
+package com.ivan.translateapp.data.net.yandex.response;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
@@ -9,24 +9,13 @@ import java.util.List;
  * Created by Ivan on 26.03.2017.
  */
 
-public class TranslateResultDTO {
-    @SerializedName("code")
-    @Expose
-    private Integer code;
+public class TranslationResponse extends BaseResponse {
     @SerializedName("lang")
     @Expose
     private String lang;
     @SerializedName("text")
     @Expose
     private List<String> text = null;
-
-    public Integer getCode() {
-        return code;
-    }
-
-    public void setCode(Integer code) {
-        this.code = code;
-    }
 
     public String getLang() {
         return lang;

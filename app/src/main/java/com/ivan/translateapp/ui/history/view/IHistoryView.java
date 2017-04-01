@@ -1,16 +1,20 @@
 package com.ivan.translateapp.ui.history.view;
 
+import com.ivan.translateapp.domain.Translation;
+
+import java.util.List;
+
 /**
  * Created by Ivan on 27.03.2017.
  */
 
 public interface IHistoryView {
 
-    void showHistory();
+    void showHistory(List<Translation> translations);
 
-    void showMainSceen();
+    void clearButtonClicked();
 
-    void clear();
+    void deleteButtonClicked();
 
-    void delete();
+    void showError(String message);
 }

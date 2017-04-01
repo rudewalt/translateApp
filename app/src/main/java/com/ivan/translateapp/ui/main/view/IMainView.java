@@ -25,4 +25,14 @@ public interface IMainView {
     void showError(String text);
 
     void showHistoryScreen();
+
+    void showClearButton();
+
+    void hideClearButton();
+
+    void showAddToFavouritesButton();
+
+    void hideAddToFavouritesButton();
+
+    void setStateActiveOnAddToFavouritesButton();
 }

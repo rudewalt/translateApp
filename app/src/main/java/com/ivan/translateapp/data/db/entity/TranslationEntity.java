@@ -11,16 +11,25 @@ import java.util.Date;
 
 public class TranslationEntity {
 
-    Long id;
+    private String text;
+    private String translated;
+    private String fromLanguage;
+    private String toLanguage;
+    private String createDate;
+    private String addToFavouriteDate;
+    private int isHidden;
+    private int isFavourite;
 
-    String text;
-    String translated;
-    String fromLanguage;
-    String toLanguage;
-    String createDate;
-    String addToFavourite;
-    Integer isHidden;
-    Integer isFavourite;
+    public TranslationEntity(String text, String translated, String fromLanguage, String toLanguage, String createDate, String addToFavouriteDate, Integer isHidden, Integer isFavourite) {
+        this.text = text;
+        this.translated = translated;
+        this.fromLanguage = fromLanguage;
+        this.toLanguage = toLanguage;
+        this.createDate = createDate;
+        this.addToFavouriteDate = addToFavouriteDate;
+        this.isHidden = isHidden;
+        this.isFavourite = isFavourite;
+    }
 
     public String getFromLanguage() {
         return fromLanguage;
@@ -60,7 +69,7 @@ public class TranslationEntity {
         Date date;
         SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
         try {
-            date = format.parse(addToFavourite);
+            date = format.parse(addToFavouriteDate);
             return date;
         } catch (ParseException e) {
             e.printStackTrace();
@@ -70,16 +79,16 @@ public class TranslationEntity {
         }
     }
 
-    public Boolean getIsFavourite() {
+    public Boolean isFavourite() {
         return
-                isFavourite != null && isFavourite == 1;
+                isFavourite == 1;
     }
 
-    public Boolean getIsHidden() {
+    public Boolean isHidden() {
         return
-                isHidden != null && isHidden == 1;
+                isHidden == 1;
     }
 
-    TranslationEntity() {
+    public TranslationEntity() {
     }
 }
