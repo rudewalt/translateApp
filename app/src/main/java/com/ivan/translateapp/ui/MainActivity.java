@@ -14,6 +14,9 @@ import com.ivan.translateapp.R;
 import com.ivan.translateapp.ui.history.view.HistoryFragment;
 import com.ivan.translateapp.ui.main.view.MainFragment;
 
+import java.util.Dictionary;
+import java.util.Hashtable;
+
 public class MainActivity extends AppCompatActivity {
 
     private Fragment currentFragment;
@@ -23,7 +26,6 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
 
             switch (item.getItemId()) {
                 case R.id.navigation_home:
@@ -66,5 +68,7 @@ public class MainActivity extends AppCompatActivity {
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
+
+
 
 }

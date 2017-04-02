@@ -11,15 +11,17 @@ public class Translation {
     private String fromLanguage;
     private String toLanguage;
     private boolean isFavourite;
+    private boolean isHistory;
 
     public Translation() {
     }
 
-    public Translation(String text, String translated, String fromLanguage, String toLanguage, boolean isFavourite) {
+    public Translation(String text, String translated, String fromLanguage, String toLanguage,boolean isHistory, boolean isFavourite) {
         this.text = text;
         this.translated = translated;
         this.fromLanguage = fromLanguage;
         this.toLanguage = toLanguage;
+        this.isHistory = isHistory;
         this.isFavourite = isFavourite;
     }
 
@@ -67,6 +69,14 @@ public class Translation {
 
     public void setFavourite(boolean favourite) {
         isFavourite = favourite;
+    }
+
+    public boolean isHistory() {
+        return isHistory;
+    }
+
+    public void setHistory(boolean history) {
+        isHistory = history;
     }
 
 }

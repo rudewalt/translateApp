@@ -2,7 +2,6 @@ package com.ivan.translateapp.data.repository;
 
 import com.ivan.translateapp.data.db.DbHelper;
 import com.ivan.translateapp.data.db.entity.TranslationEntityMapper;
-import com.ivan.translateapp.data.db.tables.TranslationTable;
 import com.ivan.translateapp.data.db.entity.TranslationEntity;
 import com.ivan.translateapp.domain.Translation;
 
@@ -28,19 +27,21 @@ public class HistoryRepository implements IHistoryRepository {
     @Override
     public Observable<List<Translation>> getHistory() {
         return
-                Observable.fromArray(dbOpenHelper.get())
+                Observable.fromArray(dbOpenHelper.getAllHistory())
                         .map(this::mapToTranslation);
-
     }
 
     @Override
     public Observable<List<Translation>> getFavourites() {
-        return null;
+        return
+                Observable.fromArray(dbOpenHelper.getAllFavourites())
+                        .map(this::mapToTranslation);
     }
 
     @Override
     public void add(Translation translation) {
-        dbOpenHelper.put(translation);
+        translation.setHistory(true);
+        dbOpenHelper.insert(translation);
     }
 
     @Override

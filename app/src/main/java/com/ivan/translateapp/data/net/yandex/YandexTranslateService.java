@@ -69,6 +69,7 @@ public class YandexTranslateService implements ITranslateService {
 
     @Override
     public Observable<Translation> translate(String text, String fromLanguage, String toLanguage) {
+        String preparedText = text.trim();
         String direction = fromLanguage == null || fromLanguage.isEmpty()
                 ? toLanguage
                 : String.format("%1$s-%2$s", fromLanguage, toLanguage);
@@ -76,11 +77,11 @@ public class YandexTranslateService implements ITranslateService {
         int includeDetectedLanguage = 1;
 
         Observable<Translation> translation = apiInterface
-                .translate(text, direction, includeDetectedLanguage)
+                .translate(preparedText, direction, includeDetectedLanguage)
                 .map(this::checkResponseCode)
                 .map(translationResponseMapper)
                 .doOnNext(t -> {
-                    t.setText(text);
+                    t.setText(preparedText);
                     t.setToLanguage(toLanguage);
                     t.setFromLanguage(fromLanguage);
                 });

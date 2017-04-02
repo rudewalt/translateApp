@@ -21,4 +21,6 @@ public interface IMainPresenter {
     void loadLanguages();
 
     void listenText(String text, String fromLanguage, String toLanguage);
+
+    void saveTranslation();
 }

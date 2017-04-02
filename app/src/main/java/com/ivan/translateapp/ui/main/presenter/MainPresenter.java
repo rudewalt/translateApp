@@ -26,6 +26,8 @@ public class MainPresenter implements IMainPresenter {
     private IMainView iMainView;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    private Translation currentTranslation;
+
     public MainPresenter(IMainInteractor iMainInteractor) {
 
         this.iMainInteractor = iMainInteractor;
@@ -47,18 +49,9 @@ public class MainPresenter implements IMainPresenter {
         Disposable disposable = iMainInteractor.getLanguages()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleSuccessetLanguages, this::handleErrorGetLanguagesError);
+                .subscribe(this::handleSuccessLanguages, this::handleErrorGetLanguagesError);
 
         compositeDisposable.add(disposable);
-    }
-
-    private void handleSuccessetLanguages(List<Language> languages) {
-        iMainView.loadLanguages(languages);
-    }
-
-    private void handleErrorGetLanguagesError(Throwable throwable) {
-        String message = throwable.getMessage();
-        iMainView.showError("");
     }
 
     @Override
@@ -71,8 +64,22 @@ public class MainPresenter implements IMainPresenter {
         compositeDisposable.add(disposable);
     }
 
-    private void handleSuccessTranslate(Translation translation) {
+    @Override
+    public void saveTranslation() {
+        iMainInteractor.saveTranslation(currentTranslation);
+    }
 
+    private void handleSuccessLanguages(List<Language> languages) {
+        iMainView.loadLanguages(languages);
+    }
+
+    private void handleErrorGetLanguagesError(Throwable throwable) {
+        String message = throwable.getMessage();
+        iMainView.showError(message);
+    }
+
+    private void handleSuccessTranslate(Translation translation) {
+        currentTranslation = translation;
         iMainView.setTranslatedText(translation.getTranslated());
     }
 

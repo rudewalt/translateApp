@@ -24,15 +24,13 @@ public interface IMainView {
 
     void showError(String text);
 
-    void showHistoryScreen();
-
     void showClearButton();
 
     void hideClearButton();
 
-    void showAddToFavouritesButton();
+    void showIsFavouriteCheckbox();
 
-    void hideAddToFavouritesButton();
+    void hideIsFavouriteCheckbox();
 
-    void setStateActiveOnAddToFavouritesButton();
+    void setStateIsFavouriteCheckbox(boolean checked);
 }

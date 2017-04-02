@@ -93,8 +93,8 @@
                 android:scrollbars="vertical"
                 tools:text="Человеку свойственно ошибаться. "/>
 
-            <ImageButton
-                android:id="@+id/addToFavourites"
+            <CheckBox
+                android:id="@+id/isFavourite"
                 android:layout_width="40dp"
                 android:layout_height="40dp" />
         </LinearLayout>

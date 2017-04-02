@@ -23,7 +23,7 @@ public class TranslationRepository implements ITranslationRepository {
     @Override
     public Observable<Translation> getTranslation(String text, String fromLanguage, String toLanguage) {
         return
-                translateService.translate(text,fromLanguage, toLanguage);
+                translateService.translate(text, fromLanguage, toLanguage);
     }
 
     @Override

@@ -42,8 +42,7 @@ public class MainInteractor implements IMainInteractor {
     public Observable<Translation> translateText(String text, String fromLanguage, String toLanguage) {
         return
                 iTranslationRepository
-                        .getTranslation(text,fromLanguage, toLanguage)
-                        .doOnNext(iHistoryRepository::add);
+                        .getTranslation(text, fromLanguage, toLanguage);
     }
 
     @Override
@@ -51,9 +50,14 @@ public class MainInteractor implements IMainInteractor {
         iHistoryRepository.addToFavourites(translation);
     }
 
+    @Override
+    public void saveTranslation(Translation translation) {
+        iHistoryRepository.add(translation);
+    }
+
 
     private List<Language> sortLanguages(List<Language> languages) {
-        Collections.sort(languages, (language1,language2) -> language1.getTitle().compareTo(language2.getTitle()));
+        Collections.sort(languages, (language1, language2) -> language1.getTitle().compareTo(language2.getTitle()));
 
         return languages;
     }

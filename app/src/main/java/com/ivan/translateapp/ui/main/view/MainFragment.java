@@ -1,8 +1,10 @@
 package com.ivan.translateapp.ui.main.view;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
@@ -10,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -30,11 +33,12 @@ import javax.inject.Inject;
 
 public class MainFragment extends Fragment implements IMainView {
 
+
     private EditText textToTranslate;
     private TextView translatedText;
     private Spinner fromLanguageSpinner;
     private Spinner toLanguageSpinner;
-    private ImageButton addToFavourites;
+    private CheckBox isFavourite;
     private ImageButton clearButton;
     private ImageButton changeDirection;
 
@@ -58,14 +62,16 @@ public class MainFragment extends Fragment implements IMainView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         textToTranslate = (EditText) view.findViewById(R.id.textToTranslate);
         translatedText = (TextView) view.findViewById(R.id.translatedText);
         fromLanguageSpinner = (Spinner) view.findViewById(R.id.fromLanguage);
         toLanguageSpinner = (Spinner) view.findViewById(R.id.toLanguage);
-        addToFavourites = (ImageButton) view.findViewById(R.id.addToFavourites);
+        isFavourite = (CheckBox) view.findViewById(R.id.isFavourite);
         clearButton = (ImageButton) view.findViewById(R.id.clearButton);
         changeDirection = (ImageButton) view.findViewById(R.id.changeDirection);
+
 
 
         textToTranslate.addTextChangedListener(new TextWatcher() {
@@ -98,6 +104,12 @@ public class MainFragment extends Fragment implements IMainView {
             }
         });
 
+        textToTranslate.setOnFocusChangeListener((v, hasFocus)->{
+            if(!hasFocus){
+                iMainPresenter.saveTranslation();
+            }
+        });
+
         changeDirection.setOnClickListener(this::handleChangeDirectionClick);
         clearButton.setOnClickListener(this::handleClearButtonClick);
 
@@ -112,6 +124,7 @@ public class MainFragment extends Fragment implements IMainView {
         iMainPresenter.unbindVIew();
         super.onDestroyView();
     }
+
 
     @Override
     public void loadLanguages(List<Language> languages) {
@@ -157,16 +170,12 @@ public class MainFragment extends Fragment implements IMainView {
 
     @Override
     public void showError(String text) {
-
-    }
-
-    @Override
-    public void showHistoryScreen() {
-        FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
-        transaction.addToBackStack(null);
-        //TODO historyScreen
-        //transaction.replace(R.id.fmt_container, new TransferFragment());
-        transaction.commit();
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
+        alert.setTitle(text);
+        alert.setPositiveButton("Ok", (dialog, whichButton) -> {
+            return;
+        });
+        alert.show();
     }
 
     @Override
@@ -184,18 +193,18 @@ public class MainFragment extends Fragment implements IMainView {
     }
 
     @Override
-    public void showAddToFavouritesButton() {
-        addToFavourites.setVisibility(View.VISIBLE);
+    public void showIsFavouriteCheckbox() {
+        isFavourite.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hideAddToFavouritesButton() {
-        addToFavourites.setVisibility(View.INVISIBLE);
+    public void hideIsFavouriteCheckbox() {
+        isFavourite.setVisibility(View.INVISIBLE);
     }
 
     @Override
-    public void setStateActiveOnAddToFavouritesButton() {
-
+    public void setStateIsFavouriteCheckbox(boolean checked) {
+        isFavourite.setChecked(checked);
     }
 
     private void handleChangeDirectionClick(View view) {
@@ -213,9 +222,12 @@ public class MainFragment extends Fragment implements IMainView {
     }
 
     private void callTranslate() {
+        String text = textToTranslate.getText().toString();
+        if(text.equals(""))
+            return;
+
         String fromLanguage = getSelectedLanguage(fromLanguageSpinner);
         String toLanguage = getSelectedLanguage(toLanguageSpinner);
-        String text = textToTranslate.getText().toString();
         iMainPresenter.listenText(text, fromLanguage, toLanguage);
     }
 

@@ -27,24 +27,33 @@ public class TranslationTable {
     @NonNull
     public static final String COLUMN_ADD_TO_FAVOURITE_DATE = "add_to_favourite_date";
     @NonNull
-    public static final String COLUMN_IS_HIDDEN = "is_hidden";
+    public static final String COLUMN_IS_HISTORY = "is_history";
 
 
     @NonNull
-    public static String getCreateTableQuery(){
-        return "CREATE TABLE "+ TABLE +"("
-                + COLUMN_TEXT + " TEXT NOT NULL PRIMARY KEY, "
+    public static String getCreateTableQuery() {
+        return "CREATE TABLE " + TABLE + "("
+                + COLUMN_TEXT + " TEXT NOT NULL, "
                 + COLUMN_CREATE_DATE + " TEXT NOT NULL, "
                 + COLUMN_TRANSLATED + " TEXT NOT NULL, "
                 + COLUMN_FROM_LANGUAGE + " TEXT NOT NULL, "
-                + COLUMN_TO_LANGUAGE  + " TEXT NOT NULL, "
+                + COLUMN_TO_LANGUAGE + " TEXT NOT NULL, "
                 + COLUMN_IS_FAVOURITE + " INTEGER NULL, "
                 + COLUMN_ADD_TO_FAVOURITE_DATE + " TEXT NULL, "
-                + COLUMN_IS_HIDDEN + " INTEGER)";
+                + COLUMN_IS_HISTORY + " INTEGER, "
+                + "PRIMARY KEY ("+COLUMN_TEXT+","+COLUMN_FROM_LANGUAGE+","+COLUMN_TO_LANGUAGE+"))";
     }
 
     @NonNull
-    public static String getAllQuery(){
-        return "SELECT * FROM " + TABLE;
+    public static String getAllHistory() {
+        return "SELECT * FROM " + TABLE + " WHERE is_History = 1 ORDER BY date(" + COLUMN_CREATE_DATE + ") DESC";
+    }
+
+    public static String getAllFavourites() {
+        return "SELECT * FROM " + TABLE + " WHERE is_favourite = 1 ORDER BY date(" + COLUMN_ADD_TO_FAVOURITE_DATE + ") DESC";
+    }
+
+    public static String getByKey(){
+        return "SELECT * FROM " + TABLE + " WHERE "+COLUMN_TEXT+"=?";
     }
 }

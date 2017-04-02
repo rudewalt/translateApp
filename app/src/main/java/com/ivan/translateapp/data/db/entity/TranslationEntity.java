@@ -1,6 +1,8 @@
 package com.ivan.translateapp.data.db.entity;
 
 
+import com.ivan.translateapp.utils.DateUtils;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -17,17 +19,17 @@ public class TranslationEntity {
     private String toLanguage;
     private String createDate;
     private String addToFavouriteDate;
-    private int isHidden;
+    private int isHistory;
     private int isFavourite;
 
-    public TranslationEntity(String text, String translated, String fromLanguage, String toLanguage, String createDate, String addToFavouriteDate, Integer isHidden, Integer isFavourite) {
+    public TranslationEntity(String text, String translated, String fromLanguage, String toLanguage, String createDate, String addToFavouriteDate, Integer isHistory, Integer isFavourite) {
         this.text = text;
         this.translated = translated;
         this.fromLanguage = fromLanguage;
         this.toLanguage = toLanguage;
         this.createDate = createDate;
         this.addToFavouriteDate = addToFavouriteDate;
-        this.isHidden = isHidden;
+        this.isHistory = isHistory;
         this.isFavourite = isFavourite;
     }
 
@@ -50,33 +52,11 @@ public class TranslationEntity {
     }
 
     public Date getCreateDate() {
-        //TODO extract to date utils
-        Date date;
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-        try {
-            date = format.parse(createDate);
-            return date;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            //Log.e()
-        } finally {
-            return null;
-        }
+        return DateUtils.parse(createDate);
     }
 
     public Date getAddToFavouriteDate() {
-        //TODO extract to date utils
-        Date date;
-        SimpleDateFormat format = new SimpleDateFormat("MM/dd/yyyy HH:mm:ss");
-        try {
-            date = format.parse(addToFavouriteDate);
-            return date;
-        } catch (ParseException e) {
-            e.printStackTrace();
-            //Log.e()
-        } finally {
-            return null;
-        }
+        return DateUtils.parse(addToFavouriteDate);
     }
 
     public Boolean isFavourite() {
@@ -84,9 +64,9 @@ public class TranslationEntity {
                 isFavourite == 1;
     }
 
-    public Boolean isHidden() {
+    public Boolean isHistory() {
         return
-                isHidden == 1;
+                isHistory == 1;
     }
 
     public TranslationEntity() {
