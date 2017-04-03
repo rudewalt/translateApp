@@ -1,6 +1,7 @@
 package com.ivan.translateapp.ui.main.view;
 
 import com.ivan.translateapp.domain.Language;
+import com.ivan.translateapp.ui.IBaseView;
 
 import java.util.List;
 
@@ -8,7 +9,7 @@ import java.util.List;
  * Created by Ivan on 27.03.2017.
  */
 
-public interface IMainView {
+public interface IMainView extends IBaseView {
 
     void loadLanguages(List<Language> languages);
 
@@ -21,8 +22,6 @@ public interface IMainView {
     void setText(String text);
 
     void saveToFavourites();
-
-    void showError(String text);
 
     void showClearButton();
 

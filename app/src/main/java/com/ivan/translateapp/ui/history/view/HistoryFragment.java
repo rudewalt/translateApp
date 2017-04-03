@@ -12,7 +12,7 @@ import com.ivan.translateapp.R;
 import com.ivan.translateapp.TranslateApplication;
 import com.ivan.translateapp.dagger.MainModule;
 import com.ivan.translateapp.domain.Translation;
-import com.ivan.translateapp.ui.adapter.HistoryAdapter;
+import com.ivan.translateapp.ui.history.adapter.HistoryAdapter;
 import com.ivan.translateapp.ui.history.presenter.IHistoryPresenter;
 
 import java.util.List;
@@ -30,7 +30,7 @@ public class HistoryFragment extends Fragment implements IHistoryView {
     private ListView historyListView;
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         TranslateApplication.get(getContext())
@@ -44,17 +44,17 @@ public class HistoryFragment extends Fragment implements IHistoryView {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
-        View view =  inflater.inflate(R.layout.fragment_history, container, false);
+        View view = inflater.inflate(R.layout.fragment_history, container, false);
 
-        historyListView = (ListView)view.findViewById(R.id.historyListView);
+        historyListView = (ListView) view.findViewById(R.id.historyListView);
 
         iHistoryPresenter.bindView(this);
-        iHistoryPresenter.loadHistory();
+        loadChanges();
         return view;
     }
 
     @Override
-    public void onDestroyView(){
+    public void onDestroyView() {
         iHistoryPresenter.unbindView();
         super.onDestroyView();
     }
@@ -62,7 +62,7 @@ public class HistoryFragment extends Fragment implements IHistoryView {
 
     @Override
     public void showHistory(List<Translation> translations) {
-        HistoryAdapter historyAdapter = new HistoryAdapter(getActivity(),R.layout.history_list_item,translations);
+        HistoryAdapter historyAdapter = new HistoryAdapter(getActivity(), R.layout.history_list_item, translations, iHistoryPresenter);
         historyListView.setAdapter(historyAdapter);
     }
 
@@ -77,5 +77,11 @@ public class HistoryFragment extends Fragment implements IHistoryView {
     @Override
     public void showError(String message) {
 
+    }
+
+    @Override
+    public void loadChanges() {
+        if (iHistoryPresenter != null)
+            iHistoryPresenter.loadHistory();
     }
 }

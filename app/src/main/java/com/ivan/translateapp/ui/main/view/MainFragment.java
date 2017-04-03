@@ -245,4 +245,9 @@ public class MainFragment extends Fragment implements IMainView {
                     }
                 };
     }
+
+    @Override
+    public void loadChanges() {
+
+    }
 }

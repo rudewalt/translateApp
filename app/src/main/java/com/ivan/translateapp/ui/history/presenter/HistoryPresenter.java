@@ -56,6 +56,24 @@ public class HistoryPresenter implements IHistoryPresenter {
 
     @Override
     public void loadFavourites() {
+        Disposable disposable =  iHistoryInteractor.getFavourites()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleSuccessLoadFavourites, this::handleErrorLoadFavourites);
 
+        compositeDisposable.add(disposable);
+    }
+
+    @Override
+    public void saveChanges(Translation translation) {
+        iHistoryInteractor.saveChanges(translation);
+    }
+
+    private void handleSuccessLoadFavourites(List<Translation> translations){
+
+    }
+
+    private void handleErrorLoadFavourites(Throwable throwable){
+        iHistoryView.showError("");
     }
 }

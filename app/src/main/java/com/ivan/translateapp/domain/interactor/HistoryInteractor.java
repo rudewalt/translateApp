@@ -41,6 +41,12 @@ public class HistoryInteractor implements IHistoryInteractor {
 
     @Override
     public void deleteFromFavourites(Translation translation) {
+        translation.setFavourite(false);
         iHistoryRepository.deleteFromFavourites(translation);
+    }
+
+    @Override
+    public void saveChanges(Translation translation) {
+        iHistoryRepository.update(translation);
     }
 }

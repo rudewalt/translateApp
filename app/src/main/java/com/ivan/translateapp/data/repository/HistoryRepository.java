@@ -8,7 +8,9 @@ import com.ivan.translateapp.domain.Translation;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.Maybe;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
  * Created by Ivan on 30.03.2017.
@@ -39,9 +41,21 @@ public class HistoryRepository implements IHistoryRepository {
     }
 
     @Override
+    public Observable<Boolean> isFavourite(String text, String fromLanguage, String toLanguage) {
+
+        TranslationEntity entity = dbOpenHelper.get(text, fromLanguage, toLanguage);
+        return Observable.just(entity != null && entity.isFavourite());
+    }
+
+    @Override
     public void add(Translation translation) {
         translation.setHistory(true);
-        dbOpenHelper.insert(translation);
+        dbOpenHelper.put(translation);
+    }
+
+    @Override
+    public void update(Translation translation) {
+        dbOpenHelper.put(translation);
     }
 
     @Override

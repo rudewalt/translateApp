@@ -22,4 +22,6 @@ public interface IHistoryInteractor {
     void clearHistory();
 
     void deleteFromFavourites(Translation translation);
+
+    void saveChanges(Translation translation);
 }

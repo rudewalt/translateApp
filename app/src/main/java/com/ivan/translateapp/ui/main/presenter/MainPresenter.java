@@ -66,6 +66,9 @@ public class MainPresenter implements IMainPresenter {
 
     @Override
     public void saveTranslation() {
+        if(currentTranslation == null)
+            return;
+
         iMainInteractor.saveTranslation(currentTranslation);
     }
 
@@ -81,6 +84,7 @@ public class MainPresenter implements IMainPresenter {
     private void handleSuccessTranslate(Translation translation) {
         currentTranslation = translation;
         iMainView.setTranslatedText(translation.getTranslated());
+        iMainView.setStateIsFavouriteCheckbox(translation.isFavourite());
     }
 
     private void handleErrorTranslate(Throwable throwable) {

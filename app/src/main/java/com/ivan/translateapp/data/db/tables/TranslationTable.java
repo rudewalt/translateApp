@@ -41,7 +41,7 @@ public class TranslationTable {
                 + COLUMN_IS_FAVOURITE + " INTEGER NULL, "
                 + COLUMN_ADD_TO_FAVOURITE_DATE + " TEXT NULL, "
                 + COLUMN_IS_HISTORY + " INTEGER, "
-                + "PRIMARY KEY ("+COLUMN_TEXT+","+COLUMN_FROM_LANGUAGE+","+COLUMN_TO_LANGUAGE+"))";
+                + "PRIMARY KEY (" + COLUMN_TEXT + "," + COLUMN_FROM_LANGUAGE + "," + COLUMN_TO_LANGUAGE + "))";
     }
 
     @NonNull
@@ -53,7 +53,16 @@ public class TranslationTable {
         return "SELECT * FROM " + TABLE + " WHERE is_favourite = 1 ORDER BY date(" + COLUMN_ADD_TO_FAVOURITE_DATE + ") DESC";
     }
 
-    public static String getByKey(){
-        return "SELECT * FROM " + TABLE + " WHERE "+COLUMN_TEXT+"=?";
+    public static String getByKey() {
+        return "SELECT * FROM " + TABLE + " WHERE " + COLUMN_TEXT + "=? AND " + COLUMN_FROM_LANGUAGE + "=? AND " + COLUMN_TO_LANGUAGE + "=?";
+    }
+
+    public static String clearHistory() {
+        return "DELETE FROM " + TABLE + " WHERE " + COLUMN_IS_HISTORY + " = 1 and " + COLUMN_IS_FAVOURITE + "=0"
+                + " UPDATE " + TABLE + " SET " + COLUMN_IS_HISTORY + "=0;";
+    }
+
+    public static String clearFavourites() {
+        return "DELETE FROM " + TABLE + " WHERE " + COLUMN_IS_FAVOURITE + "=1";
     }
 }

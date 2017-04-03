@@ -1,74 +1,95 @@
 package com.ivan.translateapp.ui;
 
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.design.widget.BottomNavigationView;
+import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentContainer;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentPagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MenuItem;
-import android.widget.TextView;
 
 import com.ivan.translateapp.R;
 import com.ivan.translateapp.ui.history.view.HistoryFragment;
 import com.ivan.translateapp.ui.main.view.MainFragment;
 
-import java.util.Dictionary;
-import java.util.Hashtable;
-
 public class MainActivity extends AppCompatActivity {
 
     private Fragment currentFragment;
+    private TabsPagerAdapter adapterViewPager;
 
-    private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
-            = new BottomNavigationView.OnNavigationItemSelectedListener() {
-
-        @Override
-        public boolean onNavigationItemSelected(@NonNull MenuItem item) {
-
-            switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    if(currentFragment.getClass()== MainFragment.class)
-                        return false;
-
-                    FragmentTransaction transaction1 = getSupportFragmentManager().beginTransaction();
-                    currentFragment = new MainFragment();
-                    transaction1.setCustomAnimations(R.anim.enter_from_left, R.anim.exit_to_right);
-                    transaction1.replace(R.id.fragment_container, currentFragment);
-                    transaction1.commit();
-                    return true;
-                case R.id.navigation_history:
-                    if(currentFragment.getClass()== HistoryFragment.class)
-                        return false;
-
-                    FragmentTransaction transaction2 = getSupportFragmentManager().beginTransaction();
-                    transaction2.setCustomAnimations(R.anim.enter_from_right, R.anim.exit_to_left);
-                    currentFragment = new HistoryFragment();
-                    transaction2.replace(R.id.fragment_container, currentFragment);
-                    transaction2.commit();
-                    return true;
-            }
-            return false;
-        }
-    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.activity_main);
 
-        if (savedInstanceState == null) {
-            currentFragment = new MainFragment();
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-            transaction.replace(R.id.fragment_container, currentFragment);
-            transaction.commit();
-        }
+        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
+        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
+        TabsPagerAdapter adapter = new TabsPagerAdapter(getSupportFragmentManager());
+        viewPager.setAdapter(adapter);
+        tabs.setupWithViewPager(viewPager);
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
+    public static class TabsPagerAdapter extends FragmentPagerAdapter{
+        private static final int PAGE_COUNT = 2;
+
+        public TabsPagerAdapter(FragmentManager fragmentManager){
+            super(fragmentManager);
+        }
+
+        @Override
+        public Fragment getItem(int position) {
+            switch (position){
+                case 0:
+                    return new MainFragment();
+                case 1:
+                    return new HistoryFragment();
+                default:
+                    return null;
+            }
+        }
+
+        @Override
+        public int getCount() {
+            return PAGE_COUNT;
+        }
+
+        @Override
+        public CharSequence getPageTitle(int position) {
+            switch (position){
+                case 0:
+                    return "Главная";
+                case 1:
+                    return "История";
+                default:
+                    return "";
+            }
+        }
+
+        /*public Fragment getFragment(int position) {
+            String tag = mFragmentTags.get(position);
+            if (tag == null)
+                return null;
+            return mFragmentManager.findFragmentByTag(tag);
+        }*/
+    }
 
 
 }

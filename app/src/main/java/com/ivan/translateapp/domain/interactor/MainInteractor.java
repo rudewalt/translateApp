@@ -13,12 +13,16 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.Single;
+import io.reactivex.annotations.NonNull;
+import io.reactivex.functions.BiFunction;
 
 /**
  * Created by Ivan on 28.03.2017.
  */
 
 public class MainInteractor implements IMainInteractor {
+
+    private static final String CURRENT_UI = "ru";
 
     private ITranslationRepository iTranslationRepository;
 
@@ -34,15 +38,22 @@ public class MainInteractor implements IMainInteractor {
 
         return
                 iTranslationRepository
-                        .getLanguages("ru")
+                        .getLanguages(CURRENT_UI)
                         .map(this::sortLanguages);
     }
 
     @Override
     public Observable<Translation> translateText(String text, String fromLanguage, String toLanguage) {
+
         return
-                iTranslationRepository
-                        .getTranslation(text, fromLanguage, toLanguage);
+                Observable.combineLatest(
+                        iTranslationRepository.getTranslation(text, fromLanguage, toLanguage),
+                        iHistoryRepository.isFavourite(text, fromLanguage, toLanguage),
+                        (fromApi, isFavourite) -> {
+                            fromApi.setFavourite(isFavourite);
+                            return fromApi;
+                        }
+                );
     }
 
     @Override

@@ -5,18 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-
 import android.support.annotation.NonNull;
-import android.util.Log;
 
 import com.ivan.translateapp.data.db.entity.TranslationEntity;
 import com.ivan.translateapp.data.db.tables.TranslationTable;
 import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.utils.DateUtils;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.List;
 
 
@@ -38,17 +34,23 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS "+ TranslationTable.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TranslationTable.TABLE);
         onCreate(db);
     }
 
-    public void insert(Translation translation) {
+    public void put(Translation translation) {
         ContentValues contentValues = getContentValues(translation);
         SQLiteDatabase dataBase = getWritableDatabase();
-        long id = dataBase.insert(TranslationTable.TABLE, null, contentValues);
-        getWritableDatabase();
 
-        Log.d(TAG, "Row inserted id " + id);
+        long id = dataBase.insertWithOnConflict(TranslationTable.TABLE, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+        if (id == -1) {
+            String whereCondition = TranslationTable.COLUMN_TEXT+"=? AND "
+                    +TranslationTable.COLUMN_TO_LANGUAGE+"=? AND "
+                    +TranslationTable.COLUMN_FROM_LANGUAGE+"=?";
+
+            dataBase.update(TranslationTable.TABLE, contentValues, whereCondition,
+                    new String[]{translation.getText(),translation.getFromLanguage(),translation.getToLanguage()});
+        }
     }
 
     public void delete(Translation translation) {
@@ -60,7 +62,6 @@ public class DbHelper extends SQLiteOpenHelper {
         } else {
             dataBase.delete(TranslationTable.TABLE, "text=?", new String[]{translation.getText()});
         }
-
     }
 
     public List<TranslationEntity> getAllHistory() {
@@ -71,13 +72,25 @@ public class DbHelper extends SQLiteOpenHelper {
         return get(TranslationTable.getAllFavourites(), null);
     }
 
-    public TranslationEntity getByKey(String text) {
+    public TranslationEntity get(String text, String fromLanguage, String toLanguage) {
         final int first = 0;
-        List<TranslationEntity> queryResult = get(TranslationTable.getByKey(), new String[]{text});
+        List<TranslationEntity> queryResult =
+                get(TranslationTable.getByKey(), new String[]{text, fromLanguage, toLanguage});
+
         return
                 queryResult.size() > 0
                         ? queryResult.get(first)
                         : null;
+    }
+
+    public void ClearHistory() {
+        SQLiteDatabase database = getWritableDatabase();
+        database.execSQL(TranslationTable.clearHistory());
+    }
+
+    public void ClearFavourites() {
+        SQLiteDatabase database = getWritableDatabase();
+        database.execSQL(TranslationTable.clearFavourites());
     }
 
     private List<TranslationEntity> get(String query, String[] params) {
