@@ -72,6 +72,16 @@ public class MainPresenter implements IMainPresenter {
         iMainInteractor.saveTranslation(currentTranslation);
     }
 
+    @Override
+    public void listenIsFavourite(boolean checked) {
+        if(currentTranslation == null)
+            return;
+
+        currentTranslation.setFavourite(checked);
+        saveTranslation();
+    }
+
+
     private void handleSuccessLanguages(List<Language> languages) {
         iMainView.loadLanguages(languages);
     }

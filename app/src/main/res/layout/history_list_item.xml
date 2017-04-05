@@ -6,6 +6,7 @@
     android:orientation="horizontal">
     <CheckBox
         android:id="@+id/template_addToFavourites"
+        android:button="@drawable/star_checkbox"
         android:layout_marginLeft="10dp"
         android:layout_gravity="center"
         android:layout_width="40dp"

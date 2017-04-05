@@ -6,6 +6,8 @@ import com.ivan.translateapp.data.db.entity.TranslationEntity;
 import com.ivan.translateapp.domain.Translation;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import io.reactivex.Maybe;
@@ -30,6 +32,7 @@ public class HistoryRepository implements IHistoryRepository {
     public Observable<List<Translation>> getHistory() {
         return
                 Observable.fromArray(dbOpenHelper.getAllHistory())
+                        .map(this::sortByCreateDateDesc)
                         .map(this::mapToTranslation);
     }
 
@@ -76,6 +79,20 @@ public class HistoryRepository implements IHistoryRepository {
     @Override
     public void deleteFromFavourites(Translation translation) {
 
+    }
+
+    private List<TranslationEntity> sortByCreateDateDesc(List<TranslationEntity> translationEntities) {
+        Collections.sort(translationEntities,
+                (entity1, entity2) -> entity2.getCreateDate().compareTo(entity1.getCreateDate()));
+
+        return translationEntities;
+    }
+
+    private List<TranslationEntity> sortByAddToFavouriteDate(List<TranslationEntity> translationEntities){
+        Collections.sort(translationEntities,
+                (entity1, entity2) -> entity1.getAddToFavouriteDate().compareTo(entity2.getAddToFavouriteDate()));
+
+        return translationEntities;
     }
 
     private List<Translation> mapToTranslation(List<TranslationEntity> translationEntities) throws Exception {

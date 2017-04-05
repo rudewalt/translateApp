@@ -3,6 +3,7 @@ package com.ivan.translateapp.domain.interactor;
 import com.ivan.translateapp.data.repository.IHistoryRepository;
 import com.ivan.translateapp.domain.Translation;
 
+import java.util.Comparator;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -49,4 +50,6 @@ public class HistoryInteractor implements IHistoryInteractor {
     public void saveChanges(Translation translation) {
         iHistoryRepository.update(translation);
     }
+
+
 }

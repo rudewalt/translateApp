@@ -7,10 +7,14 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ViewGroup;
 
 import com.ivan.translateapp.R;
 import com.ivan.translateapp.ui.history.view.HistoryFragment;
 import com.ivan.translateapp.ui.main.view.MainFragment;
+
+import java.util.HashMap;
+import java.util.Map;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,18 +30,23 @@ public class MainActivity extends AppCompatActivity {
 
         TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
-        TabsPagerAdapter adapter = new TabsPagerAdapter(getSupportFragmentManager());
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        TabsPagerAdapter adapter = new TabsPagerAdapter(fragmentManager);
         viewPager.setAdapter(adapter);
         tabs.setupWithViewPager(viewPager);
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
             }
 
             @Override
             public void onPageSelected(int position) {
-
+                IBaseView view = ((IBaseView)adapter.getFragment(position));
+                if(view!=null) {
+                    view.loadChanges();
+                }
             }
 
             @Override
@@ -45,25 +54,50 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
+
     }
 
     public static class TabsPagerAdapter extends FragmentPagerAdapter{
+        private Map<Integer, String> fragmentTags;
+        private FragmentManager fragmentManager;
         private static final int PAGE_COUNT = 2;
 
         public TabsPagerAdapter(FragmentManager fragmentManager){
             super(fragmentManager);
+            this.fragmentManager = fragmentManager;
+            this.fragmentTags = new HashMap<>(PAGE_COUNT);
+        }
+
+        @Override
+        public Object instantiateItem(ViewGroup container, int position) {
+            Object obj = super.instantiateItem(container, position);
+            if (obj instanceof Fragment) {
+                // record the fragment tag here.
+                Fragment f = (Fragment) obj;
+                String tag = f.getTag();
+                fragmentTags.put(position, tag);
+            }
+            return obj;
         }
 
         @Override
         public Fragment getItem(int position) {
+            Fragment fragment = null;
+
             switch (position){
                 case 0:
-                    return new MainFragment();
+                    fragment = new MainFragment();
+                    break;
                 case 1:
-                    return new HistoryFragment();
-                default:
-                    return null;
+                    fragment = new HistoryFragment();
+                    break;
             }
+
+            if(fragment!=null) {
+                fragmentTags.put(position, fragment.getTag());
+            }
+
+            return fragment;
         }
 
         @Override
@@ -71,6 +105,7 @@ public class MainActivity extends AppCompatActivity {
             return PAGE_COUNT;
         }
 
+        //TODO переделать
         @Override
         public CharSequence getPageTitle(int position) {
             switch (position){
@@ -83,12 +118,13 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        /*public Fragment getFragment(int position) {
-            String tag = mFragmentTags.get(position);
+        public Fragment getFragment(int position) {
+            String tag = fragmentTags.get(position);
             if (tag == null)
                 return null;
-            return mFragmentManager.findFragmentByTag(tag);
-        }*/
+
+            return fragmentManager.findFragmentByTag(tag);
+        }
     }
 
 

@@ -3,8 +3,8 @@ package com.ivan.translateapp.data.db.tables;
 import android.support.annotation.NonNull;
 
 /**
- * Use a single table for translation and favourites
- * Translation table (id,create_date,text,translated, from_language, to_language,is_favourite,add_to_favourite_date,is_hidden)
+ * Single table for translation and favourites
+ * Translation table (id,create_date,text,translated, from_language, to_language,is_favourite,add_to_favourite_date,is_history)
  */
 
 public class TranslationTable {
@@ -46,11 +46,11 @@ public class TranslationTable {
 
     @NonNull
     public static String getAllHistory() {
-        return "SELECT * FROM " + TABLE + " WHERE is_History = 1 ORDER BY date(" + COLUMN_CREATE_DATE + ") DESC";
+        return "SELECT * FROM " + TABLE + " WHERE " + COLUMN_IS_HISTORY + " = 1";
     }
 
     public static String getAllFavourites() {
-        return "SELECT * FROM " + TABLE + " WHERE is_favourite = 1 ORDER BY date(" + COLUMN_ADD_TO_FAVOURITE_DATE + ") DESC";
+        return "SELECT * FROM " + TABLE + " WHERE " + COLUMN_IS_FAVOURITE + " = 1";
     }
 
     public static String getByKey() {

@@ -21,17 +21,17 @@ public class DateUtils {
         if(stringDate.equals(""))
             return null;
 
-        Date date;
+        Date date = null;
         SimpleDateFormat format = new SimpleDateFormat(dateFormat);
         try {
             date = format.parse(stringDate);
-            return date;
+
         } catch (ParseException e) {
             e.printStackTrace();
             Log.e(TAG,e.getMessage());
-        } finally {
-            return null;
         }
+
+        return date;
     }
 
     //TODO to utils

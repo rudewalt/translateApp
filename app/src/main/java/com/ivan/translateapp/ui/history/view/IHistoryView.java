@@ -13,6 +13,8 @@ public interface IHistoryView extends IBaseView {
 
     void showHistory(List<Translation> translations);
 
+    void showFavourites(List<Translation> translations);
+
     void clearButtonClicked();
 
     void deleteButtonClicked();

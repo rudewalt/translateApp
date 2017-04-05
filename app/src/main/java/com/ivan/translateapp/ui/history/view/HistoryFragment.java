@@ -62,8 +62,15 @@ public class HistoryFragment extends Fragment implements IHistoryView {
 
     @Override
     public void showHistory(List<Translation> translations) {
-        HistoryAdapter historyAdapter = new HistoryAdapter(getActivity(), R.layout.history_list_item, translations, iHistoryPresenter);
+        HistoryAdapter historyAdapter = new HistoryAdapter(getActivity(),
+                R.layout.history_list_item, translations, iHistoryPresenter);
         historyListView.setAdapter(historyAdapter);
+    }
+
+    @Override
+    public void showFavourites(List<Translation> translations) {
+        HistoryAdapter historyAdapter = new HistoryAdapter(getActivity(),
+                R.layout.history_list_item, translations, iHistoryPresenter);
     }
 
     @Override

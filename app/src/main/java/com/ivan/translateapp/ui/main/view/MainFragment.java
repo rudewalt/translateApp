@@ -1,9 +1,7 @@
 package com.ivan.translateapp.ui.main.view;
 
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
@@ -33,17 +32,20 @@ import javax.inject.Inject;
 
 public class MainFragment extends Fragment implements IMainView {
 
+    private final String TAG = MainFragment.class.toString();
 
     private EditText textToTranslate;
     private TextView translatedText;
     private Spinner fromLanguageSpinner;
     private Spinner toLanguageSpinner;
-    private CheckBox isFavourite;
+    private CheckBox isFavouriteCheckbox;
     private ImageButton clearButton;
     private ImageButton changeDirection;
 
     private Timer afterTextChangedTimer = new Timer();
     private final long DELAY = 500; //milliseconds
+
+    private CompoundButton.OnCheckedChangeListener isFavouriteCheckedListener;
 
     @Inject
     IMainPresenter iMainPresenter;
@@ -68,11 +70,15 @@ public class MainFragment extends Fragment implements IMainView {
         translatedText = (TextView) view.findViewById(R.id.translatedText);
         fromLanguageSpinner = (Spinner) view.findViewById(R.id.fromLanguage);
         toLanguageSpinner = (Spinner) view.findViewById(R.id.toLanguage);
-        isFavourite = (CheckBox) view.findViewById(R.id.isFavourite);
+        isFavouriteCheckbox = (CheckBox) view.findViewById(R.id.isFavourite);
         clearButton = (ImageButton) view.findViewById(R.id.clearButton);
         changeDirection = (ImageButton) view.findViewById(R.id.changeDirection);
 
+        isFavouriteCheckedListener = (buttonView, isChecked) -> {
+            iMainPresenter.listenIsFavourite(isChecked);
+        };
 
+        isFavouriteCheckbox.setOnCheckedChangeListener(isFavouriteCheckedListener);
 
         textToTranslate.addTextChangedListener(new TextWatcher() {
             @Override
@@ -98,8 +104,10 @@ public class MainFragment extends Fragment implements IMainView {
 
                 if (s.toString().length() > 0) {
                     showClearButton();
+                    showIsFavouriteCheckbox();
                 } else {
                     hideClearButton();
+                    hideIsFavouriteCheckbox();
                 }
             }
         });
@@ -194,17 +202,20 @@ public class MainFragment extends Fragment implements IMainView {
 
     @Override
     public void showIsFavouriteCheckbox() {
-        isFavourite.setVisibility(View.VISIBLE);
+        isFavouriteCheckbox.setVisibility(View.VISIBLE);
     }
 
     @Override
     public void hideIsFavouriteCheckbox() {
-        isFavourite.setVisibility(View.INVISIBLE);
+        isFavouriteCheckbox.setVisibility(View.INVISIBLE);
+        setStateIsFavouriteCheckbox(false);
     }
 
     @Override
     public void setStateIsFavouriteCheckbox(boolean checked) {
-        isFavourite.setChecked(checked);
+        isFavouriteCheckbox.setOnCheckedChangeListener(null);
+        isFavouriteCheckbox.setChecked(checked);
+        isFavouriteCheckbox.setOnCheckedChangeListener(isFavouriteCheckedListener);
     }
 
     private void handleChangeDirectionClick(View view) {

@@ -23,4 +23,6 @@ public interface IMainPresenter {
     void listenText(String text, String fromLanguage, String toLanguage);
 
     void saveTranslation();
+
+    void listenIsFavourite(boolean checked);
 }
