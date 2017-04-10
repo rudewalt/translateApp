@@ -21,13 +21,15 @@ public interface IHistoryRepository {
 
     void update(Translation translation);
 
-    void addToFavourites(Translation translation);
+    void deleteHistory();
 
-    void clear();
+    void deleteFavourites();
 
     void delete(Translation translation);
 
-    void deleteFromFavourites(Translation translation);
-
     Observable<Boolean> isFavourite(String text, String fromLanguage, String toLanguage);
+
+    void saveSetting(String fromLanguage, String toLanguage);
+
+    Observable<String> getSetting(String key);
 }

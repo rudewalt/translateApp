@@ -1,12 +1,11 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:tag="fragment_history"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.view.history.HistoryFragment">
+    tools:context="com.ivan.translateapp.ui.view.history.FavouritesFragment">
 
     <ListView
-        android:id="@+id/historyListView"
+        android:id="@+id/favouritesListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical">

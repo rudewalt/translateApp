@@ -3,8 +3,6 @@ package com.ivan.translateapp.data.db.entity;
 
 import com.ivan.translateapp.utils.DateUtils;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -67,8 +65,5 @@ public class TranslationEntity {
     public Boolean isHistory() {
         return
                 isHistory == 1;
-    }
-
-    public TranslationEntity() {
     }
 }

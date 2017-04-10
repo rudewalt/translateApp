@@ -7,7 +7,6 @@ import android.support.annotation.NonNull;
 import com.ivan.translateapp.dagger.ApplicationModule;
 import com.ivan.translateapp.dagger.DaggerIApplicationComponent;
 import com.ivan.translateapp.dagger.IApplicationComponent;
-import com.ivan.translateapp.data.net.NetworkModule;
 
 /**
  * Created by Ivan on 27.03.2017.

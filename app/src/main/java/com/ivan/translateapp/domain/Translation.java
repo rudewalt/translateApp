@@ -16,7 +16,7 @@ public class Translation {
     public Translation() {
     }
 
-    public Translation(String text, String translated, String fromLanguage, String toLanguage,boolean isHistory, boolean isFavourite) {
+    public Translation(String text, String translated, String fromLanguage, String toLanguage, boolean isHistory, boolean isFavourite) {
         this.text = text;
         this.translated = translated;
         this.fromLanguage = fromLanguage;

@@ -1,8 +1,10 @@
-package com.ivan.translateapp.ui.history.presenter;
+package com.ivan.translateapp.ui.presenter;
+
+import android.support.annotation.NonNull;
 
 import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.domain.interactor.IHistoryInteractor;
-import com.ivan.translateapp.ui.history.view.IHistoryView;
+import com.ivan.translateapp.ui.view.history.IHistoryView;
 
 import java.util.List;
 
@@ -47,7 +49,7 @@ public class HistoryPresenter implements IHistoryPresenter {
     }
 
     private void handleSuccessLoadHistory(List<Translation> translations){
-        iHistoryView.showHistory(translations);
+        iHistoryView.showTranslations(translations);
     }
 
     private void handleErrorLoadHistory(Throwable throwable){
@@ -55,25 +57,17 @@ public class HistoryPresenter implements IHistoryPresenter {
     }
 
     @Override
-    public void loadFavourites() {
-        Disposable disposable =  iHistoryInteractor.getFavourites()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleSuccessLoadFavourites, this::handleErrorLoadFavourites);
-
-        compositeDisposable.add(disposable);
-    }
-
-    @Override
-    public void saveChanges(Translation translation) {
+    public void clickIsFavouriteStateCheckbox(Translation translation) {
         iHistoryInteractor.saveChanges(translation);
     }
 
-    private void handleSuccessLoadFavourites(List<Translation> translations){
+    @Override
+    public void clickToClearHistoryButton() {
 
     }
 
-    private void handleErrorLoadFavourites(Throwable throwable){
-        iHistoryView.showError("");
+    @Override
+    public void clickToDeleteTranslationButton(@NonNull Translation translation) {
+
     }
 }

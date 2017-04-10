@@ -1,14 +1,15 @@
-package com.ivan.translateapp.ui.main.presenter;
+package com.ivan.translateapp.ui.presenter;
 
 import android.util.Log;
 
 import com.ivan.translateapp.domain.Language;
 import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.domain.interactor.IMainInteractor;
-import com.ivan.translateapp.ui.main.view.IMainView;
+import com.ivan.translateapp.ui.view.main.IMainView;
 
 import java.util.List;
 
+import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
@@ -25,8 +26,6 @@ public class MainPresenter implements IMainPresenter {
     private IMainInteractor iMainInteractor;
     private IMainView iMainView;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-    private Translation currentTranslation;
 
     public MainPresenter(IMainInteractor iMainInteractor) {
 
@@ -46,10 +45,14 @@ public class MainPresenter implements IMainPresenter {
 
     @Override
     public void loadLanguages() {
-        Disposable disposable = iMainInteractor.getLanguages()
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleSuccessLanguages, this::handleErrorGetLanguagesError);
+        Disposable disposable =
+                Observable.zip(
+                        iMainInteractor.getLanguages(),
+                        iMainInteractor.restoreTranslationDirection(),
+                        (languages, restored) -> new LanguagesWithSettings(languages, restored))
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribe(this::handleSuccessLanguages, this::handleErrorGetLanguagesError);
 
         compositeDisposable.add(disposable);
     }
@@ -65,25 +68,23 @@ public class MainPresenter implements IMainPresenter {
     }
 
     @Override
-    public void saveTranslation() {
-        if(currentTranslation == null)
-            return;
-
-        iMainInteractor.saveTranslation(currentTranslation);
+    public void clickIsFavouriteCheckbox(Translation translation) {
+        saveTranslation(translation);
     }
 
     @Override
-    public void listenIsFavourite(boolean checked) {
-        if(currentTranslation == null)
-            return;
+    public void textToTranslateLostFocus(Translation translation) {
 
-        currentTranslation.setFavourite(checked);
-        saveTranslation();
+        saveTranslation(translation);
+        iMainInteractor.saveTranslationDirection(translation.getFromLanguage(), translation.getToLanguage());
     }
 
 
-    private void handleSuccessLanguages(List<Language> languages) {
-        iMainView.loadLanguages(languages);
+    private void handleSuccessLanguages(LanguagesWithSettings data) {
+        iMainView.setLanguages(data.getLanguages());
+
+        iMainView.setFromLanguage(data.getFromLanguage());
+        iMainView.setToLanguage(data.getToLanguage());
     }
 
     private void handleErrorGetLanguagesError(Throwable throwable) {
@@ -92,7 +93,6 @@ public class MainPresenter implements IMainPresenter {
     }
 
     private void handleSuccessTranslate(Translation translation) {
-        currentTranslation = translation;
         iMainView.setTranslatedText(translation.getTranslated());
         iMainView.setStateIsFavouriteCheckbox(translation.isFavourite());
     }
@@ -100,5 +100,35 @@ public class MainPresenter implements IMainPresenter {
     private void handleErrorTranslate(Throwable throwable) {
 
         Log.e(TAG, throwable.getMessage());
+    }
+
+    private void saveTranslation(Translation translation) {
+        iMainInteractor.saveTranslation(translation);
+    }
+
+    private class LanguagesWithSettings {
+        private List<Language> languages;
+        private String fromLanguage;
+        private String toLanguage;
+
+        public LanguagesWithSettings(List<Language> languages, List<String> savedSelection) {
+            this.languages = languages;
+            if (savedSelection != null && savedSelection.size() == 2) {
+                this.fromLanguage = savedSelection.get(0);
+                this.toLanguage = savedSelection.get(1);
+            }
+        }
+
+        public List<Language> getLanguages() {
+            return languages;
+        }
+
+        public String getFromLanguage() {
+            return fromLanguage;
+        }
+
+        public String getToLanguage() {
+            return toLanguage;
+        }
     }
 }

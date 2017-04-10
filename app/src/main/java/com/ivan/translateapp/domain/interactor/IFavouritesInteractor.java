@@ -6,18 +6,13 @@ import java.util.List;
 
 import io.reactivex.Observable;
 
-
 /**
- * Created by Ivan on 27.03.2017.
+ * Created by Ivan on 07.04.2017.
  */
 
-public interface IHistoryInteractor {
-
-    Observable<List<Translation>> getHistory();
-
+public interface IFavouritesInteractor {
     Observable<List<Translation>> getFavourites();
-
     void delete(Translation translation);
-
-    void saveChanges(Translation translation);
+    void clear();
+    void save(Translation translation);
 }

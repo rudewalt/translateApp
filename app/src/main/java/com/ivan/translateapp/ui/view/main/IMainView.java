@@ -1,7 +1,7 @@
-package com.ivan.translateapp.ui.main.view;
+package com.ivan.translateapp.ui.view.main;
 
 import com.ivan.translateapp.domain.Language;
-import com.ivan.translateapp.ui.IBaseView;
+import com.ivan.translateapp.ui.view.IBaseView;
 
 import java.util.List;
 
@@ -11,17 +11,15 @@ import java.util.List;
 
 public interface IMainView extends IBaseView {
 
-    void loadLanguages(List<Language> languages);
+    void setLanguages(List<Language> languages);
 
     void setTranslatedText(String text);
 
-    void setFromLanguage();
+    void setFromLanguage(String fromLanguage);
 
-    void setToLanguage();
+    void setToLanguage(String toLanguage);
 
     void setText(String text);
-
-    void saveToFavourites();
 
     void showClearButton();
 

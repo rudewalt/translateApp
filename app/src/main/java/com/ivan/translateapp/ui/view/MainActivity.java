@@ -1,5 +1,6 @@
-package com.ivan.translateapp.ui;
+package com.ivan.translateapp.ui.view;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -8,32 +9,46 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 
 import com.ivan.translateapp.R;
-import com.ivan.translateapp.ui.history.view.HistoryFragment;
-import com.ivan.translateapp.ui.main.view.MainFragment;
+import com.ivan.translateapp.ui.view.history.FavouritesFragment;
+import com.ivan.translateapp.ui.view.history.HistoryFragment;
+import com.ivan.translateapp.ui.view.main.MainFragment;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class MainActivity extends AppCompatActivity {
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
-    private Fragment currentFragment;
-    private TabsPagerAdapter adapterViewPager;
+public class MainActivity extends AppCompatActivity {
+    private static final int PAGE_COUNT = 3;
+    private static final int[] tabIcons = {
+            R.drawable.selector_ic_language,
+            R.drawable.selector_ic_history,
+            R.drawable.selector_ic_star
+    };
+
+    @BindView(R.id.tabs)
+    TabLayout tabLayout;
+    @BindView(R.id.viewPager)
+    ViewPager viewPager;
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        TabLayout tabs = (TabLayout) findViewById(R.id.tabs);
-        ViewPager viewPager = (ViewPager) findViewById(R.id.viewPager);
         FragmentManager fragmentManager = getSupportFragmentManager();
         TabsPagerAdapter adapter = new TabsPagerAdapter(fragmentManager);
+
         viewPager.setAdapter(adapter);
-        tabs.setupWithViewPager(viewPager);
+        viewPager.setOffscreenPageLimit(PAGE_COUNT);
+        tabLayout.setupWithViewPager(viewPager);
+        setupTabIcons();
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -43,9 +58,10 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                IBaseView view = ((IBaseView)adapter.getFragment(position));
-                if(view!=null) {
-                    view.loadChanges();
+                hideSoftInput();
+                IBaseView view = (IBaseView) adapter.getFragment(position);
+                if (view != null) {
+                    view.loadData();
                 }
             }
 
@@ -54,15 +70,25 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
     }
 
-    public static class TabsPagerAdapter extends FragmentPagerAdapter{
+    private void setupTabIcons() {
+        for (int i = 0; i < tabLayout.getTabCount(); i++) {
+            tabLayout.getTabAt(i).setIcon(tabIcons[i]);
+        }
+    }
+
+    private void hideSoftInput(){
+        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+    }
+
+    public static class TabsPagerAdapter extends FragmentPagerAdapter {
         private Map<Integer, String> fragmentTags;
         private FragmentManager fragmentManager;
-        private static final int PAGE_COUNT = 2;
 
-        public TabsPagerAdapter(FragmentManager fragmentManager){
+
+        public TabsPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
             this.fragmentManager = fragmentManager;
             this.fragmentTags = new HashMap<>(PAGE_COUNT);
@@ -72,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
         public Object instantiateItem(ViewGroup container, int position) {
             Object obj = super.instantiateItem(container, position);
             if (obj instanceof Fragment) {
-                // record the fragment tag here.
                 Fragment f = (Fragment) obj;
                 String tag = f.getTag();
                 fragmentTags.put(position, tag);
@@ -84,17 +109,16 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             Fragment fragment = null;
 
-            switch (position){
+            switch (position) {
                 case 0:
                     fragment = new MainFragment();
                     break;
                 case 1:
                     fragment = new HistoryFragment();
                     break;
-            }
-
-            if(fragment!=null) {
-                fragmentTags.put(position, fragment.getTag());
+                case 2:
+                    fragment = new FavouritesFragment();
+                    break;
             }
 
             return fragment;
@@ -103,19 +127,6 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public int getCount() {
             return PAGE_COUNT;
-        }
-
-        //TODO переделать
-        @Override
-        public CharSequence getPageTitle(int position) {
-            switch (position){
-                case 0:
-                    return "Главная";
-                case 1:
-                    return "История";
-                default:
-                    return "";
-            }
         }
 
         public Fragment getFragment(int position) {

@@ -6,6 +6,7 @@ import com.ivan.translateapp.data.repository.ITranslationRepository;
 import com.ivan.translateapp.domain.Language;
 import com.ivan.translateapp.domain.Translation;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -21,6 +22,10 @@ import io.reactivex.functions.BiFunction;
  */
 
 public class MainInteractor implements IMainInteractor {
+
+    private static final String EMPTY_STRING = "";
+    private static final String FROM_LANGUAGE_KEY = "fromLanguage";
+    private static final String TO_LANGUAGE_KEY = "toLanguage";
 
     private static final String CURRENT_UI = "ru";
 
@@ -57,15 +62,35 @@ public class MainInteractor implements IMainInteractor {
     }
 
     @Override
-    public void addToFavourites(Translation translation) {
-        iHistoryRepository.addToFavourites(translation);
-    }
-
-    @Override
     public void saveTranslation(Translation translation) {
+        if(translation == null
+                || translation.getText().equals(EMPTY_STRING)
+                || translation.getTranslated().equals(EMPTY_STRING)
+                || translation.getFromLanguage().equals(EMPTY_STRING)
+                || translation.getToLanguage().equals(EMPTY_STRING))
+            return;
+
         iHistoryRepository.add(translation);
     }
 
+    @Override
+    public void saveTranslationDirection(String fromLanguage, String toLanguage) {
+        if(fromLanguage.equals(EMPTY_STRING) || toLanguage.equals(EMPTY_STRING))
+            return;
+
+        iHistoryRepository.saveSetting(FROM_LANGUAGE_KEY, fromLanguage);
+        iHistoryRepository.saveSetting(TO_LANGUAGE_KEY, toLanguage);
+    }
+
+    @Override
+    public Observable<List<String>> restoreTranslationDirection(){
+        return
+        Observable.zip(
+                iHistoryRepository.getSetting(FROM_LANGUAGE_KEY),
+                iHistoryRepository.getSetting(TO_LANGUAGE_KEY),
+                (fromLanguage, toLanguage)-> new ArrayList<String>(){{add(fromLanguage); add(toLanguage);}}
+        );
+    }
 
     private List<Language> sortLanguages(List<Language> languages) {
         Collections.sort(languages, (language1, language2) -> language1.getTitle().compareTo(language2.getTitle()));

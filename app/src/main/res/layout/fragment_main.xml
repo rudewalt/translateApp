@@ -3,7 +3,7 @@
     android:tag="fragment_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.main.view.MainFragment">
+    tools:context=".ui.view.main.MainFragment">
 
     <RelativeLayout
         android:id="@+id/content"

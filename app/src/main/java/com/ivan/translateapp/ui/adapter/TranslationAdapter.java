@@ -1,38 +1,37 @@
-package com.ivan.translateapp.ui.history.adapter;
+package com.ivan.translateapp.ui.adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.BaseAdapter;
 import android.widget.CheckBox;
-import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.ivan.translateapp.R;
 import com.ivan.translateapp.domain.Translation;
-import com.ivan.translateapp.ui.history.presenter.IHistoryPresenter;
-import com.jakewharton.rxbinding2.widget.RxCompoundButton;
+import com.ivan.translateapp.ui.presenter.ISupportIsFavouriteCheckbox;
 
 import java.util.List;
-import java.util.Observable;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * Created by Ivan on 01.04.2017.
  */
 
-public class HistoryAdapter extends ArrayAdapter<Translation> {
+public class TranslationAdapter extends ArrayAdapter<Translation> {
 
     private LayoutInflater inflater;
     private int layout;
     private List<Translation> translationList;
-    private IHistoryPresenter iHistoryPresenter;
+    private ISupportIsFavouriteCheckbox iSupportIsFavouriteCheckbox;
 
-    public HistoryAdapter(Context context, int resource, List<Translation> translationList, IHistoryPresenter iHistoryPresenter) {
+    public TranslationAdapter(Context context, int resource, List<Translation> translationList, ISupportIsFavouriteCheckbox iSupportIsFavouriteCheckbox) {
         super(context, resource, translationList);
         this.translationList = translationList;
-        this.iHistoryPresenter = iHistoryPresenter;
+        this.iSupportIsFavouriteCheckbox = iSupportIsFavouriteCheckbox;
         layout = resource;
         inflater = LayoutInflater.from(context);
     }
@@ -54,27 +53,30 @@ public class HistoryAdapter extends ArrayAdapter<Translation> {
         viewHolder.translated.setText(translation.getTranslated());
         viewHolder.direction.setText(translation.getDirection());
 
-        viewHolder.addToFavourites.setOnCheckedChangeListener(null);
-        viewHolder.addToFavourites.setChecked(translation.isFavourite());
-        viewHolder.addToFavourites.setOnCheckedChangeListener(
+        viewHolder.isFavouritesCheckbox.setOnCheckedChangeListener(null);
+        viewHolder.isFavouritesCheckbox.setChecked(translation.isFavourite());
+        viewHolder.isFavouritesCheckbox.setOnCheckedChangeListener(
                 (buttonView, isChecked) -> {
                     translation.setFavourite(isChecked);
                     translationList.set(position, translation);
-                    iHistoryPresenter.saveChanges(translation);
+                    iSupportIsFavouriteCheckbox.clickIsFavouriteStateCheckbox(translation);
                 });
 
         return convertView;
     }
 
-    private class ViewHolder {
-        final CheckBox addToFavourites;
-        final TextView text, translated, direction;
+    static class ViewHolder {
+        @BindView(R.id.template_addToFavourites)
+        CheckBox isFavouritesCheckbox;
+        @BindView(R.id.template_textView)
+        TextView text;
+        @BindView(R.id.template_translatedTextView)
+        TextView translated;
+        @BindView(R.id.template_directionView)
+        TextView direction;
 
         ViewHolder(View view) {
-            addToFavourites = (CheckBox) view.findViewById(R.id.template_addToFavourites);
-            text = (TextView) view.findViewById(R.id.template_textView);
-            translated = (TextView) view.findViewById(R.id.template_translatedTextView);
-            direction = (TextView) view.findViewById(R.id.template_directionView);
+            ButterKnife.bind(this, view);
         }
     }
 }

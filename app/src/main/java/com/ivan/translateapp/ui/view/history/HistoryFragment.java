@@ -1,4 +1,4 @@
-package com.ivan.translateapp.ui.history.view;
+package com.ivan.translateapp.ui.view.history;
 
 
 import android.os.Bundle;
@@ -12,12 +12,15 @@ import com.ivan.translateapp.R;
 import com.ivan.translateapp.TranslateApplication;
 import com.ivan.translateapp.dagger.MainModule;
 import com.ivan.translateapp.domain.Translation;
-import com.ivan.translateapp.ui.history.adapter.HistoryAdapter;
-import com.ivan.translateapp.ui.history.presenter.IHistoryPresenter;
+import com.ivan.translateapp.ui.adapter.TranslationAdapter;
+import com.ivan.translateapp.ui.presenter.IHistoryPresenter;
 
 import java.util.List;
 
 import javax.inject.Inject;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,7 +30,7 @@ public class HistoryFragment extends Fragment implements IHistoryView {
     @Inject
     IHistoryPresenter iHistoryPresenter;
 
-    private ListView historyListView;
+    @BindView(R.id.historyListView) ListView historyListView;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -43,13 +46,11 @@ public class HistoryFragment extends Fragment implements IHistoryView {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
         View view = inflater.inflate(R.layout.fragment_history, container, false);
-
-        historyListView = (ListView) view.findViewById(R.id.historyListView);
+        ButterKnife.bind(this, view);
 
         iHistoryPresenter.bindView(this);
-        loadChanges();
+        loadData();
         return view;
     }
 
@@ -61,24 +62,10 @@ public class HistoryFragment extends Fragment implements IHistoryView {
 
 
     @Override
-    public void showHistory(List<Translation> translations) {
-        HistoryAdapter historyAdapter = new HistoryAdapter(getActivity(),
+    public void showTranslations(List<Translation> translations) {
+        TranslationAdapter historyAdapter = new TranslationAdapter(getActivity(),
                 R.layout.history_list_item, translations, iHistoryPresenter);
         historyListView.setAdapter(historyAdapter);
-    }
-
-    @Override
-    public void showFavourites(List<Translation> translations) {
-        HistoryAdapter historyAdapter = new HistoryAdapter(getActivity(),
-                R.layout.history_list_item, translations, iHistoryPresenter);
-    }
-
-    @Override
-    public void clearButtonClicked() {
-    }
-
-    @Override
-    public void deleteButtonClicked() {
     }
 
     @Override
@@ -87,7 +74,7 @@ public class HistoryFragment extends Fragment implements IHistoryView {
     }
 
     @Override
-    public void loadChanges() {
+    public void loadData() {
         if (iHistoryPresenter != null)
             iHistoryPresenter.loadHistory();
     }

@@ -3,26 +3,20 @@ package com.ivan.translateapp.domain.interactor;
 import com.ivan.translateapp.data.repository.IHistoryRepository;
 import com.ivan.translateapp.domain.Translation;
 
-import java.util.Comparator;
 import java.util.List;
 
 import io.reactivex.Observable;
 
 /**
- * Created by Ivan on 28.03.2017.
+ * Created by Ivan on 07.04.2017.
  */
 
-public class HistoryInteractor implements IHistoryInteractor {
+public class FavouritesInteractor implements IFavouritesInteractor {
 
     private IHistoryRepository iHistoryRepository;
 
-    public HistoryInteractor(IHistoryRepository iHistoryRepository){
+    public FavouritesInteractor(IHistoryRepository iHistoryRepository){
         this.iHistoryRepository = iHistoryRepository;
-    }
-
-    @Override
-    public Observable<List<Translation>> getHistory() {
-        return iHistoryRepository.getHistory();
     }
 
     @Override
@@ -30,17 +24,20 @@ public class HistoryInteractor implements IHistoryInteractor {
         return iHistoryRepository.getFavourites();
     }
 
-
     @Override
     public void delete(Translation translation) {
-        iHistoryRepository.delete(translation);
+        //no need
+        // try to save without isFavourite
     }
-
 
     @Override
-    public void saveChanges(Translation translation) {
-        iHistoryRepository.update(translation);
+    public void clear() {
+
     }
 
+    @Override
+    public void save(Translation translation) {
+        iHistoryRepository.update(translation);
+    }
 
 }

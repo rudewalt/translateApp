@@ -7,12 +7,9 @@ import com.ivan.translateapp.domain.Translation;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 
-import io.reactivex.Maybe;
 import io.reactivex.Observable;
-import io.reactivex.Single;
 
 /**
  * Created by Ivan on 30.03.2017.
@@ -20,6 +17,7 @@ import io.reactivex.Single;
 
 public class HistoryRepository implements IHistoryRepository {
 
+    private static final String EMPTY_STRING = "";
     private DbHelper dbOpenHelper;
     private TranslationEntityMapper translationEntityMapper;
 
@@ -40,45 +38,53 @@ public class HistoryRepository implements IHistoryRepository {
     public Observable<List<Translation>> getFavourites() {
         return
                 Observable.fromArray(dbOpenHelper.getAllFavourites())
+                        .map(this::sortByAddToFavouriteDate)
                         .map(this::mapToTranslation);
     }
 
     @Override
     public Observable<Boolean> isFavourite(String text, String fromLanguage, String toLanguage) {
 
-        TranslationEntity entity = dbOpenHelper.get(text, fromLanguage, toLanguage);
+        TranslationEntity entity = dbOpenHelper.getTranslations(text, fromLanguage, toLanguage);
         return Observable.just(entity != null && entity.isFavourite());
     }
 
     @Override
+    public void saveSetting(String key, String value) {
+        dbOpenHelper.saveKeyValue(key, value);
+    }
+
+    @Override
+    public Observable<String> getSetting(String key) {
+        return Observable.just(dbOpenHelper.getKeyValue(key))
+                .map(keyValueEntity ->  keyValueEntity.getValue());
+    }
+
+
+    @Override
     public void add(Translation translation) {
         translation.setHistory(true);
-        dbOpenHelper.put(translation);
+        dbOpenHelper.saveTranslation(translation);
     }
 
     @Override
     public void update(Translation translation) {
-        dbOpenHelper.put(translation);
+        dbOpenHelper.saveTranslation(translation);
     }
 
     @Override
-    public void addToFavourites(Translation translation) {
-
+    public void deleteHistory() {
+        dbOpenHelper.deleteHistory();
     }
 
     @Override
-    public void clear() {
-
+    public void deleteFavourites() {
+        dbOpenHelper.deleteFavourites();
     }
 
     @Override
     public void delete(Translation translation) {
-
-    }
-
-    @Override
-    public void deleteFromFavourites(Translation translation) {
-
+        dbOpenHelper.delete(translation);
     }
 
     private List<TranslationEntity> sortByCreateDateDesc(List<TranslationEntity> translationEntities) {
@@ -88,9 +94,9 @@ public class HistoryRepository implements IHistoryRepository {
         return translationEntities;
     }
 
-    private List<TranslationEntity> sortByAddToFavouriteDate(List<TranslationEntity> translationEntities){
+    private List<TranslationEntity> sortByAddToFavouriteDate(List<TranslationEntity> translationEntities) {
         Collections.sort(translationEntities,
-                (entity1, entity2) -> entity1.getAddToFavouriteDate().compareTo(entity2.getAddToFavouriteDate()));
+                (entity1, entity2) -> entity2.getAddToFavouriteDate().compareTo(entity1.getAddToFavouriteDate()));
 
         return translationEntities;
     }
