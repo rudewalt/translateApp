@@ -10,8 +10,8 @@ import io.reactivex.Observable;
  * Created by Ivan on 07.04.2017.
  */
 
-public interface IFavouritesInteractor {
-    Observable<List<Translation>> getFavourites();
+public interface IFavoritesInteractor {
+    Observable<List<Translation>> getFavorites();
     void delete(Translation translation);
     void clear();
     void save(Translation translation);

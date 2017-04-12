@@ -35,9 +35,9 @@ public class HistoryRepository implements IHistoryRepository {
     }
 
     @Override
-    public Observable<List<Translation>> getFavourites() {
+    public Observable<List<Translation>> getFavorites() {
         return
-                Observable.fromArray(dbOpenHelper.getAllFavourites())
+                Observable.fromArray(dbOpenHelper.getAllFavorites())
                         .map(this::sortByAddToFavouriteDate)
                         .map(this::mapToTranslation);
     }
@@ -46,7 +46,7 @@ public class HistoryRepository implements IHistoryRepository {
     public Observable<Boolean> isFavourite(String text, String fromLanguage, String toLanguage) {
 
         TranslationEntity entity = dbOpenHelper.getTranslations(text, fromLanguage, toLanguage);
-        return Observable.just(entity != null && entity.isFavourite());
+        return Observable.just(entity != null && entity.isFavorite());
     }
 
     @Override
@@ -78,8 +78,8 @@ public class HistoryRepository implements IHistoryRepository {
     }
 
     @Override
-    public void deleteFavourites() {
-        dbOpenHelper.deleteFavourites();
+    public void deleteFavorites() {
+        dbOpenHelper.deleteFavorites();
     }
 
     @Override
@@ -96,7 +96,7 @@ public class HistoryRepository implements IHistoryRepository {
 
     private List<TranslationEntity> sortByAddToFavouriteDate(List<TranslationEntity> translationEntities) {
         Collections.sort(translationEntities,
-                (entity1, entity2) -> entity2.getAddToFavouriteDate().compareTo(entity1.getAddToFavouriteDate()));
+                (entity1, entity2) -> entity2.getAddToFavoriteDate().compareTo(entity1.getAddToFavoriteDate()));
 
         return translationEntities;
     }

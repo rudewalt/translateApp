@@ -1,8 +1,8 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:tag="fragment_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:tag="fragment_main"
     tools:context=".ui.view.main.MainFragment">
 
     <RelativeLayout
@@ -20,8 +20,8 @@
                 android:id="@+id/fromLanguage"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:dropDownWidth="match_parent"
-                android:layout_weight="0.5" />
+                android:layout_weight="0.5"
+                android:dropDownWidth="match_parent" />
 
             <ImageButton
                 android:id="@+id/changeDirection"
@@ -35,8 +35,8 @@
                 android:id="@+id/toLanguage"
                 android:layout_width="0dp"
                 android:layout_height="50dp"
-                android:dropDownWidth="match_parent"
-                android:layout_weight="0.5" />
+                android:layout_weight="0.5"
+                android:dropDownWidth="match_parent" />
         </LinearLayout>
 
         <LinearLayout
@@ -44,11 +44,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/selectLanguageContainer"
-            android:layout_margin="15dp"
+            android:layout_marginLeft="15dp"
+            android:layout_marginRight="15dp"
+            android:background="@drawable/translate_container"
+            android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:clickable="true"
-            android:background="@drawable/translate_container"
             android:orientation="vertical">
 
             <EditText
@@ -63,6 +64,7 @@
                 android:padding="10dp"
                 android:scrollbars="vertical"
                 android:selectAllOnFocus="false"
+                android:textSize="@dimen/text_size_medium"
                 tools:text="@string/sample_text" />
 
             <ImageButton
@@ -72,15 +74,24 @@
                 android:layout_marginTop="2dp"
                 android:background="@android:drawable/ic_menu_close_clear_cancel"
                 android:visibility="invisible"
-                tools:visibility="visible"/>
+                tools:visibility="visible" />
 
         </LinearLayout>
+
+        <TextView
+            android:id="@+id/apiRequirementsTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_below="@id/textToTranslateContainer"
+            android:linksClickable="true"/>
 
         <LinearLayout
             android:id="@+id/translateResultContainer"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/textToTranslateContainer"
+            android:layout_below="@id/apiRequirementsTextView"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
             android:orientation="horizontal">
@@ -92,13 +103,15 @@
                 android:layout_weight="1"
                 android:padding="@dimen/text_container_padding"
                 android:scrollbars="vertical"
-                tools:text="Человеку свойственно ошибаться. "/>
+                android:textSize="18dp"
+                tools:text="@string/sample_text_2" />
 
             <CheckBox
-                android:id="@+id/isFavourite"
-                android:button="@drawable/star_checkbox"
+                android:id="@+id/isFavorite"
                 android:layout_width="40dp"
-                android:layout_height="40dp" />
+                android:layout_height="40dp"
+                android:button="@drawable/star_checkbox"
+                android:visibility="invisible" />
         </LinearLayout>
 
 

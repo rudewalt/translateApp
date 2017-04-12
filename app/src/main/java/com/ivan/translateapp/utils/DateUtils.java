@@ -34,7 +34,6 @@ public class DateUtils {
         return date;
     }
 
-    //TODO to utils
     public static String getCurrentDateTime() {
         Calendar c = Calendar.getInstance();
         SimpleDateFormat df = new SimpleDateFormat(dateFormat);

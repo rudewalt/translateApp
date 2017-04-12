@@ -11,23 +11,23 @@ import io.reactivex.Observable;
  * Created by Ivan on 07.04.2017.
  */
 
-public class FavouritesInteractor implements IFavouritesInteractor {
+public class FavoritesInteractor implements IFavoritesInteractor {
 
     private IHistoryRepository iHistoryRepository;
 
-    public FavouritesInteractor(IHistoryRepository iHistoryRepository){
+    public FavoritesInteractor(IHistoryRepository iHistoryRepository){
         this.iHistoryRepository = iHistoryRepository;
     }
 
     @Override
-    public Observable<List<Translation>> getFavourites() {
-        return iHistoryRepository.getFavourites();
+    public Observable<List<Translation>> getFavorites() {
+        return iHistoryRepository.getFavorites();
     }
 
     @Override
     public void delete(Translation translation) {
         //no need
-        // try to save without isFavourite
+        // try to save without isFavorite
     }
 
     @Override

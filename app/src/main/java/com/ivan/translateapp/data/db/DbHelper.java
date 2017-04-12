@@ -24,7 +24,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String TAG = DbHelper.class.toString();
 
     private static final String EMPTY_STRING = "";
-    private static final int DB_VERSION = 4;
+    private static final int DB_VERSION = 5;
     private static final String DB_NAME = "translateApp_db";
 
     public DbHelper(@NonNull Context context) {
@@ -80,8 +80,8 @@ public class DbHelper extends SQLiteOpenHelper {
         return getTranslations(TranslationTable.getAllHistory(), null);
     }
 
-    public List<TranslationEntity> getAllFavourites() {
-        return getTranslations(TranslationTable.getAllFavourites(), null);
+    public List<TranslationEntity> getAllFavorites() {
+        return getTranslations(TranslationTable.getAllFavorites(), null);
     }
 
     public TranslationEntity getTranslations(String text, String fromLanguage, String toLanguage) {
@@ -100,9 +100,9 @@ public class DbHelper extends SQLiteOpenHelper {
         database.execSQL(TranslationTable.clearHistory());
     }
 
-    public void deleteFavourites() {
+    public void deleteFavorites() {
         SQLiteDatabase database = getWritableDatabase();
-        database.execSQL(TranslationTable.clearFavourites());
+        database.execSQL(TranslationTable.clearFavorites());
     }
 
     public void saveKeyValue(String key, String value) {
@@ -150,9 +150,9 @@ public class DbHelper extends SQLiteOpenHelper {
                 cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_FROM_LANGUAGE)),
                 cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_TO_LANGUAGE)),
                 cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_CREATE_DATE)),
-                cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_ADD_TO_FAVOURITE_DATE)),
+                cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_ADD_TO_FAVORITE_DATE)),
                 cursor.getInt(cursor.getColumnIndex(TranslationTable.COLUMN_IS_HISTORY)),
-                cursor.getInt(cursor.getColumnIndex(TranslationTable.COLUMN_IS_FAVOURITE))
+                cursor.getInt(cursor.getColumnIndex(TranslationTable.COLUMN_IS_FAVORITE))
         );
 
         return entity;
@@ -175,8 +175,8 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(TranslationTable.COLUMN_TRANSLATED, translation.getTranslated());
         contentValues.put(TranslationTable.COLUMN_CREATE_DATE, DateUtils.getCurrentDateTime());
         contentValues.put(TranslationTable.COLUMN_IS_HISTORY, translation.isHistory() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_IS_FAVOURITE, translation.isFavourite() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_ADD_TO_FAVOURITE_DATE, translation.isFavourite() ? DateUtils.getCurrentDateTime() : null);
+        contentValues.put(TranslationTable.COLUMN_IS_FAVORITE, translation.isFavourite() ? 1 : 0);
+        contentValues.put(TranslationTable.COLUMN_ADD_TO_FAVORITE_DATE, translation.isFavourite() ? DateUtils.getCurrentDateTime() : null);
 
         return contentValues;
     }
@@ -184,8 +184,8 @@ public class DbHelper extends SQLiteOpenHelper {
     private ContentValues getContentValuesForUpdate(Translation translation) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(TranslationTable.COLUMN_IS_HISTORY, translation.isHistory() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_IS_FAVOURITE, translation.isFavourite() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_ADD_TO_FAVOURITE_DATE, translation.isFavourite() ? DateUtils.getCurrentDateTime() : null);
+        contentValues.put(TranslationTable.COLUMN_IS_FAVORITE, translation.isFavourite() ? 1 : 0);
+        contentValues.put(TranslationTable.COLUMN_ADD_TO_FAVORITE_DATE, translation.isFavourite() ? DateUtils.getCurrentDateTime() : null);
         return contentValues;
     }
 

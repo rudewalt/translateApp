@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.ivan.translateapp.R;
 import com.ivan.translateapp.domain.Translation;
-import com.ivan.translateapp.ui.presenter.ISupportIsFavouriteCheckbox;
+import com.ivan.translateapp.ui.presenter.ISupportIsFavoriteCheckbox;
 
 import java.util.List;
 
@@ -26,12 +26,12 @@ public class TranslationAdapter extends ArrayAdapter<Translation> {
     private LayoutInflater inflater;
     private int layout;
     private List<Translation> translationList;
-    private ISupportIsFavouriteCheckbox iSupportIsFavouriteCheckbox;
+    private ISupportIsFavoriteCheckbox iSupportIsFavoriteCheckbox;
 
-    public TranslationAdapter(Context context, int resource, List<Translation> translationList, ISupportIsFavouriteCheckbox iSupportIsFavouriteCheckbox) {
+    public TranslationAdapter(Context context, int resource, List<Translation> translationList, ISupportIsFavoriteCheckbox iSupportIsFavoriteCheckbox) {
         super(context, resource, translationList);
         this.translationList = translationList;
-        this.iSupportIsFavouriteCheckbox = iSupportIsFavouriteCheckbox;
+        this.iSupportIsFavoriteCheckbox = iSupportIsFavoriteCheckbox;
         layout = resource;
         inflater = LayoutInflater.from(context);
     }
@@ -53,21 +53,21 @@ public class TranslationAdapter extends ArrayAdapter<Translation> {
         viewHolder.translated.setText(translation.getTranslated());
         viewHolder.direction.setText(translation.getDirection());
 
-        viewHolder.isFavouritesCheckbox.setOnCheckedChangeListener(null);
-        viewHolder.isFavouritesCheckbox.setChecked(translation.isFavourite());
-        viewHolder.isFavouritesCheckbox.setOnCheckedChangeListener(
+        viewHolder.isFavoriteCheckbox.setOnCheckedChangeListener(null);
+        viewHolder.isFavoriteCheckbox.setChecked(translation.isFavourite());
+        viewHolder.isFavoriteCheckbox.setOnCheckedChangeListener(
                 (buttonView, isChecked) -> {
                     translation.setFavourite(isChecked);
                     translationList.set(position, translation);
-                    iSupportIsFavouriteCheckbox.clickIsFavouriteStateCheckbox(translation);
+                    iSupportIsFavoriteCheckbox.isFavoriteCheckboxStateChanged(translation);
                 });
 
         return convertView;
     }
 
     static class ViewHolder {
-        @BindView(R.id.template_addToFavourites)
-        CheckBox isFavouritesCheckbox;
+        @BindView(R.id.template_addToFavorites)
+        CheckBox isFavoriteCheckbox;
         @BindView(R.id.template_textView)
         TextView text;
         @BindView(R.id.template_translatedTextView)

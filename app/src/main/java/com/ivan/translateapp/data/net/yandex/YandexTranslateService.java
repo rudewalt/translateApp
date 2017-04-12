@@ -1,5 +1,6 @@
 package com.ivan.translateapp.data.net.yandex;
 
+import android.text.TextUtils;
 import android.util.Log;
 
 import com.ivan.translateapp.data.net.ITranslateService;
@@ -27,7 +28,6 @@ import static com.ivan.translateapp.data.net.yandex.ResponseCodes.SUCCESS_CODE;
 public class YandexTranslateService implements ITranslateService {
 
     private static final String TAG = YandexTranslateService.class.toString();
-
     private static final int MAX_TEXT_LENGTH = 10000;
 
 
@@ -69,21 +69,17 @@ public class YandexTranslateService implements ITranslateService {
 
     @Override
     public Observable<Translation> translate(String text, String fromLanguage, String toLanguage) {
-        String preparedText = text.trim();
+        final int includeDetectedLanguage = 1;
         String direction = fromLanguage == null || fromLanguage.isEmpty()
                 ? toLanguage
                 : String.format("%1$s-%2$s", fromLanguage, toLanguage);
 
-        int includeDetectedLanguage = 1;
-
         Observable<Translation> translation = apiInterface
-                .translate(preparedText, direction, includeDetectedLanguage)
+                .translate(text, direction, includeDetectedLanguage)
                 .map(this::checkResponseCode)
-                .map(translationResponseMapper)
-                .doOnNext(t -> {
-                    t.setText(preparedText);
-                    t.setToLanguage(toLanguage);
-                    t.setFromLanguage(fromLanguage);
+                .map(translationResponse -> {
+                    String translatedText = TextUtils.join(" ", translationResponse.getText());
+                    return new Translation(text, translatedText, toLanguage, fromLanguage, false, false);
                 });
 
         return translation;

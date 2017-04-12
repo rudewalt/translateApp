@@ -49,14 +49,15 @@ public class MainInteractor implements IMainInteractor {
 
     @Override
     public Observable<Translation> translateText(String text, String fromLanguage, String toLanguage) {
+        String textToTranslate = text.trim();
 
         return
                 Observable.combineLatest(
-                        iTranslationRepository.getTranslation(text, fromLanguage, toLanguage),
-                        iHistoryRepository.isFavourite(text, fromLanguage, toLanguage),
-                        (fromApi, isFavourite) -> {
-                            fromApi.setFavourite(isFavourite);
-                            return fromApi;
+                        iTranslationRepository.getTranslation(textToTranslate, fromLanguage, toLanguage),
+                        iHistoryRepository.isFavourite(textToTranslate, fromLanguage, toLanguage),
+                        (translation, isFavourite) -> {
+                            translation.setFavourite(isFavourite);
+                            return translation;
                         }
                 );
     }

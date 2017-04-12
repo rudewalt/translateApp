@@ -23,9 +23,9 @@ public class TranslationTable {
     @NonNull
     public static final String COLUMN_TO_LANGUAGE = "to_language";
     @NonNull
-    public static final String COLUMN_IS_FAVOURITE = "is_favourite";
+    public static final String COLUMN_IS_FAVORITE = "is_favorite";
     @NonNull
-    public static final String COLUMN_ADD_TO_FAVOURITE_DATE = "add_to_favourite_date";
+    public static final String COLUMN_ADD_TO_FAVORITE_DATE = "add_to_favourite_date";
     @NonNull
     public static final String COLUMN_IS_HISTORY = "is_history";
 
@@ -38,8 +38,8 @@ public class TranslationTable {
                 + COLUMN_TRANSLATED + " TEXT NOT NULL, "
                 + COLUMN_FROM_LANGUAGE + " TEXT NOT NULL, "
                 + COLUMN_TO_LANGUAGE + " TEXT NOT NULL, "
-                + COLUMN_IS_FAVOURITE + " INTEGER NULL, "
-                + COLUMN_ADD_TO_FAVOURITE_DATE + " TEXT NULL, "
+                + COLUMN_IS_FAVORITE + " INTEGER NULL, "
+                + COLUMN_ADD_TO_FAVORITE_DATE + " TEXT NULL, "
                 + COLUMN_IS_HISTORY + " INTEGER, "
                 + "PRIMARY KEY (" + COLUMN_TEXT + "," + COLUMN_FROM_LANGUAGE + "," + COLUMN_TO_LANGUAGE + "))";
     }
@@ -49,8 +49,8 @@ public class TranslationTable {
         return "SELECT * FROM " + TABLE + " WHERE " + COLUMN_IS_HISTORY + " = 1";
     }
 
-    public static String getAllFavourites() {
-        return "SELECT * FROM " + TABLE + " WHERE " + COLUMN_IS_FAVOURITE + " = 1";
+    public static String getAllFavorites() {
+        return "SELECT * FROM " + TABLE + " WHERE " + COLUMN_IS_FAVORITE + " = 1";
     }
 
     public static String getByKey() {
@@ -58,11 +58,11 @@ public class TranslationTable {
     }
 
     public static String clearHistory() {
-        return "DELETE FROM " + TABLE + " WHERE " + COLUMN_IS_HISTORY + " = 1 and " + COLUMN_IS_FAVOURITE + "=0"
+        return "DELETE FROM " + TABLE + " WHERE " + COLUMN_IS_HISTORY + " = 1 and " + COLUMN_IS_FAVORITE + "=0"
                 + " UPDATE " + TABLE + " SET " + COLUMN_IS_HISTORY + "=0;";
     }
 
-    public static String clearFavourites() {
-        return "DELETE FROM " + TABLE + " WHERE " + COLUMN_IS_FAVOURITE + "=1";
+    public static String clearFavorites() {
+        return "DELETE FROM " + TABLE + " WHERE " + COLUMN_IS_FAVORITE + "=1";
     }
 }

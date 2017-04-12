@@ -27,6 +27,8 @@ public class MainPresenter implements IMainPresenter {
     private IMainView iMainView;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+
+
     public MainPresenter(IMainInteractor iMainInteractor) {
 
         this.iMainInteractor = iMainInteractor;
@@ -38,7 +40,7 @@ public class MainPresenter implements IMainPresenter {
     }
 
     @Override
-    public void unbindVIew() {
+    public void unbindView() {
         iMainView = null;
         compositeDisposable.clear();
     }
@@ -74,7 +76,6 @@ public class MainPresenter implements IMainPresenter {
 
     @Override
     public void textToTranslateLostFocus(Translation translation) {
-
         saveTranslation(translation);
         iMainInteractor.saveTranslationDirection(translation.getFromLanguage(), translation.getToLanguage());
     }
@@ -94,7 +95,7 @@ public class MainPresenter implements IMainPresenter {
 
     private void handleSuccessTranslate(Translation translation) {
         iMainView.setTranslatedText(translation.getTranslated());
-        iMainView.setStateIsFavouriteCheckbox(translation.isFavourite());
+        iMainView.setStateIsFavoriteCheckbox(translation.isFavourite());
     }
 
     private void handleErrorTranslate(Throwable throwable) {

@@ -57,7 +57,7 @@ public class HistoryPresenter implements IHistoryPresenter {
     }
 
     @Override
-    public void clickIsFavouriteStateCheckbox(Translation translation) {
+    public void isFavoriteCheckboxStateChanged(Translation translation) {
         iHistoryInteractor.saveChanges(translation);
     }
 

@@ -12,7 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.ivan.translateapp.R;
-import com.ivan.translateapp.ui.view.history.FavouritesFragment;
+import com.ivan.translateapp.ui.view.favorites.FavoritesFragment;
 import com.ivan.translateapp.ui.view.history.HistoryFragment;
 import com.ivan.translateapp.ui.view.main.MainFragment;
 
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 hideSoftInput();
-                IBaseView view = (IBaseView) adapter.getFragment(position);
+                IView view = (IView) adapter.getFragment(position);
                 if (view != null) {
                     view.loadData();
                 }
@@ -117,7 +117,7 @@ public class MainActivity extends AppCompatActivity {
                     fragment = new HistoryFragment();
                     break;
                 case 2:
-                    fragment = new FavouritesFragment();
+                    fragment = new FavoritesFragment();
                     break;
             }
 

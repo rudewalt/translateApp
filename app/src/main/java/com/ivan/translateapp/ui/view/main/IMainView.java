@@ -1,7 +1,7 @@
 package com.ivan.translateapp.ui.view.main;
 
 import com.ivan.translateapp.domain.Language;
-import com.ivan.translateapp.ui.view.IBaseView;
+import com.ivan.translateapp.ui.view.IView;
 
 import java.util.List;
 
@@ -9,7 +9,7 @@ import java.util.List;
  * Created by Ivan on 27.03.2017.
  */
 
-public interface IMainView extends IBaseView {
+public interface IMainView extends IView {
 
     void setLanguages(List<Language> languages);
 
@@ -25,9 +25,9 @@ public interface IMainView extends IBaseView {
 
     void hideClearButton();
 
-    void showIsFavouriteCheckbox();
+    void showIsFavoriteCheckbox();
 
-    void hideIsFavouriteCheckbox();
+    void hideIsFavoriteCheckbox();
 
-    void setStateIsFavouriteCheckbox(boolean checked);
+    void setStateIsFavoriteCheckbox(boolean checked);
 }

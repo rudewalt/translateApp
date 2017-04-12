@@ -15,7 +15,7 @@ public interface IHistoryInteractor {
 
     Observable<List<Translation>> getHistory();
 
-    Observable<List<Translation>> getFavourites();
+    Observable<List<Translation>> getFavorites();
 
     void delete(Translation translation);
 

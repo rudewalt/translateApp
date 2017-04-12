@@ -15,7 +15,7 @@ public interface IHistoryRepository {
 
     Observable<List<Translation>> getHistory();
 
-    Observable<List<Translation>> getFavourites();
+    Observable<List<Translation>> getFavorites();
 
     void add(Translation translation);
 
@@ -23,7 +23,7 @@ public interface IHistoryRepository {
 
     void deleteHistory();
 
-    void deleteFavourites();
+    void deleteFavorites();
 
     void delete(Translation translation);
 

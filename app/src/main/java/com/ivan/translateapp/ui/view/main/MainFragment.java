@@ -4,12 +4,13 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
+import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import com.ivan.translateapp.TranslateApplication;
 import com.ivan.translateapp.dagger.MainModule;
 import com.ivan.translateapp.domain.Language;
 import com.ivan.translateapp.domain.Translation;
+import com.ivan.translateapp.ui.adapter.LanguageAdapter;
 import com.ivan.translateapp.ui.presenter.IMainPresenter;
 
 import java.util.List;
@@ -36,21 +38,30 @@ import butterknife.ButterKnife;
 
 public class MainFragment extends Fragment implements IMainView {
 
-    private final static String EMPTY_STRING = "";
     private final String TAG = MainFragment.class.toString();
-
-    @BindView(R.id.textToTranslate) EditText textToTranslate;
-    @BindView(R.id.translatedText) TextView translatedText;
-    @BindView(R.id.fromLanguage) Spinner fromLanguageSpinner;
-    @BindView(R.id.toLanguage) Spinner toLanguageSpinner;
-    @BindView(R.id.isFavourite) CheckBox isFavouriteCheckbox;
-    @BindView(R.id.clearButton) ImageButton clearButton;
-    @BindView(R.id.changeDirection) ImageButton changeDirection;
-
-    private Timer afterTextChangedTimer = new Timer();
+    private final static String EMPTY_STRING = "";
     private final long DELAY = 500; //milliseconds
 
+    @BindView(R.id.textToTranslate)
+    EditText textToTranslate;
+    @BindView(R.id.translatedText)
+    TextView translatedText;
+    @BindView(R.id.fromLanguage)
+    Spinner fromLanguageSpinner;
+    @BindView(R.id.toLanguage)
+    Spinner toLanguageSpinner;
+    @BindView(R.id.isFavorite)
+    CheckBox isFavoriteCheckbox;
+    @BindView(R.id.clearButton)
+    ImageButton clearButton;
+    @BindView(R.id.changeDirection)
+    ImageButton changeDirection;
+    @BindView(R.id.apiRequirementsTextView)
+    TextView apiRequirementsTextView;
+
+    private Timer afterTextChangedTimer = new Timer();
     private CompoundButton.OnCheckedChangeListener isFavouriteCheckedListener;
+    private LanguageAdapter languageAdapter;
 
     @Inject
     IMainPresenter iMainPresenter;
@@ -72,13 +83,14 @@ public class MainFragment extends Fragment implements IMainView {
 
         View view = inflater.inflate(R.layout.fragment_main, container, false);
         ButterKnife.bind(this, view);
+        setApiRequirementsText();
 
         isFavouriteCheckedListener = (buttonView, isChecked) -> {
             Translation translation = getTranslation();
             iMainPresenter.clickIsFavouriteCheckbox(translation);
         };
 
-        isFavouriteCheckbox.setOnCheckedChangeListener(isFavouriteCheckedListener);
+        isFavoriteCheckbox.setOnCheckedChangeListener(isFavouriteCheckedListener);
 
         textToTranslate.addTextChangedListener(new TextWatcher() {
             @Override
@@ -104,10 +116,10 @@ public class MainFragment extends Fragment implements IMainView {
 
                 if (s.toString().length() > 0) {
                     showClearButton();
-                    showIsFavouriteCheckbox();
+                    showIsFavoriteCheckbox();
                 } else {
                     hideClearButton();
-                    hideIsFavouriteCheckbox();
+                    hideIsFavoriteCheckbox();
                 }
             }
         });
@@ -133,18 +145,18 @@ public class MainFragment extends Fragment implements IMainView {
 
     @Override
     public void onDestroyView() {
-        iMainPresenter.unbindVIew();
+        iMainPresenter.unbindView();
         super.onDestroyView();
     }
 
 
     @Override
     public void setLanguages(List<Language> languages) {
-        ArrayAdapter<Language> adapter = new ArrayAdapter<>(getActivity(), android.R.layout.simple_spinner_item, languages);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        languageAdapter = new LanguageAdapter(getActivity(), android.R.layout.simple_spinner_item, languages);
+        languageAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
-        fromLanguageSpinner.setAdapter(adapter);
-        toLanguageSpinner.setAdapter(adapter);
+        fromLanguageSpinner.setAdapter(languageAdapter);
+        toLanguageSpinner.setAdapter(languageAdapter);
 
         AdapterView.OnItemSelectedListener listener = getChangeLanguageListener();
         toLanguageSpinner.setOnItemSelectedListener(listener);
@@ -158,20 +170,14 @@ public class MainFragment extends Fragment implements IMainView {
 
     @Override
     public void setFromLanguage(String fromLanguage) {
-        AdapterView.OnItemSelectedListener listener =  fromLanguageSpinner.getOnItemSelectedListener();
-        fromLanguageSpinner.setOnItemSelectedListener(null);
-
-        fromLanguageSpinner.setOnItemSelectedListener(listener);
-    }
-
-    private String getSelectedLanguage(Spinner spinner) {
-        return ((Language) spinner.getSelectedItem()).getLanguage();
+        selectLanguage(fromLanguage, fromLanguageSpinner);
     }
 
     @Override
     public void setToLanguage(String toLanguage) {
-
+        selectLanguage(toLanguage, toLanguageSpinner);
     }
+
 
     @Override
     public void setText(String text) {
@@ -182,13 +188,15 @@ public class MainFragment extends Fragment implements IMainView {
     @Override
     public void showError(String text) {
         final String errorTitle = "Ошибка";
+        final String okButtonTitle = "Ok";
 
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
-        alert.setTitle(errorTitle);
-        alert.setMessage(text);
-        alert.setPositiveButton("Ok", (dialog, whichButton) -> {
+        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity())
+        .setTitle(errorTitle)
+        .setMessage(text)
+        .setPositiveButton(okButtonTitle, (dialog, whichButton) -> {
             return;
         });
+
         alert.show();
     }
 
@@ -207,21 +215,41 @@ public class MainFragment extends Fragment implements IMainView {
     }
 
     @Override
-    public void showIsFavouriteCheckbox() {
-        isFavouriteCheckbox.setVisibility(View.VISIBLE);
+    public void showIsFavoriteCheckbox() {
+        isFavoriteCheckbox.setVisibility(View.VISIBLE);
     }
 
     @Override
-    public void hideIsFavouriteCheckbox() {
-        isFavouriteCheckbox.setVisibility(View.INVISIBLE);
-        setStateIsFavouriteCheckbox(false);
+    public void hideIsFavoriteCheckbox() {
+        isFavoriteCheckbox.setVisibility(View.INVISIBLE);
+        setStateIsFavoriteCheckbox(false);
     }
 
     @Override
-    public void setStateIsFavouriteCheckbox(boolean checked) {
-        isFavouriteCheckbox.setOnCheckedChangeListener(null);
-        isFavouriteCheckbox.setChecked(checked);
-        isFavouriteCheckbox.setOnCheckedChangeListener(isFavouriteCheckedListener);
+    public void setStateIsFavoriteCheckbox(boolean checked) {
+        isFavoriteCheckbox.setOnCheckedChangeListener(null);
+        isFavoriteCheckbox.setChecked(checked);
+        isFavoriteCheckbox.setOnCheckedChangeListener(isFavouriteCheckedListener);
+    }
+
+    @Override
+    public void loadData() {
+        //no impl
+    }
+
+    private void selectLanguage(String language, Spinner languageSpinner){
+        int position = languageAdapter.getPosition(language);
+        if(position < 0)
+            return;
+
+        AdapterView.OnItemSelectedListener listener = languageSpinner.getOnItemSelectedListener();
+        languageSpinner.setOnItemSelectedListener(null);
+        languageSpinner.setSelection(position);
+        languageSpinner.setOnItemSelectedListener(listener);
+    }
+
+    private String getSelectedLanguage(Spinner spinner) {
+        return ((Language) spinner.getSelectedItem()).getLanguage();
     }
 
     private void handleChangeDirectionClick(View view) {
@@ -240,9 +268,6 @@ public class MainFragment extends Fragment implements IMainView {
 
     private void callTranslate() {
         String text = textToTranslate.getText().toString();
-        if (text.equals(EMPTY_STRING))
-            return;
-
         String fromLanguage = getSelectedLanguage(fromLanguageSpinner);
         String toLanguage = getSelectedLanguage(toLanguageSpinner);
         iMainPresenter.listenText(text, fromLanguage, toLanguage);
@@ -265,11 +290,12 @@ public class MainFragment extends Fragment implements IMainView {
 
     private Translation getTranslation() {
         return new Translation(textToTranslate.getText().toString(), translatedText.getText().toString(),
-                getSelectedLanguage(fromLanguageSpinner), getSelectedLanguage(toLanguageSpinner), true, isFavouriteCheckbox.isChecked());
+                getSelectedLanguage(fromLanguageSpinner), getSelectedLanguage(toLanguageSpinner), true, isFavoriteCheckbox.isChecked());
     }
 
-    @Override
-    public void loadData() {
-
+    private void setApiRequirementsText(){
+        final String text="<a href='http://translate.yandex.ru/'>Переведено сервисом «Яндекс.Переводчик»</a>";
+        apiRequirementsTextView.setText(Html.fromHtml(text));
+        apiRequirementsTextView.setMovementMethod(LinkMovementMethod.getInstance());
     }
 }

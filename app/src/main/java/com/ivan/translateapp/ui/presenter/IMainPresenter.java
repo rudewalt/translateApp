@@ -7,11 +7,7 @@ import com.ivan.translateapp.ui.view.main.IMainView;
  * Created by Ivan on 27.03.2017.
  */
 
-public interface IMainPresenter {
-
-    void bindView(IMainView iMainView);
-
-    void unbindVIew();
+public interface IMainPresenter extends IPresenter<IMainView> {
 
     void loadLanguages();
 

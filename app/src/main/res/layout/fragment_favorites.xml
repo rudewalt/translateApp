@@ -2,10 +2,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.ivan.translateapp.ui.view.history.FavouritesFragment">
+    tools:context="com.ivan.translateapp.ui.view.favorites.FavoritesFragment">
 
     <ListView
-        android:id="@+id/favouritesListView"
+        android:id="@+id/favoritesListView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:scrollbars="vertical">

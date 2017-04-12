@@ -16,19 +16,19 @@ public class TranslationEntity {
     private String fromLanguage;
     private String toLanguage;
     private String createDate;
-    private String addToFavouriteDate;
+    private String addToFavoriteDate;
     private int isHistory;
-    private int isFavourite;
+    private int isFavorite;
 
-    public TranslationEntity(String text, String translated, String fromLanguage, String toLanguage, String createDate, String addToFavouriteDate, Integer isHistory, Integer isFavourite) {
+    public TranslationEntity(String text, String translated, String fromLanguage, String toLanguage, String createDate, String addToFavoriteDate, Integer isHistory, Integer isFavorite) {
         this.text = text;
         this.translated = translated;
         this.fromLanguage = fromLanguage;
         this.toLanguage = toLanguage;
         this.createDate = createDate;
-        this.addToFavouriteDate = addToFavouriteDate;
+        this.addToFavoriteDate = addToFavoriteDate;
         this.isHistory = isHistory;
-        this.isFavourite = isFavourite;
+        this.isFavorite = isFavorite;
     }
 
     public String getFromLanguage() {
@@ -53,13 +53,13 @@ public class TranslationEntity {
         return DateUtils.parse(createDate);
     }
 
-    public Date getAddToFavouriteDate() {
-        return DateUtils.parse(addToFavouriteDate);
+    public Date getAddToFavoriteDate() {
+        return DateUtils.parse(addToFavoriteDate);
     }
 
-    public Boolean isFavourite() {
+    public Boolean isFavorite() {
         return
-                isFavourite == 1;
+                isFavorite == 1;
     }
 
     public Boolean isHistory() {

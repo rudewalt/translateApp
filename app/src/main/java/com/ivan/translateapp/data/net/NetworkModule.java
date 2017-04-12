@@ -9,7 +9,6 @@ import com.ivan.translateapp.data.net.yandex.mapper.SupportedLanguagesResponseMa
 import com.ivan.translateapp.data.net.yandex.mapper.TranslationResponseMapper;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.concurrent.TimeUnit;
 
 import javax.inject.Singleton;

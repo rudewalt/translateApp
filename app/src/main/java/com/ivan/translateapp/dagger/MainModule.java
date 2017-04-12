@@ -2,14 +2,14 @@ package com.ivan.translateapp.dagger;
 
 import com.ivan.translateapp.data.repository.IHistoryRepository;
 import com.ivan.translateapp.data.repository.ITranslationRepository;
-import com.ivan.translateapp.domain.interactor.FavouritesInteractor;
+import com.ivan.translateapp.domain.interactor.FavoritesInteractor;
 import com.ivan.translateapp.domain.interactor.HistoryInteractor;
-import com.ivan.translateapp.domain.interactor.IFavouritesInteractor;
+import com.ivan.translateapp.domain.interactor.IFavoritesInteractor;
 import com.ivan.translateapp.domain.interactor.IHistoryInteractor;
 import com.ivan.translateapp.domain.interactor.IMainInteractor;
 import com.ivan.translateapp.domain.interactor.MainInteractor;
-import com.ivan.translateapp.ui.presenter.FavouritesPresenter;
-import com.ivan.translateapp.ui.presenter.IFavouritesPresenter;
+import com.ivan.translateapp.ui.presenter.FavoritesPresenter;
+import com.ivan.translateapp.ui.presenter.IFavoritesPresenter;
 import com.ivan.translateapp.ui.presenter.HistoryPresenter;
 import com.ivan.translateapp.ui.presenter.IHistoryPresenter;
 import com.ivan.translateapp.ui.presenter.IMainPresenter;
@@ -46,12 +46,12 @@ public class MainModule {
     }
 
     @Provides
-    public IFavouritesInteractor provideIFavouritesInteractor(IHistoryRepository  iHistoryRepository){
-        return new FavouritesInteractor(iHistoryRepository);
+    public IFavoritesInteractor provideIFavoritesInteractor(IHistoryRepository  iHistoryRepository){
+        return new FavoritesInteractor(iHistoryRepository);
     }
 
     @Provides
-    public IFavouritesPresenter provideIFavouritesPresenter(IFavouritesInteractor iFavouritesInteractor){
-        return new FavouritesPresenter(iFavouritesInteractor);
+    public IFavoritesPresenter provideIFavoritesPresenter(IFavoritesInteractor iFavoritesInteractor){
+        return new FavoritesPresenter(iFavoritesInteractor);
     }
 }
