@@ -9,11 +9,13 @@ import com.ivan.translateapp.domain.interactor.IHistoryInteractor;
 import com.ivan.translateapp.domain.interactor.IMainInteractor;
 import com.ivan.translateapp.domain.interactor.MainInteractor;
 import com.ivan.translateapp.ui.presenter.FavoritesPresenter;
-import com.ivan.translateapp.ui.presenter.IFavoritesPresenter;
+import com.ivan.translateapp.ui.presenter.IFavoritesPresenterPresenter;
 import com.ivan.translateapp.ui.presenter.HistoryPresenter;
-import com.ivan.translateapp.ui.presenter.IHistoryPresenter;
+import com.ivan.translateapp.ui.presenter.IHistoryPresenterPresenter;
 import com.ivan.translateapp.ui.presenter.IMainPresenter;
 import com.ivan.translateapp.ui.presenter.MainPresenter;
+
+import java.util.Locale;
 
 import dagger.Module;
 import dagger.Provides;
@@ -26,8 +28,8 @@ import dagger.Provides;
 public class MainModule {
 
     @Provides
-    public IMainInteractor provideIMainInteractor(ITranslationRepository iTranslationRepository, IHistoryRepository iHistoryRepository) {
-        return new MainInteractor(iTranslationRepository, iHistoryRepository);
+    public IMainInteractor provideIMainInteractor(ITranslationRepository iTranslationRepository, IHistoryRepository iHistoryRepository, Locale locale) {
+        return new MainInteractor(iTranslationRepository, iHistoryRepository, locale);
     }
 
     @Provides
@@ -41,7 +43,7 @@ public class MainModule {
     }
 
     @Provides
-    public IHistoryPresenter provideIHistoryPresenter(IHistoryInteractor iHistoryInteractor){
+    public IHistoryPresenterPresenter provideIHistoryPresenter(IHistoryInteractor iHistoryInteractor){
         return new HistoryPresenter(iHistoryInteractor);
     }
 
@@ -51,7 +53,7 @@ public class MainModule {
     }
 
     @Provides
-    public IFavoritesPresenter provideIFavoritesPresenter(IFavoritesInteractor iFavoritesInteractor){
+    public IFavoritesPresenterPresenter provideIFavoritesPresenter(IFavoritesInteractor iFavoritesInteractor){
         return new FavoritesPresenter(iFavoritesInteractor);
     }
 }

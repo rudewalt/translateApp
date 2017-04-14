@@ -11,4 +11,6 @@ import java.util.List;
 
 public interface IHistoryView extends IView {
     void showTranslations(List<Translation> translations);
+
+    void openMainView(Translation translation);
 }

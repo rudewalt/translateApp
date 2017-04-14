@@ -16,7 +16,7 @@ import io.reactivex.schedulers.Schedulers;
  */
 
 //TODO избавиться от копипасты
-public class FavoritesPresenter implements IFavoritesPresenter {
+public class FavoritesPresenter implements IFavoritesPresenterPresenter {
 
     private IFavoritesView iFavoritesView;
     private IFavoritesInteractor iFavoritesInteractor;
@@ -51,6 +51,11 @@ public class FavoritesPresenter implements IFavoritesPresenter {
     @Override
     public void isFavoriteCheckboxStateChanged(Translation translation) {
         iFavoritesInteractor.save(translation);
+    }
+
+    @Override
+    public void clickOnTranslation(Translation translation) {
+        iFavoritesView.openMainView(translation);
     }
 
     private void handleSuccessLoadFavorites(List<Translation> translations){

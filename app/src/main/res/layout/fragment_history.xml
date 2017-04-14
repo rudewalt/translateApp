@@ -1,15 +1,30 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:tag="fragment_history"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.view.history.HistoryFragment">
 
-    <ListView
-        android:id="@+id/historyListView"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/historyAppBar"
+        android:background="@color/colorPrimary"
+        android:layout_height="@dimen/appbar_height"
+        android:layout_width="match_parent">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/title_history"
+            android:textColor="@color/colorHeader"
+            android:textSize="@dimen/text_size_appbar" />
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/historyRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/historyAppBar"
         android:scrollbars="vertical">
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
-</FrameLayout>
+</RelativeLayout>

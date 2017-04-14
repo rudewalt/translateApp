@@ -1,14 +1,28 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.ivan.translateapp.ui.view.favorites.FavoritesFragment">
 
-    <ListView
-        android:id="@+id/favoritesListView"
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/favoriteAppBar"
+        android:background="@color/colorPrimary"
+        android:layout_height="@dimen/appbar_height"
+        android:layout_width="match_parent">
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:text="@string/title_favorites"
+            android:textSize="@dimen/text_size_appbar" />
+    </android.support.v7.widget.Toolbar>
+
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/favoritesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/favoriteAppBar"
         android:scrollbars="vertical">
-    </ListView>
+    </android.support.v7.widget.RecyclerView>
 
-</FrameLayout>
+</RelativeLayout>

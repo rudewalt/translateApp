@@ -17,7 +17,7 @@ import io.reactivex.schedulers.Schedulers;
  * Created by Ivan on 27.03.2017.
  */
 
-public class HistoryPresenter implements IHistoryPresenter {
+public class HistoryPresenter implements IHistoryPresenterPresenter {
 
     private IHistoryInteractor iHistoryInteractor;
     private IHistoryView iHistoryView;
@@ -59,6 +59,11 @@ public class HistoryPresenter implements IHistoryPresenter {
     @Override
     public void isFavoriteCheckboxStateChanged(Translation translation) {
         iHistoryInteractor.saveChanges(translation);
+    }
+
+    @Override
+    public void clickOnTranslation(@NonNull Translation translation) {
+        iHistoryView.openMainView(translation);
     }
 
     @Override

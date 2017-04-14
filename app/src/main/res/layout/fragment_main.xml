@@ -1,119 +1,127 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:tag="fragment_main"
     tools:context=".ui.view.main.MainFragment">
 
-    <RelativeLayout
-        android:id="@+id/content"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:id="@+id/selectLanguageContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Spinner
-                android:id="@+id/fromLanguage"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="0.5"
-                android:dropDownWidth="match_parent" />
-
-            <ImageButton
-                android:id="@+id/changeDirection"
-                android:layout_width="10dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="0.1"
-                android:background="@mipmap/ic_launcher_round"
-                android:elevation="0dp" />
-
-            <Spinner
-                android:id="@+id/toLanguage"
-                android:layout_width="0dp"
-                android:layout_height="50dp"
-                android:layout_weight="0.5"
-                android:dropDownWidth="match_parent" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/textToTranslateContainer"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/selectLanguageContainer"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:background="@drawable/translate_container"
-            android:clickable="true"
-            android:focusable="true"
-            android:focusableInTouchMode="true"
-            android:orientation="vertical">
-
-            <EditText
-                android:id="@+id/textToTranslate"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_columnWeight="0"
-                android:background="@drawable/edit_text_style"
-                android:gravity="top"
-                android:hint="Введите текст для перевода"
-                android:lines="4"
-                android:padding="10dp"
-                android:scrollbars="vertical"
-                android:selectAllOnFocus="false"
-                android:textSize="@dimen/text_size_medium"
-                tools:text="@string/sample_text" />
-
-            <ImageButton
-                android:id="@+id/clearButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
-                android:background="@android:drawable/ic_menu_close_clear_cancel"
-                android:visibility="invisible"
-                tools:visibility="visible" />
-
-        </LinearLayout>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/mainAppBar"
+        android:background="@color/colorPrimary"
+        android:layout_height="@dimen/appbar_height"
+        android:layout_width="match_parent">
 
         <TextView
-            android:id="@+id/apiRequirementsTextView"
-            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:layout_marginLeft="15dp"
-            android:layout_below="@id/textToTranslateContainer"
-            android:linksClickable="true"/>
+            android:layout_width="match_parent"
+            android:text="@string/title_main"
+            android:textSize="@dimen/text_size_appbar" />
+    </android.support.v7.widget.Toolbar>
 
-        <LinearLayout
-            android:id="@+id/translateResultContainer"
+    <LinearLayout
+        android:id="@+id/selectLanguageContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mainAppBar"
+        android:orientation="horizontal">
+
+        <Spinner
+            android:id="@+id/fromLanguage"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="0.5"
+            android:dropDownWidth="match_parent" />
+
+        <ImageButton
+            android:id="@+id/changeDirection"
+            android:layout_width="10dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.1"
+            android:background="@mipmap/ic_launcher_round"
+            android:contentDescription="@string/change_direction_content_description"
+            android:elevation="0dp" />
+
+        <Spinner
+            android:id="@+id/toLanguage"
+            android:layout_width="0dp"
+            android:layout_height="50dp"
+            android:layout_weight="0.5"
+            android:dropDownWidth="match_parent" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/textToTranslateContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selectLanguageContainer"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:background="@drawable/translate_container"
+        android:clickable="true"
+        android:focusable="true"
+        android:focusableInTouchMode="true"
+        android:orientation="vertical">
+
+        <EditText
+            android:id="@+id/textToTranslate"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@id/apiRequirementsTextView"
-            android:layout_marginLeft="15dp"
-            android:layout_marginRight="15dp"
-            android:orientation="horizontal">
+            android:layout_columnWeight="0"
+            android:background="@drawable/edit_text_style"
+            android:gravity="top"
+            android:hint="@string/hint_text_to_translate"
+            android:lines="4"
+            android:padding="10dp"
+            android:scrollbars="vertical"
+            android:selectAllOnFocus="false"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="@string/sample_text" />
 
-            <TextView
-                android:id="@+id/translatedText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
-                android:padding="@dimen/text_container_padding"
-                android:scrollbars="vertical"
-                android:textSize="18dp"
-                tools:text="@string/sample_text_2" />
+        <ImageButton
+            android:id="@+id/clearButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="2dp"
+            android:background="@android:drawable/ic_menu_close_clear_cancel"
+            android:contentDescription="@string/clear_content_description"
+            android:visibility="invisible"
+            tools:visibility="visible" />
 
-            <CheckBox
-                android:id="@+id/isFavorite"
-                android:layout_width="40dp"
-                android:layout_height="40dp"
-                android:button="@drawable/star_checkbox"
-                android:visibility="invisible" />
-        </LinearLayout>
+    </LinearLayout>
 
+    <TextView
+        android:id="@+id/apiRequirementsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/textToTranslateContainer"
+        android:layout_marginLeft="15dp"
+        android:layout_marginTop="10dp"
+        android:linksClickable="true" />
 
-    </RelativeLayout>
-</FrameLayout>
+    <LinearLayout
+        android:id="@+id/translateResultContainer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/apiRequirementsTextView"
+        android:layout_marginLeft="15dp"
+        android:layout_marginRight="15dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/translatedText"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:padding="@dimen/text_container_padding"
+            android:scrollbars="vertical"
+            android:textSize="@dimen/text_size_medium"
+            tools:text="@string/sample_text_2" />
+
+        <CheckBox
+            android:id="@+id/isFavorite"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:button="@drawable/star_checkbox"
+            android:visibility="invisible" />
+    </LinearLayout>
+</RelativeLayout>

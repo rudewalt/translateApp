@@ -24,7 +24,7 @@ public class DbHelper extends SQLiteOpenHelper {
     private static final String TAG = DbHelper.class.toString();
 
     private static final String EMPTY_STRING = "";
-    private static final int DB_VERSION = 5;
+    private static final int DB_VERSION = 6;
     private static final String DB_NAME = "translateApp_db";
 
     public DbHelper(@NonNull Context context) {
@@ -68,7 +68,7 @@ public class DbHelper extends SQLiteOpenHelper {
     public void delete(Translation translation) {
         SQLiteDatabase dataBase = getWritableDatabase();
 
-        if (translation.isFavourite()) {
+        if (translation.isFavorite()) {
             ContentValues contentValues = getTranslationContentValues(translation);
             long id = dataBase.update(TranslationTable.TABLE, contentValues, "text=?", new String[]{translation.getText()});
         } else {
@@ -175,8 +175,8 @@ public class DbHelper extends SQLiteOpenHelper {
         contentValues.put(TranslationTable.COLUMN_TRANSLATED, translation.getTranslated());
         contentValues.put(TranslationTable.COLUMN_CREATE_DATE, DateUtils.getCurrentDateTime());
         contentValues.put(TranslationTable.COLUMN_IS_HISTORY, translation.isHistory() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_IS_FAVORITE, translation.isFavourite() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_ADD_TO_FAVORITE_DATE, translation.isFavourite() ? DateUtils.getCurrentDateTime() : null);
+        contentValues.put(TranslationTable.COLUMN_IS_FAVORITE, translation.isFavorite() ? 1 : 0);
+        contentValues.put(TranslationTable.COLUMN_ADD_TO_FAVORITE_DATE, translation.isFavorite() ? DateUtils.getCurrentDateTime() : null);
 
         return contentValues;
     }
@@ -184,8 +184,8 @@ public class DbHelper extends SQLiteOpenHelper {
     private ContentValues getContentValuesForUpdate(Translation translation) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(TranslationTable.COLUMN_IS_HISTORY, translation.isHistory() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_IS_FAVORITE, translation.isFavourite() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_ADD_TO_FAVORITE_DATE, translation.isFavourite() ? DateUtils.getCurrentDateTime() : null);
+        contentValues.put(TranslationTable.COLUMN_IS_FAVORITE, translation.isFavorite() ? 1 : 0);
+        contentValues.put(TranslationTable.COLUMN_ADD_TO_FAVORITE_DATE, translation.isFavorite() ? DateUtils.getCurrentDateTime() : null);
         return contentValues;
     }
 

@@ -11,4 +11,6 @@ import java.util.List;
 
 public interface IFavoritesView extends IView {
     void showFavorites(List<Translation> translations);
+
+    void openMainView(Translation translation);
 }

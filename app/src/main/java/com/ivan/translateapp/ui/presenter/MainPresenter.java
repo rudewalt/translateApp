@@ -95,7 +95,7 @@ public class MainPresenter implements IMainPresenter {
 
     private void handleSuccessTranslate(Translation translation) {
         iMainView.setTranslatedText(translation.getTranslated());
-        iMainView.setStateIsFavoriteCheckbox(translation.isFavourite());
+        iMainView.setStateIsFavoriteCheckbox(translation.isFavorite());
     }
 
     private void handleErrorTranslate(Throwable throwable) {

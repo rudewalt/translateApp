@@ -8,14 +8,11 @@ import com.ivan.translateapp.domain.Translation;
 
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
+import java.util.Locale;
 
 
 import io.reactivex.Observable;
-import io.reactivex.Single;
-import io.reactivex.annotations.NonNull;
-import io.reactivex.functions.BiFunction;
 
 /**
  * Created by Ivan on 28.03.2017.
@@ -27,15 +24,14 @@ public class MainInteractor implements IMainInteractor {
     private static final String FROM_LANGUAGE_KEY = "fromLanguage";
     private static final String TO_LANGUAGE_KEY = "toLanguage";
 
-    private static final String CURRENT_UI = "ru";
-
     private ITranslationRepository iTranslationRepository;
-
     private IHistoryRepository iHistoryRepository;
+    private Locale locale;
 
-    public MainInteractor(ITranslationRepository iTranslationRepository, IHistoryRepository iHistoryRepository) {
+    public MainInteractor(ITranslationRepository iTranslationRepository, IHistoryRepository iHistoryRepository, Locale locale) {
         this.iTranslationRepository = iTranslationRepository;
         this.iHistoryRepository = iHistoryRepository;
+        this.locale = locale;
     }
 
     @Override
@@ -43,7 +39,7 @@ public class MainInteractor implements IMainInteractor {
 
         return
                 iTranslationRepository
-                        .getLanguages(CURRENT_UI)
+                        .getLanguages(locale.getLanguage())
                         .map(this::sortLanguages);
     }
 
@@ -56,7 +52,7 @@ public class MainInteractor implements IMainInteractor {
                         iTranslationRepository.getTranslation(textToTranslate, fromLanguage, toLanguage),
                         iHistoryRepository.isFavourite(textToTranslate, fromLanguage, toLanguage),
                         (translation, isFavourite) -> {
-                            translation.setFavourite(isFavourite);
+                            translation.setFavorite(isFavourite);
                             return translation;
                         }
                 );

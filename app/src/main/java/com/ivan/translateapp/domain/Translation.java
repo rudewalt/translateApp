@@ -10,19 +10,19 @@ public class Translation {
     private String translated;
     private String fromLanguage;
     private String toLanguage;
-    private boolean isFavourite;
+    private boolean isFavorite;
     private boolean isHistory;
 
     public Translation() {
     }
 
-    public Translation(String text, String translated, String fromLanguage, String toLanguage, boolean isHistory, boolean isFavourite) {
+    public Translation(String text, String translated, String fromLanguage, String toLanguage, boolean isHistory, boolean isFavorite) {
         this.text = text;
         this.translated = translated;
         this.fromLanguage = fromLanguage;
         this.toLanguage = toLanguage;
         this.isHistory = isHistory;
-        this.isFavourite = isFavourite;
+        this.isFavorite = isFavorite;
     }
 
     public String getFromLanguage() {
@@ -60,15 +60,15 @@ public class Translation {
     }
 
     public String getDirection() {
-        return String.format("%1$s-%2$s", fromLanguage, toLanguage);
+        return String.format("%1$s-%2$s", fromLanguage, toLanguage).toUpperCase();
     }
 
-    public boolean isFavourite() {
-        return isFavourite;
+    public boolean isFavorite() {
+        return isFavorite;
     }
 
-    public void setFavourite(boolean favourite) {
-        isFavourite = favourite;
+    public void setFavorite(boolean favorite) {
+        isFavorite = favorite;
     }
 
     public boolean isHistory() {

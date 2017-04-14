@@ -8,6 +8,8 @@ import com.ivan.translateapp.dagger.ApplicationModule;
 import com.ivan.translateapp.dagger.DaggerIApplicationComponent;
 import com.ivan.translateapp.dagger.IApplicationComponent;
 
+import java.util.Locale;
+
 /**
  * Created by Ivan on 27.03.2017.
  */
@@ -26,7 +28,7 @@ public class TranslateApplication extends Application {
 
         iApplicationComponent = DaggerIApplicationComponent
                 .builder()
-                .applicationModule(new ApplicationModule(this))
+                .applicationModule(new ApplicationModule(this, Locale.getDefault()))
                 .build();
     }
 

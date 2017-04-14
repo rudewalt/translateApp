@@ -1,49 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="horizontal">
-    <CheckBox
-        android:id="@+id/template_addToFavorites"
-        android:button="@drawable/star_checkbox"
-        android:layout_marginLeft="10dp"
-        android:layout_gravity="center"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+    android:orientation="vertical">
 
     <LinearLayout
-        android:layout_width="0dp"
-        android:layout_height="70dp"
-        android:paddingLeft="10dp"
-        android:paddingRight="10dp"
-        android:orientation="vertical"
-        android:layout_weight="5">
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <CheckBox
+            android:id="@+id/template_addToFavorites"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="10dp"
+            android:button="@drawable/star_checkbox" />
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="70dp"
+            android:layout_weight="5"
+            android:orientation="vertical"
+            android:paddingEnd="10dp"
+            android:paddingStart="10dp">
+
+            <TextView
+                android:id="@+id/template_textView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center|start"
+                android:maxLines="1"
+                android:textSize="@dimen/text_size_medium"
+                tools:text="Привет мир" />
+
+            <TextView
+                android:id="@+id/template_translatedTextView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:ellipsize="end"
+                android:gravity="center|start"
+                android:maxLines="1"
+                android:textColor="@color/colorNormal"
+                android:textSize="@dimen/text_size_medium"
+                tools:text="Hello world" />
+        </LinearLayout>
+
         <TextView
-            android:id="@+id/template_textView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center|left"
-            android:lines="1"
-            android:textSize="@dimen/text_size_medium"
-            android:layout_weight="1"
-            tools:text="Привет мир"/>
-        <TextView
-            android:id="@+id/template_translatedTextView"
-            android:layout_width="match_parent"
+            android:id="@+id/template_directionView"
+            android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
-            android:gravity="center|left"
-            android:lines="1"
-            android:textColor="@color/colorNormal"
-            android:textSize="@dimen/text_size_medium"
-            tools:text="Hello world"/>
+            android:gravity="center"
+            tools:text="EN-RU" />
     </LinearLayout>
-    <TextView
-        android:id="@+id/template_directionView"
-        android:layout_width="0dp"
-        android:layout_height="match_parent"
-        android:layout_weight="1"
-        android:gravity="center"
-        tools:text="EN-RU"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="@drawable/divider"/>
 </LinearLayout>

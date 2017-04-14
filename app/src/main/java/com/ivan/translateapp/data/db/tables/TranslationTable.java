@@ -25,7 +25,7 @@ public class TranslationTable {
     @NonNull
     public static final String COLUMN_IS_FAVORITE = "is_favorite";
     @NonNull
-    public static final String COLUMN_ADD_TO_FAVORITE_DATE = "add_to_favourite_date";
+    public static final String COLUMN_ADD_TO_FAVORITE_DATE = "add_to_favorite_date";
     @NonNull
     public static final String COLUMN_IS_HISTORY = "is_history";
 

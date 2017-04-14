@@ -63,6 +63,8 @@ public class MainFragment extends Fragment implements IMainView {
     private CompoundButton.OnCheckedChangeListener isFavouriteCheckedListener;
     private LanguageAdapter languageAdapter;
 
+    private TextWatcher textToTranslateWatcher;
+
     @Inject
     IMainPresenter iMainPresenter;
 
@@ -85,14 +87,34 @@ public class MainFragment extends Fragment implements IMainView {
         ButterKnife.bind(this, view);
         setApiRequirementsText();
 
-        isFavouriteCheckedListener = (buttonView, isChecked) -> {
-            Translation translation = getTranslation();
-            iMainPresenter.clickIsFavouriteCheckbox(translation);
-        };
-
+        isFavouriteCheckedListener =createFavoriteCheckedListener();
         isFavoriteCheckbox.setOnCheckedChangeListener(isFavouriteCheckedListener);
 
-        textToTranslate.addTextChangedListener(new TextWatcher() {
+        textToTranslateWatcher = createTextToTranslateWatcher();
+        textToTranslate.addTextChangedListener(textToTranslateWatcher);
+
+        textToTranslate.setOnFocusChangeListener((v, hasFocus) -> {
+            if (!hasFocus) {
+                iMainPresenter.textToTranslateLostFocus(getTranslation());
+            }
+        });
+
+        changeDirection.setOnClickListener(this::handleChangeDirectionClick);
+        clearButton.setOnClickListener(this::handleClearButtonClick);
+
+        //TODO нужно что-то придумать с языками, в таком виде не годится
+        //TODO сделать првоерку на наличие сети
+        //TODO сделать обработку и вывод понятных ошибок пользователю
+        //TODO написать тесты
+        iMainPresenter.bindView(this);
+        iMainPresenter.loadLanguages();
+
+        return view;
+    }
+
+    private TextWatcher createTextToTranslateWatcher(){
+        return
+        new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
@@ -122,25 +144,14 @@ public class MainFragment extends Fragment implements IMainView {
                     hideIsFavoriteCheckbox();
                 }
             }
-        });
+        };
+    }
 
-        textToTranslate.setOnFocusChangeListener((v, hasFocus) -> {
-            if (!hasFocus) {
-                iMainPresenter.textToTranslateLostFocus(getTranslation());
-            }
-        });
-
-        changeDirection.setOnClickListener(this::handleChangeDirectionClick);
-        clearButton.setOnClickListener(this::handleClearButtonClick);
-
-        //TODO нужно что-то придумать с языками, в таком виде не годится
-        //TODO сделать првоерку на наличие сети
-        //TODO сделать обработку и вывод понятных ошибок пользователю
-        //TODO написать тесты
-        iMainPresenter.bindView(this);
-        iMainPresenter.loadLanguages();
-
-        return view;
+    private CompoundButton.OnCheckedChangeListener createFavoriteCheckedListener(){
+        return (buttonView, isChecked) -> {
+            Translation translation = getTranslation();
+            iMainPresenter.clickIsFavouriteCheckbox(translation);
+        };
     }
 
     @Override
@@ -181,7 +192,9 @@ public class MainFragment extends Fragment implements IMainView {
 
     @Override
     public void setText(String text) {
+        textToTranslate.removeTextChangedListener(textToTranslateWatcher);
         textToTranslate.setText(text);
+        textToTranslate.addTextChangedListener(textToTranslateWatcher);
     }
 
 
@@ -237,6 +250,15 @@ public class MainFragment extends Fragment implements IMainView {
         //no impl
     }
 
+    public void setTranslation(Translation translation){
+        setText(translation.getText());
+        setTranslatedText(translation.getTranslated());
+        setFromLanguage(translation.getFromLanguage());
+        setToLanguage(translation.getToLanguage());
+        setStateIsFavoriteCheckbox(translation.isFavorite());
+        showIsFavoriteCheckbox();
+    }
+
     private void selectLanguage(String language, Spinner languageSpinner){
         int position = languageAdapter.getPosition(language);
         if(position < 0)
@@ -289,8 +311,13 @@ public class MainFragment extends Fragment implements IMainView {
     }
 
     private Translation getTranslation() {
-        return new Translation(textToTranslate.getText().toString(), translatedText.getText().toString(),
-                getSelectedLanguage(fromLanguageSpinner), getSelectedLanguage(toLanguageSpinner), true, isFavoriteCheckbox.isChecked());
+        return new Translation(
+                textToTranslate.getText().toString(),
+                translatedText.getText().toString(),
+                getSelectedLanguage(fromLanguageSpinner),
+                getSelectedLanguage(toLanguageSpinner),
+                true,
+                isFavoriteCheckbox.isChecked());
     }
 
     private void setApiRequirementsText(){

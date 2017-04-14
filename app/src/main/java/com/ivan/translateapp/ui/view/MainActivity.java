@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
 import com.ivan.translateapp.R;
+import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.ui.view.favorites.FavoritesFragment;
 import com.ivan.translateapp.ui.view.history.HistoryFragment;
 import com.ivan.translateapp.ui.view.main.MainFragment;
@@ -30,10 +31,14 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.selector_ic_star
     };
 
+    private TabsPagerAdapter tabsPagerAdapter;
+
     @BindView(R.id.tabs)
     TabLayout tabLayout;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
+
+
 
 
     @Override
@@ -43,9 +48,9 @@ public class MainActivity extends AppCompatActivity {
         ButterKnife.bind(this);
 
         FragmentManager fragmentManager = getSupportFragmentManager();
-        TabsPagerAdapter adapter = new TabsPagerAdapter(fragmentManager);
+        tabsPagerAdapter = new TabsPagerAdapter(fragmentManager);
 
-        viewPager.setAdapter(adapter);
+        viewPager.setAdapter(tabsPagerAdapter);
         viewPager.setOffscreenPageLimit(PAGE_COUNT);
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
@@ -59,7 +64,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onPageSelected(int position) {
                 hideSoftInput();
-                IView view = (IView) adapter.getFragment(position);
+                IView view = (IView) tabsPagerAdapter.getFragment(position);
                 if (view != null) {
                     view.loadData();
                 }
@@ -83,12 +88,23 @@ public class MainActivity extends AppCompatActivity {
         imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
     }
 
-    public static class TabsPagerAdapter extends FragmentPagerAdapter {
+    public void openMainFragment(Translation translation){
+        final int mainFragmentPosition = 0;
+
+        MainFragment fragment = (MainFragment) tabsPagerAdapter.getFragment(mainFragmentPosition);
+        if(fragment==null)
+            return;
+
+        fragment.setTranslation(translation);
+        viewPager.setCurrentItem(mainFragmentPosition);
+    }
+
+    private static class TabsPagerAdapter extends FragmentPagerAdapter {
         private Map<Integer, String> fragmentTags;
         private FragmentManager fragmentManager;
 
 
-        public TabsPagerAdapter(FragmentManager fragmentManager) {
+        TabsPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
             this.fragmentManager = fragmentManager;
             this.fragmentTags = new HashMap<>(PAGE_COUNT);
@@ -137,6 +153,4 @@ public class MainActivity extends AppCompatActivity {
             return fragmentManager.findFragmentByTag(tag);
         }
     }
-
-
 }

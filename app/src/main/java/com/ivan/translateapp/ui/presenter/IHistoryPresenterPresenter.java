@@ -9,7 +9,7 @@ import com.ivan.translateapp.ui.view.history.IHistoryView;
  * Created by Ivan on 27.03.2017.
  */
 
-public interface IHistoryPresenter extends IPresenter<IHistoryView>, ISupportIsFavoriteCheckbox {
+public interface IHistoryPresenterPresenter extends IPresenter<IHistoryView>, ISupportFavoritesPresenter {
 
     void loadHistory();
 
