@@ -1,7 +1,6 @@
 package com.ivan.translateapp.ui.view.favorites;
 
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,7 +8,6 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ListView;
 
 import com.ivan.translateapp.R;
 import com.ivan.translateapp.TranslateApplication;
@@ -55,7 +53,7 @@ public class FavoritesFragment extends Fragment implements IFavoritesView {
         favoritesRecyclerView.setLayoutManager(layoutManager);
 
         iFavoritesPresenter.bindView(this);
-        loadData();
+        onShowView();
         return view;
     }
 
@@ -68,7 +66,7 @@ public class FavoritesFragment extends Fragment implements IFavoritesView {
     @Override
     public void showFavorites(List<Translation> translations) {
         TranslationAdapter adapter = new TranslationAdapter(
-                translations, iFavoritesPresenter, R.layout.history_list_item);
+                translations, iFavoritesPresenter, R.layout.translation_list_item);
         favoritesRecyclerView.setAdapter(adapter);
     }
 
@@ -87,7 +85,12 @@ public class FavoritesFragment extends Fragment implements IFavoritesView {
     }
 
     @Override
-    public void loadData() {
+    public void onShowView() {
             iFavoritesPresenter.loadFavorites();
+    }
+
+    @Override
+    public void onHideView() {
+        //no implementation
     }
 }

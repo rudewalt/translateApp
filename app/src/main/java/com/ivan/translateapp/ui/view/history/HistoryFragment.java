@@ -54,7 +54,7 @@ public class HistoryFragment extends Fragment implements IHistoryView {
         historyRecyclerView.setLayoutManager(layoutManager);
 
         iHistoryPresenter.bindView(this);
-        loadData();
+        onShowView();
         return view;
     }
 
@@ -68,7 +68,7 @@ public class HistoryFragment extends Fragment implements IHistoryView {
     @Override
     public void showTranslations(List<Translation> translations) {
         TranslationAdapter adapter = new TranslationAdapter(
-                translations, iHistoryPresenter, R.layout.history_list_item);
+                translations, iHistoryPresenter, R.layout.translation_list_item);
         historyRecyclerView.setAdapter(adapter);
     }
 
@@ -87,7 +87,12 @@ public class HistoryFragment extends Fragment implements IHistoryView {
     }
 
     @Override
-    public void loadData() {
+    public void onShowView() {
             iHistoryPresenter.loadHistory();
+    }
+
+    @Override
+    public void onHideView() {
+        //no implementation
     }
 }

@@ -4,7 +4,7 @@ import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.ui.view.main.IMainView;
 
 /**
- * Created by Ivan on 27.03.2017.
+ * Interface representing a Presenter in a model view presenter (MVP) pattern.
  */
 
 public interface IMainPresenter extends IPresenter<IMainView> {
@@ -16,4 +16,8 @@ public interface IMainPresenter extends IPresenter<IMainView> {
     void clickIsFavouriteCheckbox(Translation translation);
 
     void textToTranslateLostFocus(Translation translation);
+
+    void openFromAnotherFragment(Translation translation);
+
+    void viewHidden(Translation translation);
 }

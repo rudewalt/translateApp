@@ -60,7 +60,7 @@ public class Translation {
     }
 
     public String getDirection() {
-        return String.format("%1$s-%2$s", fromLanguage, toLanguage).toUpperCase();
+        return String.format("%1$s - %2$s", fromLanguage, toLanguage).toUpperCase();
     }
 
     public boolean isFavorite() {

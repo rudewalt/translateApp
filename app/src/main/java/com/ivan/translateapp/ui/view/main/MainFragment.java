@@ -1,7 +1,9 @@
 package com.ivan.translateapp.ui.view.main;
 
+import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
@@ -10,6 +12,7 @@ import android.text.method.LinkMovementMethod;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -38,8 +41,8 @@ import butterknife.ButterKnife;
 
 public class MainFragment extends Fragment implements IMainView {
 
-    private final String TAG = MainFragment.class.toString();
     private final static String EMPTY_STRING = "";
+    private final String TAG = MainFragment.class.toString();
     private final long DELAY = 500; //milliseconds
 
     @BindView(R.id.textToTranslate)
@@ -58,15 +61,13 @@ public class MainFragment extends Fragment implements IMainView {
     ImageButton changeDirection;
     @BindView(R.id.apiRequirementsTextView)
     TextView apiRequirementsTextView;
+    @Inject
+    IMainPresenter iMainPresenter;
 
     private Timer afterTextChangedTimer = new Timer();
     private CompoundButton.OnCheckedChangeListener isFavouriteCheckedListener;
     private LanguageAdapter languageAdapter;
-
     private TextWatcher textToTranslateWatcher;
-
-    @Inject
-    IMainPresenter iMainPresenter;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -87,7 +88,7 @@ public class MainFragment extends Fragment implements IMainView {
         ButterKnife.bind(this, view);
         setApiRequirementsText();
 
-        isFavouriteCheckedListener =createFavoriteCheckedListener();
+        isFavouriteCheckedListener = createFavoriteCheckedListener();
         isFavoriteCheckbox.setOnCheckedChangeListener(isFavouriteCheckedListener);
 
         textToTranslateWatcher = createTextToTranslateWatcher();
@@ -102,7 +103,6 @@ public class MainFragment extends Fragment implements IMainView {
         changeDirection.setOnClickListener(this::handleChangeDirectionClick);
         clearButton.setOnClickListener(this::handleClearButtonClick);
 
-        //TODO нужно что-то придумать с языками, в таком виде не годится
         //TODO сделать првоерку на наличие сети
         //TODO сделать обработку и вывод понятных ошибок пользователю
         //TODO написать тесты
@@ -112,42 +112,42 @@ public class MainFragment extends Fragment implements IMainView {
         return view;
     }
 
-    private TextWatcher createTextToTranslateWatcher(){
+    private TextWatcher createTextToTranslateWatcher() {
         return
-        new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                afterTextChangedTimer.cancel();
-                afterTextChangedTimer = new Timer();
-                afterTextChangedTimer.schedule(new TimerTask() {
+                new TextWatcher() {
                     @Override
-                    public void run() {
-                        callTranslate();
-                    }
-                }, DELAY);
+                    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
 
-                if (s.toString().length() > 0) {
-                    showClearButton();
-                    showIsFavoriteCheckbox();
-                } else {
-                    hideClearButton();
-                    hideIsFavoriteCheckbox();
-                }
-            }
-        };
+                    }
+
+                    @Override
+                    public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+                    }
+
+                    @Override
+                    public void afterTextChanged(Editable s) {
+                        afterTextChangedTimer.cancel();
+                        afterTextChangedTimer = new Timer();
+                        afterTextChangedTimer.schedule(new TimerTask() {
+                            @Override
+                            public void run() {
+                                callTranslate();
+                            }
+                        }, DELAY);
+
+                        if (s.toString().length() > 0) {
+                            showClearButton();
+                            showIsFavoriteCheckbox();
+                        } else {
+                            hideClearButton();
+                            hideIsFavoriteCheckbox();
+                        }
+                    }
+                };
     }
 
-    private CompoundButton.OnCheckedChangeListener createFavoriteCheckedListener(){
+    private CompoundButton.OnCheckedChangeListener createFavoriteCheckedListener() {
         return (buttonView, isChecked) -> {
             Translation translation = getTranslation();
             iMainPresenter.clickIsFavouriteCheckbox(translation);
@@ -169,9 +169,8 @@ public class MainFragment extends Fragment implements IMainView {
         fromLanguageSpinner.setAdapter(languageAdapter);
         toLanguageSpinner.setAdapter(languageAdapter);
 
-        AdapterView.OnItemSelectedListener listener = getChangeLanguageListener();
-        toLanguageSpinner.setOnItemSelectedListener(listener);
-        fromLanguageSpinner.setOnItemSelectedListener(listener);
+        toLanguageSpinner.setOnItemSelectedListener(getChangeLanguageListener());
+        fromLanguageSpinner.setOnItemSelectedListener(getChangeLanguageListener());
     }
 
     @Override
@@ -200,31 +199,24 @@ public class MainFragment extends Fragment implements IMainView {
 
     @Override
     public void showError(String text) {
-        final String errorTitle = "Ошибка";
-        final String okButtonTitle = "Ok";
-
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity())
-        .setTitle(errorTitle)
-        .setMessage(text)
-        .setPositiveButton(okButtonTitle, (dialog, whichButton) -> {
-            return;
-        });
+                .setTitle(getString(R.string.title_error))
+                .setMessage(text)
+                .setPositiveButton(getString(R.string.title_button_ok), (dialog, whichButton) -> {
+                    return;
+                });
 
         alert.show();
     }
 
     @Override
     public void showClearButton() {
-        getActivity().runOnUiThread(() -> {
-            clearButton.setVisibility(View.VISIBLE);
-        });
+        getActivity().runOnUiThread(() -> clearButton.setVisibility(View.VISIBLE));
     }
 
     @Override
     public void hideClearButton() {
-        getActivity().runOnUiThread(() -> {
-            clearButton.setVisibility(View.INVISIBLE);
-        });
+        getActivity().runOnUiThread(() -> clearButton.setVisibility(View.INVISIBLE));
     }
 
     @Override
@@ -246,22 +238,20 @@ public class MainFragment extends Fragment implements IMainView {
     }
 
     @Override
-    public void loadData() {
-        //no impl
+    public void onShowView() {
+        if (textToTranslate.requestFocus())
+            showSoftInput();
     }
 
-    public void setTranslation(Translation translation){
-        setText(translation.getText());
-        setTranslatedText(translation.getTranslated());
-        setFromLanguage(translation.getFromLanguage());
-        setToLanguage(translation.getToLanguage());
-        setStateIsFavoriteCheckbox(translation.isFavorite());
-        showIsFavoriteCheckbox();
+    @Override
+    public void onHideView() {
+        hideSoftInput();
+        iMainPresenter.viewHidden(getTranslation());
     }
 
-    private void selectLanguage(String language, Spinner languageSpinner){
+    private void selectLanguage(String language, Spinner languageSpinner) {
         int position = languageAdapter.getPosition(language);
-        if(position < 0)
+        if (position < 0)
             return;
 
         AdapterView.OnItemSelectedListener listener = languageSpinner.getOnItemSelectedListener();
@@ -289,9 +279,14 @@ public class MainFragment extends Fragment implements IMainView {
     }
 
     private void callTranslate() {
+        //TODO это нужно переделать через RxBinding
         String text = textToTranslate.getText().toString();
         String fromLanguage = getSelectedLanguage(fromLanguageSpinner);
         String toLanguage = getSelectedLanguage(toLanguageSpinner);
+
+        if (text.trim().length() == 0)
+            return;
+
         iMainPresenter.listenText(text, fromLanguage, toLanguage);
     }
 
@@ -320,9 +315,33 @@ public class MainFragment extends Fragment implements IMainView {
                 isFavoriteCheckbox.isChecked());
     }
 
-    private void setApiRequirementsText(){
-        final String text="<a href='http://translate.yandex.ru/'>Переведено сервисом «Яндекс.Переводчик»</a>";
+    public void setTranslation(Translation translation) {
+        iMainPresenter.openFromAnotherFragment(translation);
+    }
+
+    private void setApiRequirementsText() {
+        final String text = "<a href='http://translate.yandex.ru/'>Переведено сервисом «Яндекс.Переводчик»</a>";
         apiRequirementsTextView.setText(Html.fromHtml(text));
         apiRequirementsTextView.setMovementMethod(LinkMovementMethod.getInstance());
+    }
+
+    private void hideSoftInput() {
+        FragmentActivity context = getActivity();
+        InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        View viewWithFocus = context.getCurrentFocus();
+        if (viewWithFocus == null)
+            return;
+
+        manager.hideSoftInputFromWindow(viewWithFocus.getWindowToken(), 0);
+    }
+
+    private void showSoftInput() {
+        FragmentActivity context = getActivity();
+        InputMethodManager manager = (InputMethodManager) context.getSystemService(Context.INPUT_METHOD_SERVICE);
+        View viewWithFocus = context.getCurrentFocus();
+        if (viewWithFocus == null)
+            return;
+
+        manager.showSoftInput(viewWithFocus, InputMethodManager.SHOW_IMPLICIT);
     }
 }

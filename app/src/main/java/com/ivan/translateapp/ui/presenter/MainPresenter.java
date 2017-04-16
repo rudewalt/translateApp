@@ -80,6 +80,23 @@ public class MainPresenter implements IMainPresenter {
         iMainInteractor.saveTranslationDirection(translation.getFromLanguage(), translation.getToLanguage());
     }
 
+    @Override
+    public void openFromAnotherFragment(Translation translation) {
+        iMainView.setText(translation.getText());
+        iMainView.setTranslatedText(translation.getTranslated());
+        iMainView.setFromLanguage(translation.getFromLanguage());
+        iMainView.setToLanguage(translation.getToLanguage());
+        iMainView.setStateIsFavoriteCheckbox(translation.isFavorite());
+        iMainView.showIsFavoriteCheckbox();
+        iMainView.showClearButton();
+    }
+
+    @Override
+    public void viewHidden(Translation translation) {
+        iMainInteractor.saveTranslation(translation);
+        iMainInteractor.saveTranslationDirection(translation.getFromLanguage(), translation.getToLanguage());
+    }
+
 
     private void handleSuccessLanguages(LanguagesWithSettings data) {
         iMainView.setLanguages(data.getLanguages());

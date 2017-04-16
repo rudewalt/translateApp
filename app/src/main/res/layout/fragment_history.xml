@@ -15,7 +15,6 @@
             android:layout_height="wrap_content"
             android:layout_width="match_parent"
             android:text="@string/title_history"
-            android:textColor="@color/colorHeader"
             android:textSize="@dimen/text_size_appbar" />
     </android.support.v7.widget.Toolbar>
 

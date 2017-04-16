@@ -77,17 +77,17 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     public List<TranslationEntity> getAllHistory() {
-        return getTranslations(TranslationTable.getAllHistory(), null);
+        return getTranslation(TranslationTable.getAllHistory(), null);
     }
 
     public List<TranslationEntity> getAllFavorites() {
-        return getTranslations(TranslationTable.getAllFavorites(), null);
+        return getTranslation(TranslationTable.getAllFavorites(), null);
     }
 
-    public TranslationEntity getTranslations(String text, String fromLanguage, String toLanguage) {
+    public TranslationEntity getTranslation(String text, String fromLanguage, String toLanguage) {
         final int first = 0;
         List<TranslationEntity> queryResult =
-                getTranslations(TranslationTable.getByKey(), new String[]{text, fromLanguage, toLanguage});
+                getTranslation(TranslationTable.getByKey(), new String[]{text, fromLanguage, toLanguage});
 
         return
                 queryResult.size() > 0
@@ -129,7 +129,7 @@ public class DbHelper extends SQLiteOpenHelper {
         return new KeyValueEntity(key, EMPTY_STRING);
     }
 
-    private List<TranslationEntity> getTranslations(String query, String[] params) {
+    private List<TranslationEntity> getTranslation(String query, String[] params) {
         List<TranslationEntity> result = new ArrayList<>();
         SQLiteDatabase dataBase = getReadableDatabase();
         Cursor cursor = dataBase.rawQuery(query, params);

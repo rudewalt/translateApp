@@ -17,7 +17,6 @@ import io.reactivex.Observable;
 
 public class HistoryRepository implements IHistoryRepository {
 
-    private static final String EMPTY_STRING = "";
     private DbHelper dbOpenHelper;
     private TranslationEntityMapper translationEntityMapper;
 
@@ -45,7 +44,7 @@ public class HistoryRepository implements IHistoryRepository {
     @Override
     public Observable<Boolean> isFavourite(String text, String fromLanguage, String toLanguage) {
 
-        TranslationEntity entity = dbOpenHelper.getTranslations(text, fromLanguage, toLanguage);
+        TranslationEntity entity = dbOpenHelper.getTranslation(text, fromLanguage, toLanguage);
         return Observable.just(entity != null && entity.isFavorite());
     }
 

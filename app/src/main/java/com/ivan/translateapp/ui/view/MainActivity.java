@@ -8,6 +8,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 
@@ -31,15 +32,13 @@ public class MainActivity extends AppCompatActivity {
             R.drawable.selector_ic_star
     };
 
-    private TabsPagerAdapter tabsPagerAdapter;
-
     @BindView(R.id.tabs)
     TabLayout tabLayout;
     @BindView(R.id.viewPager)
     ViewPager viewPager;
 
-
-
+    private TabsPagerAdapter tabsPagerAdapter;
+    private IView currentView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,48 +54,57 @@ public class MainActivity extends AppCompatActivity {
         tabLayout.setupWithViewPager(viewPager);
         setupTabIcons();
 
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+        viewPager.addOnPageChangeListener(createPageChangeListener());
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
+        currentView = (IView) tabsPagerAdapter.getFragment(viewPager.getCurrentItem());
+    }
+
+    public void openMainFragment(Translation translation) {
+        final int mainFragmentPosition = 0;
+
+        MainFragment fragment = (MainFragment) tabsPagerAdapter.getFragment(mainFragmentPosition);
+        if (fragment == null)
+            return;
+
+        fragment.setTranslation(translation);
+        viewPager.setCurrentItem(mainFragmentPosition);
+    }
+
+    private ViewPager.OnPageChangeListener createPageChangeListener(){
+        return new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
+                //no implementation
             }
 
             @Override
             public void onPageSelected(int position) {
-                hideSoftInput();
+                if(currentView !=null)
+                    currentView.onHideView();
+
                 IView view = (IView) tabsPagerAdapter.getFragment(position);
                 if (view != null) {
-                    view.loadData();
+                    view.onShowView();
                 }
+
+                currentView = view;
             }
 
             @Override
             public void onPageScrollStateChanged(int state) {
-
+                //no implementation
             }
-        });
+        };
     }
 
     private void setupTabIcons() {
         for (int i = 0; i < tabLayout.getTabCount(); i++) {
             tabLayout.getTabAt(i).setIcon(tabIcons[i]);
         }
-    }
-
-    private void hideSoftInput(){
-        InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-        imm.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
-    }
-
-    public void openMainFragment(Translation translation){
-        final int mainFragmentPosition = 0;
-
-        MainFragment fragment = (MainFragment) tabsPagerAdapter.getFragment(mainFragmentPosition);
-        if(fragment==null)
-            return;
-
-        fragment.setTranslation(translation);
-        viewPager.setCurrentItem(mainFragmentPosition);
     }
 
     private static class TabsPagerAdapter extends FragmentPagerAdapter {
@@ -123,21 +131,16 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public Fragment getItem(int position) {
-            Fragment fragment = null;
-
             switch (position) {
                 case 0:
-                    fragment = new MainFragment();
-                    break;
+                    return new MainFragment();
                 case 1:
-                    fragment = new HistoryFragment();
-                    break;
+                    return new HistoryFragment();
                 case 2:
-                    fragment = new FavoritesFragment();
-                    break;
+                    return new FavoritesFragment();
             }
 
-            return fragment;
+            return null;
         }
 
         @Override

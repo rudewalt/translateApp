@@ -7,13 +7,13 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/mainAppBar"
-        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/appbar_height"
-        android:layout_width="match_parent">
+        android:background="@color/colorPrimary">
 
         <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_width="match_parent"
             android:text="@string/title_main"
             android:textSize="@dimen/text_size_appbar" />
     </android.support.v7.widget.Toolbar>
@@ -30,23 +30,26 @@
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="0.5"
-            android:dropDownWidth="match_parent" />
+            android:dropDownWidth="match_parent"
+            android:spinnerMode="dialog" />
 
         <ImageButton
             android:id="@+id/changeDirection"
-            android:layout_width="10dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="0.1"
-            android:background="@mipmap/ic_launcher_round"
-            android:contentDescription="@string/change_direction_content_description"
-            android:elevation="0dp" />
+            android:layout_gravity="center"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/selector_ic_change"
+            android:contentDescription="@string/change_direction_content_description" />
 
         <Spinner
             android:id="@+id/toLanguage"
             android:layout_width="0dp"
             android:layout_height="50dp"
             android:layout_weight="0.5"
-            android:dropDownWidth="match_parent" />
+            android:dropDownWidth="match_parent"
+            android:spinnerMode="dialog" />
     </LinearLayout>
 
     <LinearLayout
@@ -56,7 +59,7 @@
         android:layout_below="@id/selectLanguageContainer"
         android:layout_marginLeft="15dp"
         android:layout_marginRight="15dp"
-        android:background="@drawable/translate_container"
+        android:background="@drawable/translate_container_normal"
         android:clickable="true"
         android:focusable="true"
         android:focusableInTouchMode="true"
@@ -82,7 +85,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="2dp"
-            android:background="@android:drawable/ic_menu_close_clear_cancel"
+            android:background="@drawable/selector_ic_clear"
             android:contentDescription="@string/clear_content_description"
             android:visibility="invisible"
             tools:visibility="visible" />
@@ -94,8 +97,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/textToTranslateContainer"
-        android:layout_marginLeft="15dp"
-        android:layout_marginTop="10dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginTop="4dp"
+        android:gravity="end"
         android:linksClickable="true" />
 
     <LinearLayout
@@ -121,7 +125,8 @@
             android:id="@+id/isFavorite"
             android:layout_width="40dp"
             android:layout_height="40dp"
-            android:button="@drawable/star_checkbox"
+            android:button="@drawable/selector_ic_star"
+            android:saveEnabled="false"
             android:visibility="invisible" />
     </LinearLayout>
 </RelativeLayout>

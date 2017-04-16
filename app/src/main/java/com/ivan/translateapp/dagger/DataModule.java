@@ -8,7 +8,9 @@ import com.ivan.translateapp.data.db.entity.TranslationEntityMapper;
 import com.ivan.translateapp.data.net.ITranslateService;
 import com.ivan.translateapp.data.repository.HistoryRepository;
 import com.ivan.translateapp.data.repository.IHistoryRepository;
+import com.ivan.translateapp.data.repository.ISettingsRepository;
 import com.ivan.translateapp.data.repository.ITranslationRepository;
+import com.ivan.translateapp.data.repository.SettingsRepository;
 import com.ivan.translateapp.data.repository.TranslationRepository;
 
 import javax.inject.Singleton;
@@ -45,5 +47,10 @@ public class DataModule {
         return new TranslationRepository(translateService);
     }
 
+    @Provides
+    @Singleton
+    ISettingsRepository provideISettingsRepository(@NonNull Context context){
+        return new SettingsRepository(context);
+    }
 
 }

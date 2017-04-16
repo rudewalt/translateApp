@@ -5,6 +5,10 @@ package com.ivan.translateapp.ui.view;
  */
 
 public interface IView {
-    void loadData();
+
     void showError(String message);
+
+    void onShowView();
+
+    void onHideView();
 }

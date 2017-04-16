@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Переводчик</string>
+    <string name="title_main">Переводчик</string>
+    <string name="title_history">История</string>
+    <string name="title_favorites">Избранное</string>
+    <string name="hint_text_to_translate">Введите текст для перевода</string>
+    <string name="clear_content_description">Очистить окно перевода</string>
+    <string name="change_direction_content_description">Поменять направление перевода на противоположное</string>
+
+    <string name="title_button_ok">ОК</string>
+    <string name="title_error">Ошибка</string>
+
+    <!--tools-->
+    <string name="sample_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</string>
+    <string name="sample_text_2">Человеку свойственно ошибаться</string>
+</resources>
