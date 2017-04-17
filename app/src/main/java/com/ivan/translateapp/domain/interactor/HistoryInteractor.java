@@ -5,6 +5,7 @@ import com.ivan.translateapp.domain.Translation;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 /**
@@ -29,16 +30,15 @@ public class HistoryInteractor implements IHistoryInteractor {
         return iHistoryRepository.getFavorites();
     }
 
-
     @Override
-    public void delete(Translation translation) {
-        iHistoryRepository.delete(translation);
+    public Completable delete(Translation translation) {
+        return iHistoryRepository.delete(translation);
     }
 
 
     @Override
-    public void saveChanges(Translation translation) {
-        iHistoryRepository.update(translation);
+    public Completable saveChanges(Translation translation) {
+        return iHistoryRepository.update(translation);
     }
 
 

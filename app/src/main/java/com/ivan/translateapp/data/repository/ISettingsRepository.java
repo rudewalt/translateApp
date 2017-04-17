@@ -1,5 +1,6 @@
 package com.ivan.translateapp.data.repository;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 /**
@@ -9,5 +10,5 @@ import io.reactivex.Observable;
 public interface ISettingsRepository {
     Observable<String> getValue(String key);
 
-    void setValue(String key, String value);
+    Completable setValue(String key, String value);
 }

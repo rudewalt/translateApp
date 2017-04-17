@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.support.annotation.NonNull;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 
@@ -25,9 +26,12 @@ public class SettingsRepository implements ISettingsRepository {
     }
 
     @Override
-    public void setValue(String key, String value) {
-        SharedPreferences.Editor editor = sharedPref.edit();
-        editor.putString(key, value);
-        editor.commit();
+    public Completable setValue(String key, String value) {
+        return
+                Completable.fromAction(() -> {
+                    SharedPreferences.Editor editor = sharedPref.edit();
+                    editor.putString(key, value);
+                    editor.commit();
+                });
     }
 }

@@ -2,13 +2,20 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
+    signingConfigs {
+        signConfig {
+            keyAlias 'key1'
+            keyPassword 'k!!!QQQ222'
+            storeFile file('C:/Projects/Android/KeyStore/ISaninKey.jks')
+            storePassword 'k!!!QQQ222'
+        }
+    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-
     defaultConfig {
         applicationId "com.ivan.translateapp"
         minSdkVersion 21
@@ -21,9 +28,12 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.signConfig
+        }
+        debug {
+            signingConfig signingConfigs.signConfig
         }
     }
-
     packagingOptions {
         exclude 'LICENSE.txt'
         exclude 'META-INF/DEPENDENCIES'
@@ -54,14 +64,11 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.9'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.5.1'
     provided 'javax.annotation:jsr250-api:1.0'
-
     androidTestCompile 'org.mockito:mockito-android:2.7.22'
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-
     testCompile 'org.assertj:assertj-core:2.6.0'
     testCompile 'org.testng:testng:6.9.6'
     testCompile 'org.mockito:mockito-core:2.7.22'
-
 }

@@ -9,6 +9,7 @@ import com.ivan.translateapp.ui.view.main.IMainView;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -26,7 +27,6 @@ public class MainPresenter implements IMainPresenter {
     private IMainInteractor iMainInteractor;
     private IMainView iMainView;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
 
 
     public MainPresenter(IMainInteractor iMainInteractor) {
@@ -50,8 +50,7 @@ public class MainPresenter implements IMainPresenter {
         Disposable disposable =
                 Observable.zip(
                         iMainInteractor.getLanguages(),
-                        iMainInteractor.restoreTranslationDirection(),
-                        (languages, restored) -> new LanguagesWithSettings(languages, restored))
+                        iMainInteractor.restoreTranslationDirection(), LanguagesWithSettings::new)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribe(this::handleSuccessLanguages, this::handleErrorGetLanguagesError);
@@ -70,6 +69,16 @@ public class MainPresenter implements IMainPresenter {
     }
 
     @Override
+    public void loadChanges(Translation translation) {
+        Disposable disposable = iMainInteractor.isFavorite(translation)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(this::handleSuccessCheckIsFavorite, this::handleErrorCheckIsFavorite);
+
+        compositeDisposable.add(disposable);
+    }
+
+    @Override
     public void clickIsFavouriteCheckbox(Translation translation) {
         saveTranslation(translation);
     }
@@ -77,7 +86,7 @@ public class MainPresenter implements IMainPresenter {
     @Override
     public void textToTranslateLostFocus(Translation translation) {
         saveTranslation(translation);
-        iMainInteractor.saveTranslationDirection(translation.getFromLanguage(), translation.getToLanguage());
+        saveTranslationDirection(translation.getFromLanguage(), translation.getToLanguage());
     }
 
     @Override
@@ -93,8 +102,8 @@ public class MainPresenter implements IMainPresenter {
 
     @Override
     public void viewHidden(Translation translation) {
-        iMainInteractor.saveTranslation(translation);
-        iMainInteractor.saveTranslationDirection(translation.getFromLanguage(), translation.getToLanguage());
+        saveTranslation(translation);
+        saveTranslationDirection(translation.getFromLanguage(), translation.getToLanguage());
     }
 
 
@@ -115,13 +124,35 @@ public class MainPresenter implements IMainPresenter {
         iMainView.setStateIsFavoriteCheckbox(translation.isFavorite());
     }
 
+    private void handleSuccessCheckIsFavorite(Boolean isFavorite){
+        iMainView.setStateIsFavoriteCheckbox(isFavorite);
+    }
+
+    private void handleErrorCheckIsFavorite(Throwable throwable){
+        String message = throwable.getMessage();
+        iMainView.showError(message);
+    }
+
     private void handleErrorTranslate(Throwable throwable) {
 
         Log.e(TAG, throwable.getMessage());
     }
 
     private void saveTranslation(Translation translation) {
-        iMainInteractor.saveTranslation(translation);
+
+        Disposable disposable = iMainInteractor.saveTranslation(translation)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+
+        compositeDisposable.add(disposable);
+    }
+
+    private void saveTranslationDirection(String fromLanguage, String toLanguage){
+        Disposable disposable = iMainInteractor.saveTranslationDirection(fromLanguage, toLanguage)
+                .subscribeOn(Schedulers.io())
+                .subscribe();
+
+        compositeDisposable.add(disposable);
     }
 
     private class LanguagesWithSettings {
@@ -130,8 +161,9 @@ public class MainPresenter implements IMainPresenter {
         private String toLanguage;
 
         public LanguagesWithSettings(List<Language> languages, List<String> savedSelection) {
+            final int size = 2;
             this.languages = languages;
-            if (savedSelection != null && savedSelection.size() == 2) {
+            if (savedSelection != null && savedSelection.size() == size) {
                 this.fromLanguage = savedSelection.get(0);
                 this.toLanguage = savedSelection.get(1);
             }

@@ -4,6 +4,7 @@ import com.ivan.translateapp.domain.Translation;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
@@ -17,19 +18,19 @@ public interface IHistoryRepository {
 
     Observable<List<Translation>> getFavorites();
 
-    void add(Translation translation);
+    Completable add(Translation translation);
 
-    void update(Translation translation);
+    Completable update(Translation translation);
 
-    void deleteHistory();
+    Completable deleteHistory();
 
-    void deleteFavorites();
+    Completable deleteFavorites();
 
-    void delete(Translation translation);
+    Completable delete(Translation translation);
 
     Observable<Boolean> isFavourite(String text, String fromLanguage, String toLanguage);
 
-    void saveSetting(String fromLanguage, String toLanguage);
+    Completable saveSetting(String fromLanguage, String toLanguage);
 
     Observable<String> getSetting(String key);
 }

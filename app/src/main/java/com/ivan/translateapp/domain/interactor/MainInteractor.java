@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 /**
@@ -79,24 +80,33 @@ public class MainInteractor implements IMainInteractor {
     }
 
     @Override
-    public void saveTranslation(Translation translation) {
+    public Observable<Boolean> isFavorite(Translation translation) {
+        return iHistoryRepository.
+                isFavourite(translation.getText(), translation.getFromLanguage(), translation.getToLanguage());
+    }
+
+    @Override
+    public Completable saveTranslation(Translation translation) {
         if (translation == null
                 || translation.getText().equals(EMPTY_STRING)
                 || translation.getTranslated().equals(EMPTY_STRING)
                 || translation.getFromLanguage().equals(EMPTY_STRING)
                 || translation.getToLanguage().equals(EMPTY_STRING))
-            return;
+            return Completable.complete();
 
-        iHistoryRepository.add(translation);
+        return iHistoryRepository.add(translation);
     }
 
     @Override
-    public void saveTranslationDirection(String fromLanguage, String toLanguage) {
+    public Completable saveTranslationDirection(String fromLanguage, String toLanguage) {
         if (fromLanguage.equals(EMPTY_STRING) || toLanguage.equals(EMPTY_STRING))
-            return;
+            return Completable.complete();
 
-        iSettingsRepository.setValue(FROM_LANGUAGE_KEY, fromLanguage);
-        iSettingsRepository.setValue(TO_LANGUAGE_KEY, toLanguage);
+        return
+                Completable.concatArray(
+                        iSettingsRepository.setValue(FROM_LANGUAGE_KEY, fromLanguage),
+                        iSettingsRepository.setValue(TO_LANGUAGE_KEY, toLanguage)
+                );
     }
 
     @Override

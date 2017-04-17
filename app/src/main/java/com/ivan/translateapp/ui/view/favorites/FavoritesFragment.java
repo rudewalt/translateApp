@@ -14,21 +14,23 @@ import com.ivan.translateapp.TranslateApplication;
 import com.ivan.translateapp.dagger.MainModule;
 import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.ui.adapter.TranslationAdapter;
-import com.ivan.translateapp.ui.presenter.IFavoritesPresenterPresenter;
+import com.ivan.translateapp.ui.presenter.ITranslationListViewPresenter;
+import com.ivan.translateapp.ui.view.ITranslationListView;
 import com.ivan.translateapp.ui.view.MainActivity;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class FavoritesFragment extends Fragment implements IFavoritesView {
+public class FavoritesFragment extends Fragment implements ITranslationListView {
 
-    @Inject
-    IFavoritesPresenterPresenter iFavoritesPresenter;
+    @Inject @Named("favorites")
+    ITranslationListViewPresenter iFavoritesPresenter;
 
     @BindView(R.id.favoritesRecyclerView)
     RecyclerView favoritesRecyclerView;
@@ -64,7 +66,7 @@ public class FavoritesFragment extends Fragment implements IFavoritesView {
     }
 
     @Override
-    public void showFavorites(List<Translation> translations) {
+    public void showTranslations(List<Translation> translations) {
         TranslationAdapter adapter = new TranslationAdapter(
                 translations, iFavoritesPresenter, R.layout.translation_list_item);
         favoritesRecyclerView.setAdapter(adapter);
@@ -86,7 +88,7 @@ public class FavoritesFragment extends Fragment implements IFavoritesView {
 
     @Override
     public void onShowView() {
-            iFavoritesPresenter.loadFavorites();
+            iFavoritesPresenter.loadTranslations();
     }
 
     @Override

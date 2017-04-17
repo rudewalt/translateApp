@@ -13,6 +13,8 @@ public interface IMainPresenter extends IPresenter<IMainView> {
 
     void listenText(String text, String fromLanguage, String toLanguage);
 
+    void loadChanges(Translation translation);
+
     void clickIsFavouriteCheckbox(Translation translation);
 
     void textToTranslateLostFocus(Translation translation);

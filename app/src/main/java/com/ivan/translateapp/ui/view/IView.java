@@ -6,9 +6,22 @@ package com.ivan.translateapp.ui.view;
 
 public interface IView {
 
+
+    /**
+     * Show error message to user
+     * @param message
+     */
     void showError(String message);
 
+
+    /**
+     * Called when view become visible to user
+     */
     void onShowView();
 
+
+    /**
+     * Called when view become hide to user
+     */
     void onHideView();
 }

@@ -241,6 +241,9 @@ public class MainFragment extends Fragment implements IMainView {
     public void onShowView() {
         if (textToTranslate.requestFocus())
             showSoftInput();
+
+        //check that current translation still isFavorite
+        iMainPresenter.loadChanges(getTranslation());
     }
 
     @Override

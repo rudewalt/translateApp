@@ -1,19 +1,17 @@
 package com.ivan.translateapp.data.repository;
 
 import com.ivan.translateapp.data.db.DbHelper;
-import com.ivan.translateapp.data.db.entity.TranslationEntityMapper;
 import com.ivan.translateapp.data.db.entity.TranslationEntity;
+import com.ivan.translateapp.data.db.entity.TranslationEntityMapper;
 import com.ivan.translateapp.domain.Translation;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
-/**
- * Created by Ivan on 30.03.2017.
- */
 
 public class HistoryRepository implements IHistoryRepository {
 
@@ -28,7 +26,7 @@ public class HistoryRepository implements IHistoryRepository {
     @Override
     public Observable<List<Translation>> getHistory() {
         return
-                Observable.fromArray(dbOpenHelper.getAllHistory())
+                Observable.fromCallable(() -> dbOpenHelper.getAllHistory())
                         .map(this::sortByCreateDateDesc)
                         .map(this::mapToTranslation);
     }
@@ -36,54 +34,62 @@ public class HistoryRepository implements IHistoryRepository {
     @Override
     public Observable<List<Translation>> getFavorites() {
         return
-                Observable.fromArray(dbOpenHelper.getAllFavorites())
+                Observable.fromCallable(() -> dbOpenHelper.getAllFavorites())
                         .map(this::sortByAddToFavouriteDate)
                         .map(this::mapToTranslation);
     }
 
     @Override
     public Observable<Boolean> isFavourite(String text, String fromLanguage, String toLanguage) {
-
-        TranslationEntity entity = dbOpenHelper.getTranslation(text, fromLanguage, toLanguage);
-        return Observable.just(entity != null && entity.isFavorite());
+        return Observable.fromCallable(() -> {
+            TranslationEntity entity = dbOpenHelper.getTranslation(text, fromLanguage, toLanguage);
+            return entity != null && entity.isFavorite();
+        });
     }
 
     @Override
-    public void saveSetting(String key, String value) {
-        dbOpenHelper.saveKeyValue(key, value);
+    public Completable saveSetting(String key, String value) {
+        return
+                Completable.fromAction(() -> dbOpenHelper.saveKeyValue(key, value));
     }
 
     @Override
     public Observable<String> getSetting(String key) {
-        return Observable.just(dbOpenHelper.getKeyValue(key))
-                .map(keyValueEntity ->  keyValueEntity.getValue());
-    }
-
-
-    @Override
-    public void add(Translation translation) {
-        translation.setHistory(true);
-        dbOpenHelper.saveTranslation(translation);
+        return Observable.fromCallable(() -> dbOpenHelper.getKeyValue(key))
+                .map(keyValueEntity -> keyValueEntity.getValue());
     }
 
     @Override
-    public void update(Translation translation) {
-        dbOpenHelper.saveTranslation(translation);
+    public Completable add(Translation translation) {
+        return
+                Completable.fromAction(() -> {
+                    translation.setHistory(true);
+                    dbOpenHelper.saveTranslation(translation);
+                });
     }
 
     @Override
-    public void deleteHistory() {
-        dbOpenHelper.deleteHistory();
+    public Completable update(Translation translation) {
+        return
+                Completable.fromAction(() -> dbOpenHelper.saveTranslation(translation));
     }
 
     @Override
-    public void deleteFavorites() {
-        dbOpenHelper.deleteFavorites();
+    public Completable deleteHistory() {
+        return
+                Completable.fromAction(() -> dbOpenHelper.deleteHistory());
     }
 
     @Override
-    public void delete(Translation translation) {
-        dbOpenHelper.delete(translation);
+    public Completable deleteFavorites() {
+        return
+                Completable.fromAction(() -> dbOpenHelper.deleteFavorites());
+    }
+
+    @Override
+    public Completable delete(Translation translation) {
+        return
+                Completable.fromAction(() -> dbOpenHelper.delete(translation));
     }
 
     private List<TranslationEntity> sortByCreateDateDesc(List<TranslationEntity> translationEntities) {
@@ -101,7 +107,7 @@ public class HistoryRepository implements IHistoryRepository {
     }
 
     private List<Translation> mapToTranslation(List<TranslationEntity> translationEntities) throws Exception {
-        List<Translation> translations = new ArrayList<Translation>();
+        List<Translation> translations = new ArrayList<>();
         for (TranslationEntity entity : translationEntities) {
             translations.add(translationEntityMapper.apply(entity));
         }

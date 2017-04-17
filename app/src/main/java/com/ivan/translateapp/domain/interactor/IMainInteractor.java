@@ -5,6 +5,7 @@ import com.ivan.translateapp.domain.Translation;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.Single;
 
@@ -19,9 +20,11 @@ public interface IMainInteractor {
 
     Observable<Translation> translateText(String text, String fromLanguage, String toLanguage);
 
-    void saveTranslation(Translation translation);
+    Observable<Boolean> isFavorite(Translation translation);
 
-    void saveTranslationDirection(String fromLanguage, String toLanguage);
+    Completable saveTranslation(Translation translation);
+
+    Completable saveTranslationDirection(String fromLanguage, String toLanguage);
 
     Observable<List<String>> restoreTranslationDirection();
 }

@@ -4,6 +4,7 @@ import com.ivan.translateapp.domain.Translation;
 
 import java.util.List;
 
+import io.reactivex.Completable;
 import io.reactivex.Observable;
 
 
@@ -17,7 +18,7 @@ public interface IHistoryInteractor {
 
     Observable<List<Translation>> getFavorites();
 
-    void delete(Translation translation);
+    Completable delete(Translation translation);
 
-    void saveChanges(Translation translation);
+    Completable saveChanges(Translation translation);
 }

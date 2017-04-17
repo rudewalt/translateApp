@@ -14,21 +14,24 @@ import com.ivan.translateapp.TranslateApplication;
 import com.ivan.translateapp.dagger.MainModule;
 import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.ui.adapter.TranslationAdapter;
-import com.ivan.translateapp.ui.presenter.IHistoryPresenterPresenter;
+import com.ivan.translateapp.ui.presenter.ITranslationListViewPresenter;
+import com.ivan.translateapp.ui.view.ITranslationListView;
 import com.ivan.translateapp.ui.view.MainActivity;
 
 import java.util.List;
 
 import javax.inject.Inject;
+import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class HistoryFragment extends Fragment implements IHistoryView {
+public class HistoryFragment extends Fragment implements ITranslationListView {
 
     @Inject
-    IHistoryPresenterPresenter iHistoryPresenter;
+    @Named("history")
+    ITranslationListViewPresenter iHistoryPresenter;
 
     @BindView(R.id.historyRecyclerView)
     RecyclerView historyRecyclerView;
@@ -88,7 +91,7 @@ public class HistoryFragment extends Fragment implements IHistoryView {
 
     @Override
     public void onShowView() {
-            iHistoryPresenter.loadHistory();
+            iHistoryPresenter.loadTranslations();
     }
 
     @Override
