@@ -5,7 +5,20 @@ package com.ivan.translateapp.data.net.exception;
  */
 
 public class TranslateServiceException extends Exception {
-    public TranslateServiceException(String message){
-        super(message);
+
+    private int errorCode;
+
+    public TranslateServiceException(int errorCode){
+        super();
+
+        this.errorCode = errorCode;
+    }
+
+    public String getMessageResName(){
+        return "error_title_code_"+ errorCode;
+    }
+
+    public String getDescriptionResName(){
+        return "error_description_code_"+ errorCode;
     }
 }

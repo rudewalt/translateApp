@@ -85,7 +85,12 @@ public class HistoryFragment extends Fragment implements ITranslationListView {
     }
 
     @Override
-    public void showError(String message) {
+    public void showError(String title, String description) {
+
+    }
+
+    @Override
+    public void showInternetConnectionError() {
 
     }
 

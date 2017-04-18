@@ -10,9 +10,6 @@ import com.ivan.translateapp.dagger.IApplicationComponent;
 
 import java.util.Locale;
 
-/**
- * Created by Ivan on 27.03.2017.
- */
 
 public class TranslateApplication extends Application {
 

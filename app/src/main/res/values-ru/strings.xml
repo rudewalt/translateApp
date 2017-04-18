@@ -11,6 +11,27 @@
     <string name="title_button_ok">ОК</string>
     <string name="title_error">Ошибка</string>
 
+    <string name="error_title_code_401">Системная ошибка</string>
+    <string name="error_description_code_401">Пожалуйста обратитесь в службу поддержки</string>
+
+    <string name="error_code_402">Системная ошибка</string>
+    <string name="error_description_code_402">Пожалуйста обратитесь в службу поддержки</string>
+
+    <string name="error_code_404">Очень много переводов сегодня</string>
+    <string name="error_description_code_404">Исчерпан дневной лимит переводов. Передохните и попробуйте завтра</string>
+
+    <string name="error_code_413">Текст слишком длинный</string>
+    <string name="error_description_code_413">Сократите текст для перевода до 1000 сиволов и попробуйте снова</string>
+
+    <string name="error_code_422">Не найден перевод</string>
+    <string name="error_description_code_422">Не найден подходящий перевод. Попробуйте перевести другое слово</string>
+
+    <string name="error_code_501">Выбранное направление перевода не поддерживается</string>
+    <string name="error_description_code_501">Пожалуйста выберите другое направление перевода и повторите попытку</string>
+
+    <string name="error_title_no_internet">Ошибка интернет-соединения</string>
+    <string name="error_description_no_internet">Проверьте подключение к интернету и повторите попытку</string>
+
     <!--tools-->
     <string name="sample_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</string>
     <string name="sample_text_2">Человеку свойственно ошибаться</string>

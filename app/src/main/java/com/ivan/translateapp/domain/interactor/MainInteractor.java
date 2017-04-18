@@ -1,11 +1,13 @@
 package com.ivan.translateapp.domain.interactor;
 
 
+import com.ivan.translateapp.domain.exception.NoInternetConnectionException;
 import com.ivan.translateapp.data.repository.IHistoryRepository;
 import com.ivan.translateapp.data.repository.ISettingsRepository;
 import com.ivan.translateapp.data.repository.ITranslationRepository;
 import com.ivan.translateapp.domain.Language;
 import com.ivan.translateapp.domain.Translation;
+import com.ivan.translateapp.utils.ConnectivityUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -30,16 +32,19 @@ public class MainInteractor implements IMainInteractor {
     private IHistoryRepository iHistoryRepository;
     private ISettingsRepository iSettingsRepository;
     private Locale locale;
+    private ConnectivityUtils connectivityUtils;
 
     public MainInteractor(
             ITranslationRepository iTranslationRepository,
             IHistoryRepository iHistoryRepository,
             ISettingsRepository iSettingsRepository,
-            Locale locale) {
+            Locale locale,
+            ConnectivityUtils connectivityUtils) {
         this.iTranslationRepository = iTranslationRepository;
         this.iHistoryRepository = iHistoryRepository;
         this.iSettingsRepository = iSettingsRepository;
         this.locale = locale;
+        this.connectivityUtils = connectivityUtils;
     }
 
     private static String getCurrentLanguage(Locale locale) {
@@ -57,10 +62,9 @@ public class MainInteractor implements IMainInteractor {
 
     @Override
     public Observable<List<Language>> getLanguages() {
-
         return
-                iTranslationRepository
-                        .getLanguages(getCurrentLanguage(locale))
+                ensureIsOnline()
+                        .flatMap(x -> iTranslationRepository.getLanguages(getCurrentLanguage(locale)))
                         .map(this::sortLanguages);
     }
 
@@ -69,14 +73,16 @@ public class MainInteractor implements IMainInteractor {
         String textToTranslate = text.trim();
 
         return
-                Observable.combineLatest(
-                        iTranslationRepository.getTranslation(textToTranslate, fromLanguage, toLanguage),
-                        iHistoryRepository.isFavourite(textToTranslate, fromLanguage, toLanguage),
-                        (translation, isFavourite) -> {
-                            translation.setFavorite(isFavourite);
-                            return translation;
-                        }
-                );
+                ensureIsOnline()
+                        .flatMap(x ->
+                                Observable.zip(
+                                        iTranslationRepository.getTranslation(textToTranslate, fromLanguage, toLanguage),
+                                        iHistoryRepository.isFavourite(textToTranslate, fromLanguage, toLanguage),
+                                        (translation, isFavourite) -> {
+                                            translation.setFavorite(isFavourite);
+                                            return translation;
+                                        }
+                                ));
     }
 
     @Override
@@ -125,6 +131,15 @@ public class MainInteractor implements IMainInteractor {
                             }};
                         }
                 );
+    }
+
+    private Observable<Boolean> ensureIsOnline() {
+        return Observable.fromCallable(() -> {
+            if (connectivityUtils.isOnline())
+                return true;
+
+            throw new NoInternetConnectionException();
+        });
     }
 
     private List<Language> sortLanguages(List<Language> languages) {

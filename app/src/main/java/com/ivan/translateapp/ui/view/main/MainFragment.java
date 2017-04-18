@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ivan.translateapp.R;
 import com.ivan.translateapp.TranslateApplication;
@@ -28,6 +29,7 @@ import com.ivan.translateapp.domain.Language;
 import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.ui.adapter.LanguageAdapter;
 import com.ivan.translateapp.ui.presenter.IMainPresenter;
+import com.ivan.translateapp.utils.ResourceUtils;
 
 import java.util.List;
 import java.util.Timer;
@@ -105,7 +107,6 @@ public class MainFragment extends Fragment implements IMainView {
 
         //TODO сделать првоерку на наличие сети
         //TODO сделать обработку и вывод понятных ошибок пользователю
-        //TODO написать тесты
         iMainPresenter.bindView(this);
         iMainPresenter.loadLanguages();
 
@@ -198,15 +199,27 @@ public class MainFragment extends Fragment implements IMainView {
 
 
     @Override
-    public void showError(String text) {
+    public void showError(String titleResName, String descriptionResName) {
+        String title = getResources().getString(ResourceUtils.getResId(titleResName, R.string.class));
+        String description = getResources().getString(ResourceUtils.getResId(descriptionResName, R.string.class));
+
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity())
-                .setTitle(getString(R.string.title_error))
-                .setMessage(text)
+                .setTitle(title)
+                .setMessage(description)
                 .setPositiveButton(getString(R.string.title_button_ok), (dialog, whichButton) -> {
                     return;
                 });
 
         alert.show();
+    }
+
+    @Override
+    public void showInternetConnectionError() {
+        int duration = Toast.LENGTH_SHORT;
+        String text = getResources().getString(R.string.error_description_no_internet);
+
+        Toast toast = Toast.makeText(getActivity(), text, duration);
+        toast.show();
     }
 
     @Override
@@ -264,7 +277,11 @@ public class MainFragment extends Fragment implements IMainView {
     }
 
     private String getSelectedLanguage(Spinner spinner) {
-        return ((Language) spinner.getSelectedItem()).getLanguage();
+        Language selected = ((Language) spinner.getSelectedItem());
+        if(selected != null)
+            return selected.getLanguage();
+
+        return EMPTY_STRING;
     }
 
     private void handleChangeDirectionClick(View view) {
@@ -282,7 +299,6 @@ public class MainFragment extends Fragment implements IMainView {
     }
 
     private void callTranslate() {
-        //TODO это нужно переделать через RxBinding
         String text = textToTranslate.getText().toString();
         String fromLanguage = getSelectedLanguage(fromLanguageSpinner);
         String toLanguage = getSelectedLanguage(toLanguageSpinner);

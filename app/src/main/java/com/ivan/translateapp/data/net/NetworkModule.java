@@ -7,6 +7,7 @@ import com.ivan.translateapp.data.net.yandex.YandexTranslateService;
 import com.ivan.translateapp.data.net.yandex.mapper.LanguageResponseMapper;
 import com.ivan.translateapp.data.net.yandex.mapper.SupportedLanguagesResponseMapper;
 import com.ivan.translateapp.data.net.yandex.mapper.TranslationResponseMapper;
+import com.ivan.translateapp.utils.ConnectivityUtils;
 
 import java.io.File;
 import java.util.concurrent.TimeUnit;
@@ -39,6 +40,11 @@ public class NetworkModule {
     private static final String BASE_URL = "https://translate.yandex.net/api/v1.5/tr.json/";
     private static final String API_KEY = "trnsl.1.1.20170317T170351Z.34081ee0ccb0bc5a.0aa288afa818fd81d6fefc8ce938b0de8995cc6f";
 
+    @Provides
+    @Singleton
+    public ConnectivityUtils provideConnectivityUtil(Context context){
+        return new ConnectivityUtils(context);
+    }
 
     @Provides
     @Singleton
@@ -62,10 +68,9 @@ public class NetworkModule {
     @Singleton
     public ITranslateService provideITranslateService(IYandexTranslateApiInterface apiInterface,
                                                       LanguageResponseMapper languageResponseMapper,
-                                                      SupportedLanguagesResponseMapper supportedLanguagesResponseMapper,
-                                                      TranslationResponseMapper translationResponseMapper) {
+                                                      SupportedLanguagesResponseMapper supportedLanguagesResponseMapper) {
 
-        return new YandexTranslateService(apiInterface, languageResponseMapper, supportedLanguagesResponseMapper, translationResponseMapper);
+        return new YandexTranslateService(apiInterface, languageResponseMapper, supportedLanguagesResponseMapper);
     }
 
     @Provides
@@ -130,7 +135,7 @@ public class NetworkModule {
         };
     }
 
-    public static Interceptor provideCacheInterceptor() {
+    private static Interceptor provideCacheInterceptor() {
         return chain -> {
             Response response = chain.proceed(chain.request());
 

@@ -12,6 +12,7 @@ import com.ivan.translateapp.ui.presenter.HistoryPresenter;
 import com.ivan.translateapp.ui.presenter.IMainPresenter;
 import com.ivan.translateapp.ui.presenter.ITranslationListViewPresenter;
 import com.ivan.translateapp.ui.presenter.MainPresenter;
+import com.ivan.translateapp.utils.ConnectivityUtils;
 
 import java.util.Locale;
 
@@ -27,12 +28,14 @@ import dagger.Provides;
 @Module
 public class MainModule {
 
+
     @Provides
     public IMainInteractor provideIMainInteractor(ITranslationRepository iTranslationRepository,
                                                   IHistoryRepository iHistoryRepository,
                                                   ISettingsRepository iSettingsRepository,
-                                                  Locale locale) {
-        return new MainInteractor(iTranslationRepository, iHistoryRepository, iSettingsRepository, locale);
+                                                  Locale locale,
+                                                  ConnectivityUtils connectivityUtils) {
+        return new MainInteractor(iTranslationRepository, iHistoryRepository, iSettingsRepository, locale, connectivityUtils);
     }
 
     @Provides

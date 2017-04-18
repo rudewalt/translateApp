@@ -10,6 +10,27 @@
     <string name="title_button_ok">Ok</string>
     <string name="title_error">Error</string>
 
+    <string name="error_title_code_401">Api key blocked</string>
+    <string name="error_description_code_401">Please contact support</string>
+
+    <string name="error_code_402">Wrong api key</string>
+    <string name="error_description_code_402">Please contact support</string>
+
+    <string name="error_code_404">Too many translations today</string>
+    <string name="error_description_code_404">Take a rest and continue tomorrow</string>
+
+    <string name="error_code_413">Text for translate too long</string>
+    <string name="error_description_code_413">Please shorten the text to 1000 characters and try again</string>
+
+    <string name="error_code_422">Can not translate text</string>
+    <string name="error_description_code_422">Sorry we can not found any translations</string>
+
+    <string name="error_code_501">Translation direction not supported</string>
+    <string name="error_description_code_501">Current translation direction not yet supported</string>
+
+    <string name="error_title_no_internet">No internet connection</string>
+    <string name="error_description_no_internet">Check internet connection and try again</string>
+
     <!--tools-->
     <string name="sample_text">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua</string>
     <string name="sample_text_2">Человеку свойственно ошибаться</string>

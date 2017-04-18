@@ -9,10 +9,11 @@ public interface IView {
 
     /**
      * Show error message to user
-     * @param message
      */
-    void showError(String message);
+    void showError(String title, String description);
 
+
+    void showInternetConnectionError();
 
     /**
      * Called when view become visible to user

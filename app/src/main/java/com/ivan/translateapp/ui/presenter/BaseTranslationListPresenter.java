@@ -77,6 +77,6 @@ public abstract class BaseTranslationListPresenter implements ITranslationListVi
     }
 
     protected void handleErrorLoadFavorites(Throwable throwable){
-        listView.showError(throwable.getLocalizedMessage());
+        //listView.showError();
     }
 }

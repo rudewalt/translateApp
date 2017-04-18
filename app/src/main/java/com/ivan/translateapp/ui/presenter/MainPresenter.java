@@ -2,14 +2,15 @@ package com.ivan.translateapp.ui.presenter;
 
 import android.util.Log;
 
+import com.ivan.translateapp.data.net.exception.TranslateServiceException;
 import com.ivan.translateapp.domain.Language;
 import com.ivan.translateapp.domain.Translation;
+import com.ivan.translateapp.domain.exception.NoInternetConnectionException;
 import com.ivan.translateapp.domain.interactor.IMainInteractor;
 import com.ivan.translateapp.ui.view.main.IMainView;
 
 import java.util.List;
 
-import io.reactivex.Completable;
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
@@ -30,7 +31,6 @@ public class MainPresenter implements IMainPresenter {
 
 
     public MainPresenter(IMainInteractor iMainInteractor) {
-
         this.iMainInteractor = iMainInteractor;
     }
 
@@ -115,8 +115,14 @@ public class MainPresenter implements IMainPresenter {
     }
 
     private void handleErrorGetLanguagesError(Throwable throwable) {
-        String message = throwable.getMessage();
-        iMainView.showError(message);
+        if(throwable instanceof TranslateServiceException) {
+            TranslateServiceException exception = (TranslateServiceException) throwable;
+            exception.getMessageResName();
+            iMainView.showError(exception.getMessageResName(), exception.getDescriptionResName());
+        }
+        else if(throwable instanceof NoInternetConnectionException){
+            iMainView.showInternetConnectionError();
+        }
     }
 
     private void handleSuccessTranslate(Translation translation) {
@@ -124,18 +130,28 @@ public class MainPresenter implements IMainPresenter {
         iMainView.setStateIsFavoriteCheckbox(translation.isFavorite());
     }
 
-    private void handleSuccessCheckIsFavorite(Boolean isFavorite){
+    private void handleSuccessCheckIsFavorite(Boolean isFavorite) {
         iMainView.setStateIsFavoriteCheckbox(isFavorite);
     }
 
-    private void handleErrorCheckIsFavorite(Throwable throwable){
-        String message = throwable.getMessage();
-        iMainView.showError(message);
+    private void handleErrorCheckIsFavorite(Throwable throwable) {
+        if(throwable instanceof TranslateServiceException) {
+            TranslateServiceException exception = (TranslateServiceException) throwable;
+            exception.getMessageResName();
+            iMainView.showError(exception.getMessageResName(), exception.getDescriptionResName());
+        }
     }
 
     private void handleErrorTranslate(Throwable throwable) {
 
-        Log.e(TAG, throwable.getMessage());
+        if(throwable instanceof TranslateServiceException) {
+            TranslateServiceException exception = (TranslateServiceException) throwable;
+            exception.getMessageResName();
+            iMainView.showError(exception.getMessageResName(), exception.getDescriptionResName());
+        }
+        else if(throwable instanceof NoInternetConnectionException){
+            iMainView.showInternetConnectionError();
+        }
     }
 
     private void saveTranslation(Translation translation) {
@@ -147,7 +163,7 @@ public class MainPresenter implements IMainPresenter {
         compositeDisposable.add(disposable);
     }
 
-    private void saveTranslationDirection(String fromLanguage, String toLanguage){
+    private void saveTranslationDirection(String fromLanguage, String toLanguage) {
         Disposable disposable = iMainInteractor.saveTranslationDirection(fromLanguage, toLanguage)
                 .subscribeOn(Schedulers.io())
                 .subscribe();

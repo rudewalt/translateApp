@@ -6,6 +6,7 @@ import com.ivan.translateapp.data.repository.ITranslationRepository;
 import com.ivan.translateapp.domain.Language;
 import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.domain.interactor.MainInteractor;
+import com.ivan.translateapp.utils.ConnectivityUtils;
 
 import org.assertj.core.api.Condition;
 import org.junit.Before;
@@ -21,7 +22,6 @@ import java.util.Locale;
 import io.reactivex.Observable;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.ArgumentMatchers.anySet;
 import static org.mockito.BDDMockito.given;
 
 /**
@@ -40,12 +40,15 @@ public class MainInteractorTest {
     private IHistoryRepository mockHistoryRepository;
     @Mock
     private ISettingsRepository mockSettingsRepository;
+    @Mock
+    private ConnectivityUtils connectivityUtils;
 
 
     @Before
     public void setUp() {
         locale = new Locale("en");
-        mainInteractor = new MainInteractor(mockTranslationRepository, mockHistoryRepository, mockSettingsRepository, locale);
+        mainInteractor = new MainInteractor(mockTranslationRepository, mockHistoryRepository, mockSettingsRepository, locale, connectivityUtils);
+        given(connectivityUtils.isOnline()).willReturn(true);
     }
 
     @Test

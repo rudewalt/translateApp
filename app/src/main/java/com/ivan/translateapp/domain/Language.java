@@ -3,7 +3,7 @@ package com.ivan.translateapp.domain;
 /**
  * Created by Ivan on 26.03.2017.
  */
-//TODO переименовать и перенести в модель
+
 public class Language {
     public String title;
     public String language;
