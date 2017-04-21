@@ -9,7 +9,6 @@ import com.ivan.translateapp.domain.exception.NoInternetConnectionException;
 import com.ivan.translateapp.domain.interactor.IMainInteractor;
 import com.ivan.translateapp.ui.view.main.IMainView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Single;

@@ -7,4 +7,9 @@
     <dimen name="text_size_medium">15sp</dimen>
     <dimen name="text_size_large">18sp</dimen>
     <dimen name="text_size_appbar">20sp</dimen>
+    <dimen name="text_size_hint">25sp</dimen>
+    <dimen name="margin_top_hint">60dp</dimen>
+    <dimen name="margin_hint_text">10dp</dimen>
+    <dimen name="margin_end_direction">10dp</dimen>
+    <dimen name="translation_layout_width">60dp</dimen>
 </resources>

@@ -26,6 +26,7 @@ import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 
 public class FavoritesFragment extends BaseFragment implements ITranslationListView {
@@ -35,6 +36,11 @@ public class FavoritesFragment extends BaseFragment implements ITranslationListV
 
     @BindView(R.id.favoritesRecyclerView)
     RecyclerView favoritesRecyclerView;
+
+    @BindView(R.id.empty_view)
+    View emptyView;
+
+    private Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -50,7 +56,7 @@ public class FavoritesFragment extends BaseFragment implements ITranslationListV
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_favorites, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         favoritesRecyclerView.setLayoutManager(layoutManager);
@@ -63,6 +69,9 @@ public class FavoritesFragment extends BaseFragment implements ITranslationListV
     @Override
     public void onDestroyView() {
         iFavoritesPresenter.unbindView();
+        if (unbinder != null)
+            unbinder.unbind();
+
         super.onDestroyView();
     }
 
@@ -71,6 +80,9 @@ public class FavoritesFragment extends BaseFragment implements ITranslationListV
         TranslationAdapter adapter = new TranslationAdapter(
                 translations, iFavoritesPresenter, R.layout.translation_list_item);
         favoritesRecyclerView.setAdapter(adapter);
+
+        getActivity().runOnUiThread(()->
+                emptyView.setVisibility(translations.size() == 0 ? View.VISIBLE : View.INVISIBLE));
     }
 
     @Override

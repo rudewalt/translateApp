@@ -6,6 +6,8 @@
     <string name="hint_text_to_translate">Type text to translation</string>
     <string name="clear_content_description">Clear translation</string>
     <string name="change_direction_content_description">Change translation direction</string>
+    <string name="title_no_favorites">No favorite translations</string>
+    <string name="title_no_translations">No translations</string>
 
     <string name="title_button_ok">Ok</string>
     <string name="title_error">Error</string>

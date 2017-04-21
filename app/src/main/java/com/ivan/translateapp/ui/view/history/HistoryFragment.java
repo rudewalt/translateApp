@@ -2,8 +2,6 @@ package com.ivan.translateapp.ui.view.history;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -27,6 +25,7 @@ import javax.inject.Named;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 
 public class HistoryFragment extends BaseFragment implements ITranslationListView {
@@ -37,6 +36,11 @@ public class HistoryFragment extends BaseFragment implements ITranslationListVie
 
     @BindView(R.id.historyRecyclerView)
     RecyclerView historyRecyclerView;
+
+    @BindView(R.id.empty_view)
+    View emptyView;
+
+    private Unbinder unbinder;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,7 @@ public class HistoryFragment extends BaseFragment implements ITranslationListVie
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_history, container, false);
-        ButterKnife.bind(this, view);
+        unbinder = ButterKnife.bind(this, view);
 
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         historyRecyclerView.setLayoutManager(layoutManager);
@@ -66,21 +70,27 @@ public class HistoryFragment extends BaseFragment implements ITranslationListVie
     @Override
     public void onDestroyView() {
         iHistoryPresenter.unbindView();
+        if (unbinder != null)
+            unbinder.unbind();
+
         super.onDestroyView();
     }
-
 
     @Override
     public void showTranslations(List<Translation> translations) {
         TranslationAdapter adapter = new TranslationAdapter(
                 translations, iHistoryPresenter, R.layout.translation_list_item);
         historyRecyclerView.setAdapter(adapter);
+
+        getActivity().runOnUiThread(() ->
+                emptyView.setVisibility(translations.size() == 0 ? View.VISIBLE : View.INVISIBLE));
+
     }
 
     @Override
     public void openMainView(Translation translation) {
         MainActivity activity = (MainActivity) getActivity();
-        if(activity == null)
+        if (activity == null)
             return;
 
         activity.openMainFragment(translation);
@@ -88,7 +98,7 @@ public class HistoryFragment extends BaseFragment implements ITranslationListVie
 
     @Override
     public void onShowView() {
-            iHistoryPresenter.loadTranslations();
+        iHistoryPresenter.loadTranslations();
     }
 
     @Override

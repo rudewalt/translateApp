@@ -22,7 +22,32 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/favoriteAppBar"
-        android:scrollbars="vertical">
-    </android.support.v7.widget.RecyclerView>
+        android:scrollbars="vertical"/>
+
+    <RelativeLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:layout_below="@id/favoriteAppBar"
+        android:layout_marginTop="@dimen/margin_top_hint">
+        <ImageView
+            android:id="@+id/no_favorites_image"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/ic_star_hint" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/margin_hint_text"
+            android:layout_marginLeft="@dimen/margin_hint_text"
+            android:layout_toRightOf="@id/no_favorites_image"
+            android:gravity="center"
+            android:textColor="@color/colorHint"
+            android:text="@string/title_no_favorites"
+            android:textSize="@dimen/text_size_hint" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

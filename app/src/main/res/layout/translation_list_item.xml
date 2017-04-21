@@ -21,7 +21,7 @@
 
         <LinearLayout
             android:layout_width="0dp"
-            android:layout_height="60dp"
+            android:layout_height="@dimen/translation_layout_width"
             android:layout_weight="5"
             android:orientation="vertical"
             android:paddingEnd="10dp"
@@ -58,7 +58,7 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_marginEnd="10dp"
+            android:layout_marginEnd="@dimen/margin_end_direction"
             tools:text="EN-RU" />
     </LinearLayout>
 

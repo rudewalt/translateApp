@@ -7,6 +7,8 @@
     <string name="hint_text_to_translate">Введите текст для перевода</string>
     <string name="clear_content_description">Очистить окно перевода</string>
     <string name="change_direction_content_description">Поменять направление перевода на противоположное</string>
+    <string name="title_no_favorites">Нет избранных переводов</string>
+    <string name="title_no_translations">Нет переводов</string>
 
     <string name="title_button_ok">ОК</string>
     <string name="title_error">Системная ошибка</string>

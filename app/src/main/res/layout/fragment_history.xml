@@ -1,19 +1,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:tag="fragment_history"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:tag="fragment_history"
     tools:context=".ui.view.history.HistoryFragment">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/historyAppBar"
-        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/appbar_height"
-        android:layout_width="match_parent">
+        android:background="@color/colorPrimary">
 
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/title_history"
             android:textSize="@dimen/text_size_appbar" />
     </android.support.v7.widget.Toolbar>
@@ -23,7 +23,33 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/historyAppBar"
-        android:scrollbars="vertical">
-    </android.support.v7.widget.RecyclerView>
+        android:scrollbars="vertical" />
+
+        <RelativeLayout
+            android:id="@+id/empty_view"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:layout_below="@id/historyAppBar"
+            android:layout_marginTop="@dimen/margin_top_hint">
+            <ImageView
+                android:id="@+id/no_history_image"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/ic_history_hint" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/margin_hint_text"
+                android:layout_marginLeft="@dimen/margin_hint_text"
+                android:layout_toRightOf="@id/no_history_image"
+                android:gravity="center"
+                android:textColor="@color/colorHint"
+                android:text="@string/title_no_translations"
+                android:textSize="@dimen/text_size_hint" />
+
+        </RelativeLayout>
+
 
 </RelativeLayout>
