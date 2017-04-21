@@ -1,38 +1,48 @@
 package com.ivan.translateapp.domain.interactor;
 
 
-import com.ivan.translateapp.domain.exception.NoInternetConnectionException;
 import com.ivan.translateapp.data.repository.IHistoryRepository;
 import com.ivan.translateapp.data.repository.ISettingsRepository;
 import com.ivan.translateapp.data.repository.ITranslationRepository;
 import com.ivan.translateapp.domain.Language;
 import com.ivan.translateapp.domain.Translation;
+import com.ivan.translateapp.domain.exception.NoInternetConnectionException;
 import com.ivan.translateapp.utils.ConnectivityUtils;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
-/**
- * Created by Ivan on 28.03.2017.
- */
 
 public class MainInteractor implements IMainInteractor {
 
+    //начальные значения языков, при первом запуске приложения
+    private static final String DEFAULT_FROM_LANGUAGE = "en";
+    private static final String DEFAULT_TO_LANGUAGE = "ru";
+
+    //значение локали по умолчанию
     private static final String DEFAULT_LANGUAGE_CODE = "en";
+
     private static final String EMPTY_STRING = "";
+    private static final String LANGUAGE_CODE_SEPARATOR = ";";
+
+    //ключи для settingsRepository
     private static final String FROM_LANGUAGE_KEY = "fromLanguage";
     private static final String TO_LANGUAGE_KEY = "toLanguage";
+    private static final String LANGUAGES_SET_KEY = "language_codes";
 
     private ITranslationRepository iTranslationRepository;
     private IHistoryRepository iHistoryRepository;
     private ISettingsRepository iSettingsRepository;
     private Locale locale;
     private ConnectivityUtils connectivityUtils;
+    private boolean isOffline;
 
     public MainInteractor(
             ITranslationRepository iTranslationRepository,
@@ -53,6 +63,7 @@ public class MainInteractor implements IMainInteractor {
         if (locale == null || locale.getLanguage().equals(undefinedLocale))
             return DEFAULT_LANGUAGE_CODE;
 
+        //язык может быть с указанием региона, нам нужен только язык
         String[] splitted = locale.getLanguage().split("-");
         if (splitted.length > 0)
             return splitted[0];
@@ -61,21 +72,35 @@ public class MainInteractor implements IMainInteractor {
     }
 
     @Override
-    public Observable<List<Language>> getLanguages() {
-        return
-                ensureIsOnline()
-                        .flatMap(x -> iTranslationRepository.getLanguages(getCurrentLanguage(locale)))
-                        .map(this::sortLanguages);
+    public Single<List<Language>> getLanguages() {
+        boolean isOnline = connectivityUtils.isOnline();
+
+        if (isOnline) {
+            //если есть интернет - грузим языки из api и сохраняем в настройки
+            return
+                    iTranslationRepository
+                            .getLanguages(getCurrentLanguage(locale))
+                            .map(this::sortLanguages)
+                            .flatMap(languages ->
+                                    saveToSettings(languages).toSingle(() -> languages));
+        } else {
+            //если нет - грузим из настроек
+
+            return
+                    iSettingsRepository
+                            .getStringSet(LANGUAGES_SET_KEY)
+                            .flatMap(this::mapToLanguages);
+        }
     }
 
     @Override
-    public Observable<Translation> translateText(String text, String fromLanguage, String toLanguage) {
+    public Single<Translation> translateText(String text, String fromLanguage, String toLanguage) {
         String textToTranslate = text.trim();
 
         return
                 ensureIsOnline()
                         .flatMap(x ->
-                                Observable.zip(
+                                Single.zip(
                                         iTranslationRepository.getTranslation(textToTranslate, fromLanguage, toLanguage),
                                         iHistoryRepository.isFavourite(textToTranslate, fromLanguage, toLanguage),
                                         (translation, isFavourite) -> {
@@ -86,7 +111,7 @@ public class MainInteractor implements IMainInteractor {
     }
 
     @Override
-    public Observable<Boolean> isFavorite(Translation translation) {
+    public Single<Boolean> isFavorite(Translation translation) {
         return iHistoryRepository.
                 isFavourite(translation.getText(), translation.getFromLanguage(), translation.getToLanguage());
     }
@@ -110,31 +135,27 @@ public class MainInteractor implements IMainInteractor {
 
         return
                 Completable.concatArray(
-                        iSettingsRepository.setValue(FROM_LANGUAGE_KEY, fromLanguage),
-                        iSettingsRepository.setValue(TO_LANGUAGE_KEY, toLanguage)
-                );
+                        iSettingsRepository.putValue(FROM_LANGUAGE_KEY, fromLanguage),
+                        iSettingsRepository.putValue(TO_LANGUAGE_KEY, toLanguage));
     }
 
     @Override
-    public Observable<List<String>> restoreTranslationDirection() {
+    public Single<List<String>> restoreTranslationDirection() {
         return
-                Observable.zip(
+                Single.zip(
                         iSettingsRepository.getValue(FROM_LANGUAGE_KEY),
                         iSettingsRepository.getValue(TO_LANGUAGE_KEY),
                         (fromLanguage, toLanguage) -> {
-                            if (fromLanguage.equals(EMPTY_STRING) || toLanguage.equals(EMPTY_STRING))
-                                return new ArrayList<String>();
-
                             return new ArrayList<String>() {{
-                                add(fromLanguage);
-                                add(toLanguage);
+                                add(!fromLanguage.equals(EMPTY_STRING) ? fromLanguage : DEFAULT_FROM_LANGUAGE);
+                                add(!toLanguage.equals(EMPTY_STRING) ? toLanguage : DEFAULT_TO_LANGUAGE);
                             }};
                         }
                 );
     }
 
-    private Observable<Boolean> ensureIsOnline() {
-        return Observable.fromCallable(() -> {
+    private Single<Boolean> ensureIsOnline() {
+        return Single.fromCallable(() -> {
             if (connectivityUtils.isOnline())
                 return true;
 
@@ -146,5 +167,31 @@ public class MainInteractor implements IMainInteractor {
         Collections.sort(languages, (language1, language2) -> language1.getTitle().compareTo(language2.getTitle()));
 
         return languages;
+    }
+
+    //сохраняем в настройку языки при каждом запуске
+    //чтобы без интернета можно было запуститься с заполненными языками
+    //но есть проблема, если locale на телефоне изменится, то title будут некудышными
+    private Completable saveToSettings(List<Language> languages) {
+        HashSet<String> languageSet = new HashSet<>();
+        for (Language language : languages) {
+            languageSet.add(language.getTitle() + LANGUAGE_CODE_SEPARATOR + language.getLanguage());
+        }
+
+        return
+                iSettingsRepository.putStringSet(LANGUAGES_SET_KEY, languageSet);
+    }
+
+    private Single<List<Language>> mapToLanguages(Set<String> languageSet) {
+        if (languageSet.size() == 0)
+            return Single.just(new ArrayList<>());
+
+        List<Language> languages = new ArrayList<>();
+        for (String str : languageSet) {
+            String[] splitted = str.split(LANGUAGE_CODE_SEPARATOR);
+            languages.add(new Language(splitted[0], splitted[1]));
+        }
+
+        return Single.just(languages);
     }
 }

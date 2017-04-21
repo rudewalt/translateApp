@@ -10,9 +10,12 @@ import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 
+/**
+ * Репозиторий для сохранения переводов в локальной БД
+ */
 public class HistoryRepository implements IHistoryRepository {
 
     private DbHelper dbOpenHelper;
@@ -24,39 +27,27 @@ public class HistoryRepository implements IHistoryRepository {
     }
 
     @Override
-    public Observable<List<Translation>> getHistory() {
+    public Single<List<Translation>> getHistory() {
         return
-                Observable.fromCallable(() -> dbOpenHelper.getAllHistory())
+                Single.fromCallable(() -> dbOpenHelper.getAllHistory())
                         .map(this::sortByCreateDateDesc)
                         .map(this::mapToTranslation);
     }
 
     @Override
-    public Observable<List<Translation>> getFavorites() {
+    public Single<List<Translation>> getFavorites() {
         return
-                Observable.fromCallable(() -> dbOpenHelper.getAllFavorites())
+                Single.fromCallable(() -> dbOpenHelper.getAllFavorites())
                         .map(this::sortByAddToFavouriteDate)
                         .map(this::mapToTranslation);
     }
 
     @Override
-    public Observable<Boolean> isFavourite(String text, String fromLanguage, String toLanguage) {
-        return Observable.fromCallable(() -> {
+    public Single<Boolean> isFavourite(String text, String fromLanguage, String toLanguage) {
+        return Single.fromCallable(() -> {
             TranslationEntity entity = dbOpenHelper.getTranslation(text, fromLanguage, toLanguage);
             return entity != null && entity.isFavorite();
         });
-    }
-
-    @Override
-    public Completable saveSetting(String key, String value) {
-        return
-                Completable.fromAction(() -> dbOpenHelper.saveKeyValue(key, value));
-    }
-
-    @Override
-    public Observable<String> getSetting(String key) {
-        return Observable.fromCallable(() -> dbOpenHelper.getKeyValue(key))
-                .map(keyValueEntity -> keyValueEntity.getValue());
     }
 
     @Override

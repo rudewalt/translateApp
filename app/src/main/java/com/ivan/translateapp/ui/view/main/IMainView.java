@@ -5,10 +5,6 @@ import com.ivan.translateapp.ui.view.IView;
 
 import java.util.List;
 
-/**
- * Created by Ivan on 27.03.2017.
- */
-
 public interface IMainView extends IView {
 
     void setLanguages(List<Language> languages);
@@ -30,4 +26,8 @@ public interface IMainView extends IView {
     void hideIsFavoriteCheckbox();
 
     void setStateIsFavoriteCheckbox(boolean checked);
+
+    void showProgress();
+
+    void hideProgress();
 }

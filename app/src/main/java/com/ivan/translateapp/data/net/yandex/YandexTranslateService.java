@@ -13,17 +13,14 @@ import com.ivan.translateapp.domain.Translation;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
- * Implementation of ITranslateService
+ * Реализация интерфейса сервиса-переводчика
  */
 
 public class YandexTranslateService implements ITranslateService {
-
     private static final String TAG = YandexTranslateService.class.toString();
-    private static final int MAX_TEXT_LENGTH = 10000;
-
 
     private IYandexTranslateApiInterface apiInterface;
     private LanguageResponseMapper languageResponseMapper;
@@ -39,48 +36,40 @@ public class YandexTranslateService implements ITranslateService {
     }
 
     @Override
-    public Observable<List<Language>> getLanguages(String ui) {
-        Observable<List<Language>> languages = apiInterface
+    public Single<List<Language>> getLanguages(String ui) {
+        return apiInterface
                 .getLanguages(ui)
                 .map(this::checkResponseCode)
                 .map(supportedLanguagesResponseMapper);
-
-        return languages;
     }
 
     @Override
-    public Observable<Language> detectLanguage(String text) {
-
-        Observable<Language> detectedLanguage = apiInterface
+    public Single<Language> detectLanguage(String text) {
+        return apiInterface
                 .detectLanguage(text)
                 .map(this::checkResponseCode)
                 .map(languageResponseMapper);
-
-        return detectedLanguage;
     }
 
     @Override
-    public Observable<Translation> translate(String text, String fromLanguage, String toLanguage) {
+    public Single<Translation> translate(String text, String fromLanguage, String toLanguage) {
         final int includeDetectedLanguage = 1;
         String direction = fromLanguage == null || fromLanguage.isEmpty()
                 ? toLanguage
                 : String.format("%1$s-%2$s", fromLanguage, toLanguage);
 
-
-        Observable<Translation> translation = apiInterface
+        return apiInterface
                 .translate(text, direction, includeDetectedLanguage)
                 .map(this::checkResponseCode)
                 .map(translationResponse -> {
                     String translatedText = TextUtils.join(" ", translationResponse.getText());
                     return new Translation(text, translatedText, toLanguage, fromLanguage, false, false);
                 });
-
-        return translation;
     }
 
     private <T extends BaseResponse> T checkResponseCode(T response) throws TranslateServiceException {
         Integer code = response.getCode();
-        if(code == null)
+        if (code == null)
             return response;
 
         switch (code) {
@@ -92,7 +81,7 @@ public class YandexTranslateService implements ITranslateService {
 
             case ErrorCodes.INVALID_API_KEY:
             case ErrorCodes.BLOCKED_API_KEY:
-                Log.e(TAG," Yandex Api return error response code " + code);
+                Log.e(TAG, " Yandex Api return error response code " + code);
                 throw new TranslateServiceException(code);
         }
 

@@ -102,7 +102,15 @@
         android:gravity="end"
         android:linksClickable="true" />
 
-    <LinearLayout
+    <ProgressBar
+        android:id="@+id/progressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/apiRequirementsTextView"
+        android:visibility="invisible" />
+
+    <RelativeLayout
         android:id="@+id/translateResultContainer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -111,22 +119,25 @@
         android:layout_marginRight="15dp"
         android:orientation="horizontal">
 
+        <CheckBox
+            android:id="@+id/isFavorite"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:button="@drawable/selector_ic_star"
+            android:saveEnabled="false"
+            android:visibility="invisible" />
+
         <TextView
             android:id="@+id/translatedText"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_weight="1"
+            android:layout_toLeftOf="@id/isFavorite"
             android:padding="@dimen/text_container_padding"
             android:scrollbars="vertical"
             android:textSize="@dimen/text_size_medium"
             tools:text="@string/sample_text_2" />
 
-        <CheckBox
-            android:id="@+id/isFavorite"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:button="@drawable/selector_ic_star"
-            android:saveEnabled="false"
-            android:visibility="invisible" />
-    </LinearLayout>
+
+    </RelativeLayout>
 </RelativeLayout>

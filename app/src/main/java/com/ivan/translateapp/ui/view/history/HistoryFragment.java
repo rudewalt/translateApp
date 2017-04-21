@@ -3,6 +3,7 @@ package com.ivan.translateapp.ui.view.history;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -15,6 +16,7 @@ import com.ivan.translateapp.dagger.MainModule;
 import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.ui.adapter.TranslationAdapter;
 import com.ivan.translateapp.ui.presenter.ITranslationListViewPresenter;
+import com.ivan.translateapp.ui.view.BaseFragment;
 import com.ivan.translateapp.ui.view.ITranslationListView;
 import com.ivan.translateapp.ui.view.MainActivity;
 
@@ -27,7 +29,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class HistoryFragment extends Fragment implements ITranslationListView {
+public class HistoryFragment extends BaseFragment implements ITranslationListView {
 
     @Inject
     @Named("history")
@@ -85,22 +87,12 @@ public class HistoryFragment extends Fragment implements ITranslationListView {
     }
 
     @Override
-    public void showError(String title, String description) {
-
-    }
-
-    @Override
-    public void showInternetConnectionError() {
-
-    }
-
-    @Override
     public void onShowView() {
             iHistoryPresenter.loadTranslations();
     }
 
     @Override
     public void onHideView() {
-        //no implementation
+
     }
 }

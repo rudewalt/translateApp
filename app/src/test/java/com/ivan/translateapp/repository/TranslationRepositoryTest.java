@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -45,10 +46,10 @@ public class TranslationRepositoryTest {
         String translated = "текст";
 
         given(mockTranslateService.translate(text,fromLanguage,toLanguage))
-                .willReturn(Observable.just(new Translation(text,translated,fromLanguage,toLanguage,false,false)));
+                .willReturn(Single.just(new Translation(text,translated,fromLanguage,toLanguage,false,false)));
 
         //when
-        Translation result = translationRepository.getTranslation(text,fromLanguage,toLanguage).blockingFirst();
+        Translation result = translationRepository.getTranslation(text,fromLanguage,toLanguage).blockingGet();
 
         //then
         assertThat(result).isNotNull();
@@ -59,10 +60,10 @@ public class TranslationRepositoryTest {
     public void getLanguages_shouldReturnLanguages(){
         //given
         String ui = "test ui";
-        given(mockTranslateService.getLanguages(ui)).willReturn(Observable.just(new ArrayList<>()));
+        given(mockTranslateService.getLanguages(ui)).willReturn(Single.just(new ArrayList<>()));
 
         //when
-        List<Language> result = translationRepository.getLanguages(ui).blockingFirst();
+        List<Language> result = translationRepository.getLanguages(ui).blockingGet();
 
         //then
         assertThat(result).isNotNull();

@@ -33,7 +33,6 @@ public class Translation {
         this.fromLanguage = fromLanguage;
     }
 
-
     public String getToLanguage() {
         return toLanguage;
     }

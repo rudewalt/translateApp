@@ -2,9 +2,7 @@ package com.ivan.translateapp.ui.view.main;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.AlertDialog;
 import android.text.Editable;
 import android.text.Html;
 import android.text.TextWatcher;
@@ -18,9 +16,9 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ProgressBar;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.ivan.translateapp.R;
 import com.ivan.translateapp.TranslateApplication;
@@ -29,7 +27,7 @@ import com.ivan.translateapp.domain.Language;
 import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.ui.adapter.LanguageAdapter;
 import com.ivan.translateapp.ui.presenter.IMainPresenter;
-import com.ivan.translateapp.utils.ResourceUtils;
+import com.ivan.translateapp.ui.view.BaseFragment;
 
 import java.util.List;
 import java.util.Timer;
@@ -41,10 +39,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class MainFragment extends Fragment implements IMainView {
+public class MainFragment extends BaseFragment implements IMainView {
 
     private final static String EMPTY_STRING = "";
-    private final String TAG = MainFragment.class.toString();
     private final long DELAY = 500; //milliseconds
 
     @BindView(R.id.textToTranslate)
@@ -63,6 +60,9 @@ public class MainFragment extends Fragment implements IMainView {
     ImageButton changeDirection;
     @BindView(R.id.apiRequirementsTextView)
     TextView apiRequirementsTextView;
+    @BindView(R.id.progressBar)
+    ProgressBar progressBar;
+
     @Inject
     IMainPresenter iMainPresenter;
 
@@ -105,8 +105,6 @@ public class MainFragment extends Fragment implements IMainView {
         changeDirection.setOnClickListener(this::handleChangeDirectionClick);
         clearButton.setOnClickListener(this::handleClearButtonClick);
 
-        //TODO сделать првоерку на наличие сети
-        //TODO сделать обработку и вывод понятных ошибок пользователю
         iMainPresenter.bindView(this);
         iMainPresenter.loadLanguages();
 
@@ -128,6 +126,9 @@ public class MainFragment extends Fragment implements IMainView {
 
                     @Override
                     public void afterTextChanged(Editable s) {
+                        setTranslatedText(EMPTY_STRING);
+                        hideIsFavoriteCheckbox();
+
                         afterTextChangedTimer.cancel();
                         afterTextChangedTimer = new Timer();
                         afterTextChangedTimer.schedule(new TimerTask() {
@@ -139,7 +140,6 @@ public class MainFragment extends Fragment implements IMainView {
 
                         if (s.toString().length() > 0) {
                             showClearButton();
-                            showIsFavoriteCheckbox();
                         } else {
                             hideClearButton();
                             hideIsFavoriteCheckbox();
@@ -176,7 +176,7 @@ public class MainFragment extends Fragment implements IMainView {
 
     @Override
     public void setTranslatedText(String text) {
-        translatedText.setText(text);
+        getActivity().runOnUiThread(() -> translatedText.setText(text));
     }
 
     @Override
@@ -194,32 +194,8 @@ public class MainFragment extends Fragment implements IMainView {
     public void setText(String text) {
         textToTranslate.removeTextChangedListener(textToTranslateWatcher);
         textToTranslate.setText(text);
+        textToTranslate.setSelection(text.length());
         textToTranslate.addTextChangedListener(textToTranslateWatcher);
-    }
-
-
-    @Override
-    public void showError(String titleResName, String descriptionResName) {
-        String title = getResources().getString(ResourceUtils.getResId(titleResName, R.string.class));
-        String description = getResources().getString(ResourceUtils.getResId(descriptionResName, R.string.class));
-
-        AlertDialog.Builder alert = new AlertDialog.Builder(getActivity())
-                .setTitle(title)
-                .setMessage(description)
-                .setPositiveButton(getString(R.string.title_button_ok), (dialog, whichButton) -> {
-                    return;
-                });
-
-        alert.show();
-    }
-
-    @Override
-    public void showInternetConnectionError() {
-        int duration = Toast.LENGTH_SHORT;
-        String text = getResources().getString(R.string.error_description_no_internet);
-
-        Toast toast = Toast.makeText(getActivity(), text, duration);
-        toast.show();
     }
 
     @Override
@@ -234,13 +210,12 @@ public class MainFragment extends Fragment implements IMainView {
 
     @Override
     public void showIsFavoriteCheckbox() {
-        isFavoriteCheckbox.setVisibility(View.VISIBLE);
+        getActivity().runOnUiThread(() -> isFavoriteCheckbox.setVisibility(View.VISIBLE));
     }
 
     @Override
     public void hideIsFavoriteCheckbox() {
-        isFavoriteCheckbox.setVisibility(View.INVISIBLE);
-        setStateIsFavoriteCheckbox(false);
+        getActivity().runOnUiThread(() -> isFavoriteCheckbox.setVisibility(View.INVISIBLE));
     }
 
     @Override
@@ -251,11 +226,22 @@ public class MainFragment extends Fragment implements IMainView {
     }
 
     @Override
+    public void showProgress() {
+        getActivity().runOnUiThread(() -> progressBar.setVisibility(View.VISIBLE));
+    }
+
+    @Override
+    public void hideProgress() {
+        getActivity().runOnUiThread(() -> progressBar.setVisibility(View.INVISIBLE));
+    }
+
+    @Override
     public void onShowView() {
         if (textToTranslate.requestFocus())
             showSoftInput();
 
-        //check that current translation still isFavorite
+        //проверяем были ли изменения текущего переведенного слова
+        //пользователь мог убрать перевод из избранного, тогда нам нужно снять чекбокс
         iMainPresenter.loadChanges(getTranslation());
     }
 
@@ -278,7 +264,7 @@ public class MainFragment extends Fragment implements IMainView {
 
     private String getSelectedLanguage(Spinner spinner) {
         Language selected = ((Language) spinner.getSelectedItem());
-        if(selected != null)
+        if (selected != null)
             return selected.getLanguage();
 
         return EMPTY_STRING;
@@ -307,6 +293,8 @@ public class MainFragment extends Fragment implements IMainView {
             return;
 
         iMainPresenter.listenText(text, fromLanguage, toLanguage);
+
+
     }
 
     private AdapterView.OnItemSelectedListener getChangeLanguageListener() {

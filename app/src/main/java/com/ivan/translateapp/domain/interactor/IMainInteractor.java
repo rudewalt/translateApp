@@ -7,23 +7,24 @@ import java.util.List;
 
 import io.reactivex.Completable;
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 
 /**
- * Created by Ivan on 27.03.2017.
+ * Интерактор для хранения бизнес-логики, связанной с переводами
  */
 
 public interface IMainInteractor {
 
-    Observable<List<Language>> getLanguages();
+    Single<List<Language>> getLanguages();
 
-    Observable<Translation> translateText(String text, String fromLanguage, String toLanguage);
+    Single<Translation> translateText(String text, String fromLanguage, String toLanguage);
 
-    Observable<Boolean> isFavorite(Translation translation);
+    Single<Boolean> isFavorite(Translation translation);
 
     Completable saveTranslation(Translation translation);
 
     Completable saveTranslationDirection(String fromLanguage, String toLanguage);
 
-    Observable<List<String>> restoreTranslationDirection();
+    Single<List<String>> restoreTranslationDirection();
 }

@@ -9,7 +9,7 @@
     <string name="change_direction_content_description">Поменять направление перевода на противоположное</string>
 
     <string name="title_button_ok">ОК</string>
-    <string name="title_error">Ошибка</string>
+    <string name="title_error">Системная ошибка</string>
 
     <string name="error_title_code_401">Системная ошибка</string>
     <string name="error_description_code_401">Пожалуйста обратитесь в службу поддержки</string>

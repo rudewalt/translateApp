@@ -1,14 +1,20 @@
 package com.ivan.translateapp.data.repository;
 
+import java.util.Set;
+
 import io.reactivex.Completable;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
- * Created by Ivan on 15.04.2017.
+ * Репозиторий для сохранения настроек и начальных данных приложения
  */
 
 public interface ISettingsRepository {
-    Observable<String> getValue(String key);
+    Single<String> getValue(String key);
 
-    Completable setValue(String key, String value);
+    Completable putValue(String key, String value);
+
+    Completable putStringSet(String key, Set<String> stringSet);
+
+    Single<Set<String>> getStringSet(String key);
 }

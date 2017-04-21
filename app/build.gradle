@@ -2,14 +2,6 @@ apply plugin: 'com.android.application'
 apply plugin: 'me.tatarka.retrolambda'
 
 android {
-    signingConfigs {
-        signConfig {
-            keyAlias 'key1'
-            keyPassword 'k!!!QQQ222'
-            storeFile file('C:/Projects/Android/KeyStore/ISaninKey.jks')
-            storePassword 'k!!!QQQ222'
-        }
-    }
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     compileOptions {
@@ -46,9 +38,6 @@ android {
 
 dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
-    //compile 'com.pushtorefresh.storio:sqlite:1.12.3'
-    //compile 'com.pushtorefresh.storio:sqlite-annotations:1.12.3'
-    //annotationProcessor 'com.pushtorefresh.storio:sqlite-annotations-processor:1.12.3'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support:design:25.3.1'
     compile 'com.google.dagger:dagger:2.9'

@@ -5,7 +5,7 @@ import com.ivan.translateapp.domain.Translation;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 
 /**
@@ -14,8 +14,8 @@ import io.reactivex.Observable;
 
 public interface ITranslationRepository {
 
-    Observable<Translation> getTranslation(String text, String fromLanguage, String toLanguage);
+    Single<Translation> getTranslation(String text, String fromLanguage, String toLanguage);
 
-    Observable<List<Language>> getLanguages(String userInterface);
+    Single<List<Language>> getLanguages(String userInterface);
 
 }

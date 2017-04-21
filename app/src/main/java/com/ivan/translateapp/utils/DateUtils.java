@@ -17,7 +17,7 @@ public class DateUtils {
 
     public static final String dateFormat = "yyyy-MM-dd HH:mm:ss";
 
-    public static Date parse(@NonNull String stringDate){
+    public static Date parse(String stringDate){
         if(stringDate.equals(""))
             return null;
 

@@ -5,17 +5,17 @@ import com.ivan.translateapp.domain.Translation;
 
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
 /**
- * Created by Ivan on 26.03.2017.
+ * Интерфейс над Api Яндекс-переводчика.
  */
 
 public interface ITranslateService {
 
-    Observable<List<Language>> getLanguages(String ui);
+    Single<List<Language>> getLanguages(String ui);
 
-    Observable<Language> detectLanguage(String text);
+    Single<Language> detectLanguage(String text);
 
-    Observable<Translation> translate(String text, String fromLanguage, String toLanguage);
+    Single<Translation> translate(String text, String fromLanguage, String toLanguage);
 }

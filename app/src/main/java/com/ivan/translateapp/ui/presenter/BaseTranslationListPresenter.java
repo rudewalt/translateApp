@@ -12,7 +12,7 @@ import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Base presenter for history and favorites
+ * Базовый презентер для управления фрагментами со списком переводов
  */
 
 public abstract class BaseTranslationListPresenter implements ITranslationListViewPresenter{

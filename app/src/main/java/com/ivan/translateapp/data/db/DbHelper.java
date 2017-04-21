@@ -8,14 +8,13 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.NonNull;
 import android.util.Log;
 
-import com.ivan.translateapp.data.db.entity.KeyValueEntity;
-import com.ivan.translateapp.data.db.entity.TranslationEntity;
-import com.ivan.translateapp.data.db.tables.KeyValueTable;
-import com.ivan.translateapp.data.db.tables.TranslationTable;
 import com.ivan.translateapp.domain.Translation;
+import com.ivan.translateapp.data.db.entity.TranslationEntity;
+import com.ivan.translateapp.data.db.tables.TranslationsTable;
 import com.ivan.translateapp.utils.DateUtils;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 
@@ -23,9 +22,35 @@ public class DbHelper extends SQLiteOpenHelper {
 
     private static final String TAG = DbHelper.class.toString();
 
-    private static final String EMPTY_STRING = "";
     private static final int DB_VERSION = 6;
     private static final String DB_NAME = "translateApp_db";
+
+    //скрипт создания таблички переводов с составным ключом (текст,язык текста, язык перевода)
+    private static final String SQL_CREATE_TRANSLATIONS =
+            "CREATE TABLE " + TranslationsTable.TABLE + "("
+                    + TranslationsTable.COLUMN_TEXT + " TEXT NOT NULL, "
+                    + TranslationsTable.COLUMN_CREATE_DATE + " TEXT NOT NULL, "
+                    + TranslationsTable.COLUMN_TRANSLATED + " TEXT NOT NULL, "
+                    + TranslationsTable.COLUMN_FROM_LANGUAGE + " TEXT NOT NULL, "
+                    + TranslationsTable.COLUMN_TO_LANGUAGE + " TEXT NOT NULL, "
+                    + TranslationsTable.COLUMN_IS_FAVORITE + " INTEGER NULL, "
+                    + TranslationsTable.COLUMN_ADD_TO_FAVORITE_DATE + " TEXT NULL, "
+                    + TranslationsTable.COLUMN_IS_HISTORY + " INTEGER, "
+                    + "PRIMARY KEY (" + TranslationsTable.COLUMN_TEXT + "," + TranslationsTable.COLUMN_FROM_LANGUAGE + "," + TranslationsTable.COLUMN_TO_LANGUAGE + "))";
+
+    private static final String SQL_GET_HISTORY =
+         "SELECT * FROM " + TranslationsTable.TABLE + " WHERE " + TranslationsTable.COLUMN_IS_HISTORY + " = 1";
+
+    private static final String SQL_GET_FAVORITES =
+            "SELECT * FROM " + TranslationsTable.TABLE + " WHERE " + TranslationsTable.COLUMN_IS_FAVORITE + " = 1";
+
+    public static String SQL_DELETE_HISTORY =
+         "DELETE FROM " + TranslationsTable.TABLE + " WHERE " + TranslationsTable.COLUMN_IS_HISTORY + " = 1 and " + TranslationsTable.COLUMN_IS_FAVORITE + "=0"
+                + " UPDATE " + TranslationsTable.TABLE + " SET " + TranslationsTable.COLUMN_IS_HISTORY + "=0;";
+
+    public static String SQL_DELETE_FAVORITES =
+         "DELETE FROM " + TranslationsTable.TABLE + " WHERE " + TranslationsTable.COLUMN_IS_FAVORITE + "=1";
+
 
     public DbHelper(@NonNull Context context) {
         super(context, DB_NAME, null, DB_VERSION);
@@ -33,32 +58,27 @@ public class DbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(TranslationTable.getCreateTableQuery());
-        db.execSQL(KeyValueTable.getCreateTableQuery());
+        db.execSQL(SQL_CREATE_TRANSLATIONS);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TranslationTable.TABLE);
-        db.execSQL("DROP TABLE IF EXISTS " + KeyValueTable.TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TranslationsTable.TABLE);
         onCreate(db);
     }
 
-    /*
-          try insert, if fail then try to update
-     */
     public void saveTranslation(Translation translation) {
         ContentValues contentValues = getTranslationContentValues(translation);
         SQLiteDatabase dataBase = getWritableDatabase();
 
-        long id = dataBase.insertWithOnConflict(TranslationTable.TABLE, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
+        long id = dataBase.insertWithOnConflict(TranslationsTable.TABLE, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
         if (id == -1) {
             ContentValues contentValuesForUpdate = getContentValuesForUpdate(translation);
-            String whereCondition = TranslationTable.COLUMN_TEXT + "=? AND "
-                    + TranslationTable.COLUMN_FROM_LANGUAGE + "=? AND "
-                    + TranslationTable.COLUMN_TO_LANGUAGE + "=?";
+            String whereCondition = TranslationsTable.COLUMN_TEXT + "=? AND "
+                    + TranslationsTable.COLUMN_FROM_LANGUAGE + "=? AND "
+                    + TranslationsTable.COLUMN_TO_LANGUAGE + "=?";
 
-            int rowsAffected = dataBase.update(TranslationTable.TABLE, contentValuesForUpdate, whereCondition,
+            int rowsAffected = dataBase.update(TranslationsTable.TABLE, contentValuesForUpdate, whereCondition,
                     new String[]{translation.getText(), translation.getFromLanguage(), translation.getToLanguage()});
 
             Log.d(TAG, rowsAffected + " rows updated");
@@ -70,24 +90,24 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (translation.isFavorite()) {
             ContentValues contentValues = getTranslationContentValues(translation);
-            long id = dataBase.update(TranslationTable.TABLE, contentValues, "text=?", new String[]{translation.getText()});
+            long id = dataBase.update(TranslationsTable.TABLE, contentValues, "text=?", new String[]{translation.getText()});
         } else {
-            dataBase.delete(TranslationTable.TABLE, "text=?", new String[]{translation.getText()});
+            dataBase.delete(TranslationsTable.TABLE, "text=?", new String[]{translation.getText()});
         }
     }
 
     public List<TranslationEntity> getAllHistory() {
-        return getTranslation(TranslationTable.getAllHistory(), null);
+        return getTranslation(SQL_GET_HISTORY, null);
     }
 
     public List<TranslationEntity> getAllFavorites() {
-        return getTranslation(TranslationTable.getAllFavorites(), null);
+        return getTranslation(SQL_GET_FAVORITES, null);
     }
 
     public TranslationEntity getTranslation(String text, String fromLanguage, String toLanguage) {
         final int first = 0;
         List<TranslationEntity> queryResult =
-                getTranslation(TranslationTable.getByKey(), new String[]{text, fromLanguage, toLanguage});
+                getTranslation(getTranslationsByKeyQuery(), new String[]{text, fromLanguage, toLanguage});
 
         return
                 queryResult.size() > 0
@@ -97,36 +117,12 @@ public class DbHelper extends SQLiteOpenHelper {
 
     public void deleteHistory() {
         SQLiteDatabase database = getWritableDatabase();
-        database.execSQL(TranslationTable.clearHistory());
+        database.execSQL(SQL_DELETE_HISTORY);
     }
 
     public void deleteFavorites() {
         SQLiteDatabase database = getWritableDatabase();
-        database.execSQL(TranslationTable.clearFavorites());
-    }
-
-    public void saveKeyValue(String key, String value) {
-        ContentValues contentValues = new ContentValues();
-        contentValues.put(KeyValueTable.COLUMN_KEY, key);
-        contentValues.put(KeyValueTable.COLUMN_VALUE, value);
-
-        SQLiteDatabase dataBase = getWritableDatabase();
-        long id = dataBase.insertWithOnConflict(KeyValueTable.TABLE, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
-        if (id == -1) {
-            String whereCondition = KeyValueTable.COLUMN_KEY + "=?";
-            int rowsAffected = dataBase.update(KeyValueTable.TABLE, contentValues, whereCondition, new String[]{key});
-        }
-    }
-
-    public KeyValueEntity getKeyValue(String key) {
-        SQLiteDatabase dataBase = getReadableDatabase();
-        Cursor cursor = dataBase.rawQuery(KeyValueTable.getKeyValuePairQuery(), new String[]{key});
-        if (cursor.moveToFirst()) {
-            KeyValueEntity entity = getKeyValueEntity(cursor);
-            return entity;
-        }
-
-        return new KeyValueEntity(key, EMPTY_STRING);
+        database.execSQL(SQL_DELETE_FAVORITES);
     }
 
     private List<TranslationEntity> getTranslation(String query, String[] params) {
@@ -144,50 +140,50 @@ public class DbHelper extends SQLiteOpenHelper {
     }
 
     private TranslationEntity getTranslationEntity(Cursor cursor) {
+        String addToFavoriteDateString = cursor.getString(cursor.getColumnIndex(TranslationsTable.COLUMN_ADD_TO_FAVORITE_DATE));
+        Date addToFavoriteDate = addToFavoriteDateString != null && addToFavoriteDateString.length()>0
+                ? DateUtils.parse(addToFavoriteDateString)
+                : null;
+
         TranslationEntity entity = new TranslationEntity(
-                cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_TEXT)),
-                cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_TRANSLATED)),
-                cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_FROM_LANGUAGE)),
-                cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_TO_LANGUAGE)),
-                cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_CREATE_DATE)),
-                cursor.getString(cursor.getColumnIndex(TranslationTable.COLUMN_ADD_TO_FAVORITE_DATE)),
-                cursor.getInt(cursor.getColumnIndex(TranslationTable.COLUMN_IS_HISTORY)),
-                cursor.getInt(cursor.getColumnIndex(TranslationTable.COLUMN_IS_FAVORITE))
+                cursor.getString(cursor.getColumnIndex(TranslationsTable.COLUMN_TEXT)),
+                cursor.getString(cursor.getColumnIndex(TranslationsTable.COLUMN_TRANSLATED)),
+                cursor.getString(cursor.getColumnIndex(TranslationsTable.COLUMN_FROM_LANGUAGE)),
+                cursor.getString(cursor.getColumnIndex(TranslationsTable.COLUMN_TO_LANGUAGE)),
+                DateUtils.parse(cursor.getString(cursor.getColumnIndex(TranslationsTable.COLUMN_CREATE_DATE))),
+                addToFavoriteDate,
+                cursor.getInt(cursor.getColumnIndex(TranslationsTable.COLUMN_IS_HISTORY)) == 1,
+                cursor.getInt(cursor.getColumnIndex(TranslationsTable.COLUMN_IS_FAVORITE)) == 1
         );
 
         return entity;
     }
 
-    private KeyValueEntity getKeyValueEntity(Cursor cursor){
-        KeyValueEntity keyValueEntity = new KeyValueEntity(
-                cursor.getString(cursor.getColumnIndex(KeyValueTable.COLUMN_KEY)),
-                cursor.getString(cursor.getColumnIndex(KeyValueTable.COLUMN_VALUE)));
-
-        return keyValueEntity;
-    }
-
     private ContentValues getTranslationContentValues(Translation translation) {
 
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TranslationTable.COLUMN_FROM_LANGUAGE, translation.getFromLanguage());
-        contentValues.put(TranslationTable.COLUMN_TO_LANGUAGE, translation.getToLanguage());
-        contentValues.put(TranslationTable.COLUMN_TEXT, translation.getText());
-        contentValues.put(TranslationTable.COLUMN_TRANSLATED, translation.getTranslated());
-        contentValues.put(TranslationTable.COLUMN_CREATE_DATE, DateUtils.getCurrentDateTime());
-        contentValues.put(TranslationTable.COLUMN_IS_HISTORY, translation.isHistory() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_IS_FAVORITE, translation.isFavorite() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_ADD_TO_FAVORITE_DATE, translation.isFavorite() ? DateUtils.getCurrentDateTime() : null);
+        contentValues.put(TranslationsTable.COLUMN_FROM_LANGUAGE, translation.getFromLanguage());
+        contentValues.put(TranslationsTable.COLUMN_TO_LANGUAGE, translation.getToLanguage());
+        contentValues.put(TranslationsTable.COLUMN_TEXT, translation.getText());
+        contentValues.put(TranslationsTable.COLUMN_TRANSLATED, translation.getTranslated());
+        contentValues.put(TranslationsTable.COLUMN_CREATE_DATE, DateUtils.getCurrentDateTime());
+        contentValues.put(TranslationsTable.COLUMN_IS_HISTORY, translation.isHistory() ? 1 : 0);
+        contentValues.put(TranslationsTable.COLUMN_IS_FAVORITE, translation.isFavorite() ? 1 : 0);
+        contentValues.put(TranslationsTable.COLUMN_ADD_TO_FAVORITE_DATE, translation.isFavorite() ? DateUtils.getCurrentDateTime() : null);
 
         return contentValues;
     }
 
     private ContentValues getContentValuesForUpdate(Translation translation) {
         ContentValues contentValues = new ContentValues();
-        contentValues.put(TranslationTable.COLUMN_IS_HISTORY, translation.isHistory() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_IS_FAVORITE, translation.isFavorite() ? 1 : 0);
-        contentValues.put(TranslationTable.COLUMN_ADD_TO_FAVORITE_DATE, translation.isFavorite() ? DateUtils.getCurrentDateTime() : null);
+        contentValues.put(TranslationsTable.COLUMN_IS_HISTORY, translation.isHistory() ? 1 : 0);
+        contentValues.put(TranslationsTable.COLUMN_IS_FAVORITE, translation.isFavorite() ? 1 : 0);
+        contentValues.put(TranslationsTable.COLUMN_ADD_TO_FAVORITE_DATE, translation.isFavorite() ? DateUtils.getCurrentDateTime() : null);
         return contentValues;
     }
 
-
+    private static String getTranslationsByKeyQuery() {
+        return "SELECT * FROM " + TranslationsTable.TABLE +
+                " WHERE " + TranslationsTable.COLUMN_TEXT + "=? AND " + TranslationsTable.COLUMN_FROM_LANGUAGE + "=? AND " + TranslationsTable.COLUMN_TO_LANGUAGE + "=?";
+    }
 }

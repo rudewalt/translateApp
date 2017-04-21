@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -40,10 +41,10 @@ public class HistoryInteractorTest {
     public void getHistory_shouldReturnTranslationHistory(){
         //given
         ArrayList<Translation> testTranslations = getTestTranslations();
-        given(HistoryRepository.getHistory()).willReturn(Observable.fromArray(testTranslations));
+        given(HistoryRepository.getHistory()).willReturn(Single.just(testTranslations));
 
         //when
-        List<Translation> result =  historyInteractor.getHistory().blockingFirst();
+        List<Translation> result =  historyInteractor.getHistory().blockingGet();
 
         //then
         assertThat(result).isNotEmpty();

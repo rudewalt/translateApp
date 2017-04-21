@@ -9,26 +9,27 @@ import com.ivan.translateapp.domain.exception.NoInternetConnectionException;
 import com.ivan.translateapp.domain.interactor.IMainInteractor;
 import com.ivan.translateapp.ui.view.main.IMainView;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
+import io.reactivex.Single;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
 
 /**
- * Created by Ivan on 27.03.2017.
+ * Реализация презентара фрагмента переводов
  */
-
 public class MainPresenter implements IMainPresenter {
 
     private static final String TAG = MainPresenter.class.toString();
+    private static final String EMPTY_STRING = "";
 
+    private boolean isOffline;
     private IMainInteractor iMainInteractor;
     private IMainView iMainView;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
 
     public MainPresenter(IMainInteractor iMainInteractor) {
         this.iMainInteractor = iMainInteractor;
@@ -48,22 +49,25 @@ public class MainPresenter implements IMainPresenter {
     @Override
     public void loadLanguages() {
         Disposable disposable =
-                Observable.zip(
+                Single.zip(
                         iMainInteractor.getLanguages(),
                         iMainInteractor.restoreTranslationDirection(), LanguagesWithSettings::new)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(this::handleSuccessLanguages, this::handleErrorGetLanguagesError);
+                        .subscribe(this::handleSuccessLanguages, this::handleError);
 
         compositeDisposable.add(disposable);
     }
 
     @Override
     public void listenText(String text, String fromLanguage, String toLanguage) {
-        Disposable disposable = iMainInteractor.translateText(text, fromLanguage, toLanguage)
+        iMainView.showProgress();
+
+        Disposable disposable =
+                iMainInteractor.translateText(text, fromLanguage, toLanguage)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(this::handleSuccessTranslate, this::handleErrorTranslate);
+                .subscribe(this::handleSuccessTranslate, this::handleError);
 
         compositeDisposable.add(disposable);
     }
@@ -113,21 +117,25 @@ public class MainPresenter implements IMainPresenter {
         iMainView.setFromLanguage(data.getFromLanguage());
         iMainView.setToLanguage(data.getToLanguage());
     }
-
+/*
     private void handleErrorGetLanguagesError(Throwable throwable) {
-        if(throwable instanceof TranslateServiceException) {
+        iMainView.setLanguages(new ArrayList<>());
+
+        if (throwable instanceof TranslateServiceException) {
             TranslateServiceException exception = (TranslateServiceException) throwable;
             exception.getMessageResName();
             iMainView.showError(exception.getMessageResName(), exception.getDescriptionResName());
-        }
-        else if(throwable instanceof NoInternetConnectionException){
+        } else if (throwable instanceof NoInternetConnectionException) {
             iMainView.showInternetConnectionError();
         }
-    }
+    }*/
 
     private void handleSuccessTranslate(Translation translation) {
         iMainView.setTranslatedText(translation.getTranslated());
         iMainView.setStateIsFavoriteCheckbox(translation.isFavorite());
+        iMainView.showIsFavoriteCheckbox();
+        iMainView.hideProgress();
+        isOffline = false;
     }
 
     private void handleSuccessCheckIsFavorite(Boolean isFavorite) {
@@ -135,26 +143,35 @@ public class MainPresenter implements IMainPresenter {
     }
 
     private void handleErrorCheckIsFavorite(Throwable throwable) {
-        if(throwable instanceof TranslateServiceException) {
+        if (throwable instanceof TranslateServiceException) {
             TranslateServiceException exception = (TranslateServiceException) throwable;
             exception.getMessageResName();
             iMainView.showError(exception.getMessageResName(), exception.getDescriptionResName());
         }
     }
 
-    private void handleErrorTranslate(Throwable throwable) {
-
-        if(throwable instanceof TranslateServiceException) {
+    private void handleError(Throwable throwable) {
+        if (throwable instanceof TranslateServiceException) {
             TranslateServiceException exception = (TranslateServiceException) throwable;
             exception.getMessageResName();
             iMainView.showError(exception.getMessageResName(), exception.getDescriptionResName());
-        }
-        else if(throwable instanceof NoInternetConnectionException){
+        } else if (throwable instanceof NoInternetConnectionException) {
             iMainView.showInternetConnectionError();
+            iMainView.hideIsFavoriteCheckbox();
+            isOffline = true;
+        } else {
+            //неизвестная ошибка
+            iMainView.showError(throwable.getLocalizedMessage());
+            Log.e(TAG, "error in listenText", throwable);
         }
+
+        iMainView.hideProgress();
     }
 
     private void saveTranslation(Translation translation) {
+        //если нет сети - запрещаем сохранять из фрагмента переводов
+        if(isOffline)
+            return;
 
         Disposable disposable = iMainInteractor.saveTranslation(translation)
                 .subscribeOn(Schedulers.io())
@@ -171,6 +188,12 @@ public class MainPresenter implements IMainPresenter {
         compositeDisposable.add(disposable);
     }
 
+
+    /**
+     * Вспомогательный класс для объединения результатов Observable.zip
+     * содержит языки список поддерживаемых языков
+     * и последние выбранные языки
+     */
     private class LanguagesWithSettings {
         private List<Language> languages;
         private String fromLanguage;

@@ -5,7 +5,7 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 
 /**
- * For checking internet connection status
+ * Утилита для проверки интерне-соединения
  */
 
 public class ConnectivityUtils {

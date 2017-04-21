@@ -5,18 +5,14 @@ import com.ivan.translateapp.domain.Translation;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
+import io.reactivex.Single;
 
-
-/**
- * Created by Ivan on 27.03.2017.
- */
 
 public interface IHistoryInteractor {
 
-    Observable<List<Translation>> getHistory();
+    Single<List<Translation>> getHistory();
 
-    Observable<List<Translation>> getFavorites();
+    Single<List<Translation>> getFavorites();
 
     Completable delete(Translation translation);
 

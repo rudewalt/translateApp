@@ -1,6 +1,7 @@
 package com.ivan.translateapp.data.net;
 
 import android.content.Context;
+import android.support.annotation.NonNull;
 
 import com.ivan.translateapp.data.net.yandex.IYandexTranslateApiInterface;
 import com.ivan.translateapp.data.net.yandex.YandexTranslateService;
@@ -27,18 +28,21 @@ import retrofit2.Retrofit;
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by Ivan on 26.03.2017.
- */
 
 @Module
 public class NetworkModule {
     private static final int CACHE_SIZE = 10 * 1024 * 1024;
     private static final String CACHE_CONTROL = "Cache-Control";
     private static final String CACHE_PATH = "httpCache";
+    private static final int CONNECT_TIMEOUT = 10; //seconds
 
-    private static final String BASE_URL = "https://translate.yandex.net/api/v1.5/tr.json/";
-    private static final String API_KEY = "trnsl.1.1.20170317T170351Z.34081ee0ccb0bc5a.0aa288afa818fd81d6fefc8ce938b0de8995cc6f";
+    private final String translationApiBaseUrl;
+    private final String apiKey;
+
+    public NetworkModule(@NonNull String translationApiBaseUrl, @NonNull String apiKey){
+        this.translationApiBaseUrl = translationApiBaseUrl;
+        this.apiKey = apiKey;
+    }
 
     @Provides
     @Singleton
@@ -78,6 +82,7 @@ public class NetworkModule {
     public IYandexTranslateApiInterface provideIYandexTranslateApiInterface(Context context) {
 
         OkHttpClient httpClient = new OkHttpClient.Builder()
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
                 .addInterceptor(provideAddApiKeyInterceptor())
                 .addInterceptor(provideOfflineCacheInterceptor())
                 .addNetworkInterceptor(provideCacheInterceptor())
@@ -85,7 +90,7 @@ public class NetworkModule {
                 .build();
 
         Retrofit.Builder builder = new Retrofit.Builder().
-                baseUrl(BASE_URL)
+                baseUrl(translationApiBaseUrl)
                 .client(httpClient)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
@@ -102,7 +107,7 @@ public class NetworkModule {
             HttpUrl originalUrl = original.url();
 
             HttpUrl url = originalUrl.newBuilder()
-                    .addQueryParameter("key", API_KEY)
+                    .addQueryParameter("key", apiKey)
                     .build();
 
             Request.Builder requestBuilder = original.newBuilder()
@@ -113,8 +118,9 @@ public class NetworkModule {
         };
     }
 
+    //setup cache size and cache directory
     private Cache getCache(Context context) {
-        //setup cache
+
         File httpCacheDirectory = new File(context.getCacheDir(), CACHE_PATH);
         return new Cache(httpCacheDirectory, CACHE_SIZE);
     }

@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.Locale;
 
 import io.reactivex.Observable;
+import io.reactivex.Single;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
@@ -57,7 +58,7 @@ public class MainInteractorTest {
         given(mockTranslationRepository.getLanguages(UI)).willReturn(getUnsortedLanguages());
 
         //when
-        List<Language> languages = mainInteractor.getLanguages().blockingFirst();
+        List<Language> languages = mainInteractor.getLanguages().blockingGet();
 
         //then
         assertThat(languages).isNotEmpty();
@@ -69,7 +70,7 @@ public class MainInteractorTest {
         given(mockTranslationRepository.getLanguages(UI)).willReturn(getUnsortedLanguages());
 
         //when
-        List<Language> languages = mainInteractor.getLanguages().blockingFirst();
+        List<Language> languages = mainInteractor.getLanguages().blockingGet();
 
         //then
         assertThat(languages).is(inAscSorting());
@@ -89,14 +90,14 @@ public class MainInteractorTest {
         };
     }
 
-    private Observable<List<Language>> getUnsortedLanguages() {
+    private Single<List<Language>> getUnsortedLanguages() {
         List<Language> languages = new ArrayList<Language>() {{
             add(new Language("Русский", "ru"));
             add(new Language("Арабский", "ar"));
             add(new Language("Французский", "fr"));
         }};
 
-        return Observable.fromArray(languages);
+        return Single.just(languages);
     }
 
     @Test
@@ -110,14 +111,14 @@ public class MainInteractorTest {
         Boolean isFavorite = false;
 
         given(mockTranslationRepository.getTranslation(text, fromLanguage, toLanguage))
-                .willReturn(Observable.just(new Translation(text, translated, fromLanguage, toLanguage, isHistory, isFavorite)));
+                .willReturn(Single.just(new Translation(text, translated, fromLanguage, toLanguage, isHistory, isFavorite)));
 
         given(mockHistoryRepository.isFavourite(text, fromLanguage, toLanguage))
-                .willReturn(Observable.just(false));
+                .willReturn(Single.just(false));
 
         //when
-        Observable<Translation> result = mainInteractor.translateText(text, fromLanguage, toLanguage);
-        Translation resultTranslation = result.blockingFirst();
+        Single<Translation> result = mainInteractor.translateText(text, fromLanguage, toLanguage);
+        Translation resultTranslation = result.blockingGet();
 
         //then
         assertThat(result).isNotNull();
@@ -140,14 +141,14 @@ public class MainInteractorTest {
         Boolean isFavoriteExpected = true;
 
         given(mockTranslationRepository.getTranslation(text, fromLanguage, toLanguage))
-                .willReturn(Observable.just(new Translation(text, translated, fromLanguage, toLanguage, isHistory, isFavorite)));
+                .willReturn(Single.just(new Translation(text, translated, fromLanguage, toLanguage, isHistory, isFavorite)));
 
         given(mockHistoryRepository.isFavourite(text, fromLanguage, toLanguage))
-                .willReturn(Observable.just(isFavoriteExpected));
+                .willReturn(Single.just(isFavoriteExpected));
 
         //when
-        Observable<Translation> result = mainInteractor.translateText(text, fromLanguage, toLanguage);
-        Translation resultTranslation = result.blockingFirst();
+        Single<Translation> result = mainInteractor.translateText(text, fromLanguage, toLanguage);
+        Translation resultTranslation = result.blockingGet();
 
         //then
         assertThat(result).isNotNull();
@@ -164,11 +165,11 @@ public class MainInteractorTest {
         String key2 = "toLanguage";
         String fromLanguage = "en";
         String toLanguage = "ru";
-        given(mockSettingsRepository.getValue(key1)).willReturn(Observable.just(fromLanguage));
-        given(mockSettingsRepository.getValue(key2)).willReturn(Observable.just(toLanguage));
+        given(mockSettingsRepository.getValue(key1)).willReturn(Single.just(fromLanguage));
+        given(mockSettingsRepository.getValue(key2)).willReturn(Single.just(toLanguage));
 
         //when
-        List<String> result = mainInteractor.restoreTranslationDirection().blockingFirst();
+        List<String> result = mainInteractor.restoreTranslationDirection().blockingGet();
 
         //then
         assertThat(result).isNotNull();
@@ -183,11 +184,11 @@ public class MainInteractorTest {
         String key1 = "fromLanguage";
         String key2 = "toLanguage";
         String empty = "";
-        given(mockSettingsRepository.getValue(key1)).willReturn(Observable.just(empty));
-        given(mockSettingsRepository.getValue(key2)).willReturn(Observable.just(empty));
+        given(mockSettingsRepository.getValue(key1)).willReturn(Single.just(empty));
+        given(mockSettingsRepository.getValue(key2)).willReturn(Single.just(empty));
 
         //when
-        List<String> result = mainInteractor.restoreTranslationDirection().blockingFirst();
+        List<String> result = mainInteractor.restoreTranslationDirection().blockingGet();
 
         //then
         assertThat(result).isNotNull();

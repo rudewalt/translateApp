@@ -15,6 +15,7 @@ import com.ivan.translateapp.dagger.MainModule;
 import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.ui.adapter.TranslationAdapter;
 import com.ivan.translateapp.ui.presenter.ITranslationListViewPresenter;
+import com.ivan.translateapp.ui.view.BaseFragment;
 import com.ivan.translateapp.ui.view.ITranslationListView;
 import com.ivan.translateapp.ui.view.MainActivity;
 
@@ -27,7 +28,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 
-public class FavoritesFragment extends Fragment implements ITranslationListView {
+public class FavoritesFragment extends BaseFragment implements ITranslationListView {
 
     @Inject @Named("favorites")
     ITranslationListViewPresenter iFavoritesPresenter;
@@ -79,16 +80,6 @@ public class FavoritesFragment extends Fragment implements ITranslationListView 
             return;
 
         activity.openMainFragment(translation);
-    }
-
-    @Override
-    public void showError(String title, String description) {
-
-    }
-
-    @Override
-    public void showInternetConnectionError() {
-
     }
 
     @Override

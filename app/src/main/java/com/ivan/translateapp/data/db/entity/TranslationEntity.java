@@ -1,26 +1,22 @@
 package com.ivan.translateapp.data.db.entity;
 
 
-import com.ivan.translateapp.utils.DateUtils;
-
 import java.util.Date;
 
-/**
- * Created by Ivan on 26.03.2017.
- */
 
 public class TranslationEntity {
-
     private String text;
     private String translated;
     private String fromLanguage;
     private String toLanguage;
-    private String createDate;
-    private String addToFavoriteDate;
-    private int isHistory;
-    private int isFavorite;
+    private Date createDate;
+    private Date addToFavoriteDate;
+    private boolean isHistory;
+    private boolean isFavorite;
 
-    public TranslationEntity(String text, String translated, String fromLanguage, String toLanguage, String createDate, String addToFavoriteDate, Integer isHistory, Integer isFavorite) {
+    public TranslationEntity(String text, String translated, String fromLanguage,
+                             String toLanguage, Date createDate, Date addToFavoriteDate,
+                             boolean isHistory, boolean isFavorite) {
         this.text = text;
         this.translated = translated;
         this.fromLanguage = fromLanguage;
@@ -50,20 +46,18 @@ public class TranslationEntity {
     }
 
     public Date getCreateDate() {
-        return DateUtils.parse(createDate);
+        return createDate;
     }
 
     public Date getAddToFavoriteDate() {
-        return DateUtils.parse(addToFavoriteDate);
+        return addToFavoriteDate;
     }
 
     public Boolean isFavorite() {
-        return
-                isFavorite == 1;
+        return isFavorite;
     }
 
     public Boolean isHistory() {
-        return
-                isHistory == 1;
+        return isHistory;
     }
 }

@@ -1,28 +1,35 @@
 package com.ivan.translateapp.ui.view;
 
 /**
- * Created by Ivan on 02.04.2017.
+ * Базовый интерфейс View
  */
 
 public interface IView {
 
 
     /**
-     * Show error message to user
+     * Показать пользователю сообщение обошибке.
+     * Текст и сообщение локализовано и берется из ресурсов
+     * @param titleResourceName
+     * @param descriptionResourceName
      */
-    void showError(String title, String description);
-
-
-    void showInternetConnectionError();
+    void showError(String titleResourceName, String descriptionResourceName);
 
     /**
-     * Called when view become visible to user
+     * Показать пользователю сообщение об ошибке.
+     * @param errorMessage
      */
+    void showError(String errorMessage);
+
+
+    /**
+     * Показать пользователю, сообщение, об отсутствии интернета
+     */
+    void showInternetConnectionError();
+
+
     void onShowView();
 
 
-    /**
-     * Called when view become hide to user
-     */
     void onHideView();
 }

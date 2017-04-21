@@ -6,11 +6,7 @@ import com.ivan.translateapp.domain.Translation;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
-
-/**
- * Created by Ivan on 28.03.2017.
- */
+import io.reactivex.Single;
 
 public class HistoryInteractor implements IHistoryInteractor {
 
@@ -21,12 +17,12 @@ public class HistoryInteractor implements IHistoryInteractor {
     }
 
     @Override
-    public Observable<List<Translation>> getHistory() {
+    public Single<List<Translation>> getHistory() {
         return iHistoryRepository.getHistory();
     }
 
     @Override
-    public Observable<List<Translation>> getFavorites() {
+    public Single<List<Translation>> getFavorites() {
         return iHistoryRepository.getFavorites();
     }
 

@@ -43,7 +43,7 @@ public class SettingsRepositoryTest {
         given(mockSharedPreferences.getString(key,EMPTY_STRING)).willReturn(value);
 
         //when
-        String result = settingsRepository.getValue(key).blockingFirst();
+        String result = settingsRepository.getValue(key).blockingGet();
 
         //then
         assertThat(result).isEqualTo(value);

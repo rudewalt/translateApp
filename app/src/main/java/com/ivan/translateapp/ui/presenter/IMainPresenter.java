@@ -4,7 +4,7 @@ import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.ui.view.main.IMainView;
 
 /**
- * Interface representing a Presenter in a model view presenter (MVP) pattern.
+ *  Презентер главного предсставления
  */
 
 public interface IMainPresenter extends IPresenter<IMainView> {
