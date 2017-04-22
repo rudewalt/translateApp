@@ -8,7 +8,6 @@
 * _Retrofit 2_
 * _ButterKnife_
 
-#### Тестирование
 * _Assertj_
 * _Mockito_
 
