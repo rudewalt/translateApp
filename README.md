@@ -15,3 +15,4 @@
 * https://github.com/artem-zinnatullin/qualitymatters/
 * https://artemzin.com/blog/
 * https://github.com/matzuk/TestableCodeMobius
+* https://github.com/android10/Android-CleanArchitecture
