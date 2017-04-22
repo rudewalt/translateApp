@@ -8,6 +8,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingEnd="10dp"
+        android:paddingStart="20dp"
         android:orientation="horizontal">
 
         <CheckBox
@@ -15,11 +17,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="20dp"
             android:layout_marginEnd="10dp"
             android:button="@drawable/selector_ic_star" />
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="0dp"
             android:layout_height="@dimen/translation_layout_width"
             android:layout_weight="5"
@@ -30,27 +31,27 @@
             <TextView
                 android:id="@+id/template_textView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="@dimen/translation_item_text_height"
+                android:layout_alignParentTop="true"
+                android:layout_marginBottom="2dp"
                 android:ellipsize="end"
                 android:gravity="bottom|start"
                 android:maxLines="1"
-                android:layout_marginBottom="2dp"
                 android:textSize="@dimen/text_size_medium"
                 tools:text="Привет мир" />
 
             <TextView
                 android:id="@+id/template_translatedTextView"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_weight="1"
+                android:layout_height="@dimen/translation_item_text_height"
+                android:layout_below="@id/template_textView"
                 android:ellipsize="end"
                 android:gravity="top|start"
                 android:maxLines="1"
                 android:textColor="@color/colorNormal"
                 android:textSize="@dimen/text_size_medium"
                 tools:text="Hello world" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/template_directionView"
@@ -58,12 +59,11 @@
             android:layout_height="match_parent"
             android:layout_weight="1"
             android:gravity="center"
-            android:layout_marginEnd="@dimen/margin_end_direction"
             tools:text="EN-RU" />
     </LinearLayout>
 
     <View
         android:layout_width="match_parent"
         android:layout_height="0.3dp"
-        android:background="@drawable/divider"/>
+        android:background="@drawable/divider" />
 </LinearLayout>

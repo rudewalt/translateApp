@@ -24,7 +24,7 @@ public class DataModule {
 
     @Provides
     @Singleton
-    TranslationEntityMapper provideTranslationEntityMapper(){
+    TranslationEntityMapper provideTranslationEntityMapper() {
         return new TranslationEntityMapper();
     }
 
@@ -37,19 +37,19 @@ public class DataModule {
 
     @Provides
     @Singleton
-    IHistoryRepository provideIHistoryRepository(DbHelper dbHelper,TranslationEntityMapper translationEntityMapper){
+    IHistoryRepository provideIHistoryRepository(DbHelper dbHelper, TranslationEntityMapper translationEntityMapper) {
         return new HistoryRepository(dbHelper, translationEntityMapper);
     }
 
     @Provides
     @Singleton
-    ITranslationRepository provideITranslationRepository(ITranslateService translateService){
+    ITranslationRepository provideITranslationRepository(ITranslateService translateService) {
         return new TranslationRepository(translateService);
     }
 
     @Provides
     @Singleton
-    ISettingsRepository provideISettingsRepository(@NonNull Context context){
+    ISettingsRepository provideISettingsRepository(@NonNull Context context) {
         return new SettingsRepository(context);
     }
 

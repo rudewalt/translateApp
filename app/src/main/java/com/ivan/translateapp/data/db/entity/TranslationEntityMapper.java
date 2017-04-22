@@ -6,21 +6,18 @@ import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
 /**
- * mapper from entity to domain class
+ * маппер из сущности в доменный класс
  */
 
 public class TranslationEntityMapper implements Function<TranslationEntity, Translation> {
     @Override
     public Translation apply(@NonNull TranslationEntity translationEntity) throws Exception {
-
-        Translation translation = new Translation(
+        return new Translation(
                 translationEntity.getText(),
                 translationEntity.getTranslated(),
                 translationEntity.getFromLanguage(),
                 translationEntity.getToLanguage(),
                 translationEntity.isHistory(),
                 translationEntity.isFavorite());
-
-        return translation;
     }
 }

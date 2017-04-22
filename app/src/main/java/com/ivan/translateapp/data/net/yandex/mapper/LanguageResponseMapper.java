@@ -6,16 +6,13 @@ import com.ivan.translateapp.domain.Language;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
-/**
- * Created by Ivan on 26.03.2017.
- */
 
 public class LanguageResponseMapper implements Function<LanguageResponse, Language> {
 
+    private static final String EMPTY_STRING = "";
+
     @Override
     public Language apply(@NonNull LanguageResponse languageDTO) throws Exception {
-        Language lang = new Language("",languageDTO.getLang());
-
-        return lang;
+        return new Language(EMPTY_STRING, languageDTO.getLang());
     }
 }

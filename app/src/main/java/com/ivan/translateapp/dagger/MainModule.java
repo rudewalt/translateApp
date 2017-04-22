@@ -21,13 +21,8 @@ import javax.inject.Named;
 import dagger.Module;
 import dagger.Provides;
 
-/**
- * Created by Ivan on 28.03.2017.
- */
-
 @Module
 public class MainModule {
-
 
     @Provides
     public IMainInteractor provideIMainInteractor(ITranslationRepository iTranslationRepository,

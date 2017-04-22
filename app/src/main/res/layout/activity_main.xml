@@ -12,13 +12,12 @@
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_weight="1"
-        android:layout_height="match_parent" />
+        android:layout_height="0dp" />
 
     <android.support.design.widget.TabLayout
         android:id="@+id/tabs"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/viewPager"
         app:tabGravity="fill"
         app:tabMode="fixed"/>
 </LinearLayout>

@@ -37,11 +37,11 @@ public class MainInteractor implements IMainInteractor {
     private static final String TO_LANGUAGE_KEY = "toLanguage";
     private static final String LANGUAGES_SET_KEY = "language_codes";
 
-    private ITranslationRepository iTranslationRepository;
-    private IHistoryRepository iHistoryRepository;
-    private ISettingsRepository iSettingsRepository;
-    private Locale locale;
-    private ConnectivityUtils connectivityUtils;
+    private final ITranslationRepository iTranslationRepository;
+    private final IHistoryRepository iHistoryRepository;
+    private final ISettingsRepository iSettingsRepository;
+    private final Locale locale;
+    private final ConnectivityUtils connectivityUtils;
     private boolean isOffline;
 
     public MainInteractor(
@@ -145,12 +145,11 @@ public class MainInteractor implements IMainInteractor {
                 Single.zip(
                         iSettingsRepository.getValue(FROM_LANGUAGE_KEY),
                         iSettingsRepository.getValue(TO_LANGUAGE_KEY),
-                        (fromLanguage, toLanguage) -> {
-                            return new ArrayList<String>() {{
-                                add(!fromLanguage.equals(EMPTY_STRING) ? fromLanguage : DEFAULT_FROM_LANGUAGE);
-                                add(!toLanguage.equals(EMPTY_STRING) ? toLanguage : DEFAULT_TO_LANGUAGE);
-                            }};
-                        }
+                        (fromLanguage, toLanguage) ->
+                                new ArrayList<String>() {{
+                                    add(!fromLanguage.equals(EMPTY_STRING) ? fromLanguage : DEFAULT_FROM_LANGUAGE);
+                                    add(!toLanguage.equals(EMPTY_STRING) ? toLanguage : DEFAULT_TO_LANGUAGE);
+                                }}
                 );
     }
 

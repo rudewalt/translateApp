@@ -6,13 +6,13 @@
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/favoriteAppBar"
-        android:background="@color/colorPrimary"
+        android:layout_width="match_parent"
         android:layout_height="@dimen/appbar_height"
-        android:layout_width="match_parent">
+        android:background="@color/colorPrimary">
 
         <TextView
-            android:layout_height="wrap_content"
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:text="@string/title_favorites"
             android:textSize="@dimen/text_size_appbar" />
     </android.support.v7.widget.Toolbar>
@@ -22,32 +22,27 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/favoriteAppBar"
-        android:scrollbars="vertical"/>
+        android:scrollbars="vertical" />
 
-    <RelativeLayout
+    <LinearLayout
         android:id="@+id/empty_view"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_below="@id/favoriteAppBar"
-        android:layout_marginTop="@dimen/margin_top_hint">
-        <ImageView
-            android:id="@+id/no_favorites_image"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/ic_star_hint" />
+        android:layout_marginTop="@dimen/margin_top_hint"
+        android:gravity="center">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/margin_hint_text"
-            android:layout_marginLeft="@dimen/margin_hint_text"
-            android:layout_toRightOf="@id/no_favorites_image"
             android:gravity="center"
-            android:textColor="@color/colorHint"
+            android:lines="3"
+            android:maxWidth="@dimen/hint_max_width"
             android:text="@string/title_no_favorites"
+            android:drawableLeft="@drawable/ic_star_hint"
+            android:textColor="@color/colorHint"
             android:textSize="@dimen/text_size_hint" />
 
-    </RelativeLayout>
+    </LinearLayout>
 
 </RelativeLayout>

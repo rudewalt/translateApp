@@ -22,9 +22,9 @@ import io.reactivex.Single;
 public class YandexTranslateService implements ITranslateService {
     private static final String TAG = YandexTranslateService.class.toString();
 
-    private IYandexTranslateApiInterface apiInterface;
-    private LanguageResponseMapper languageResponseMapper;
-    private SupportedLanguagesResponseMapper supportedLanguagesResponseMapper;
+    private final IYandexTranslateApiInterface apiInterface;
+    private final LanguageResponseMapper languageResponseMapper;
+    private final SupportedLanguagesResponseMapper supportedLanguagesResponseMapper;
 
 
     public YandexTranslateService(IYandexTranslateApiInterface apiInterface,

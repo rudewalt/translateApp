@@ -76,15 +76,15 @@ public class HistoryRepositoryTest {
         //given
         String text = "text";
         String fromLanguage = "fromLanguage";
-        String toLangage = "toLanguage";
+        String toLanguage = "toLanguage";
         String translated = "текст";
         Date date = DateUtils.parse("2017-07-01 12:00:32");
 
-        given(mockDbHelper.getTranslation(text, fromLanguage, toLangage))
-                .willReturn(new TranslationEntity(text, translated, fromLanguage, toLangage, date, date, true, true));
+        given(mockDbHelper.getTranslation(text, fromLanguage, toLanguage))
+                .willReturn(new TranslationEntity(text, translated, fromLanguage, toLanguage, date, date, true, true));
 
         //when
-        Boolean result = historyRepository.isFavourite(text, fromLanguage, toLangage).blockingGet();
+        Boolean result = historyRepository.isFavourite(text, fromLanguage, toLanguage).blockingGet();
 
         //then
         assertThat(result).isTrue();

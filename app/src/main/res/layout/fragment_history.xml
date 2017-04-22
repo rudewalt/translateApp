@@ -25,31 +25,26 @@
         android:layout_below="@id/historyAppBar"
         android:scrollbars="vertical" />
 
-        <RelativeLayout
-            android:id="@+id/empty_view"
-            android:layout_width="match_parent"
+    <LinearLayout
+        android:id="@+id/empty_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/historyAppBar"
+        android:layout_marginTop="@dimen/margin_top_hint"
+        android:gravity="center">
+
+        <TextView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:gravity="center"
-            android:layout_below="@id/historyAppBar"
-            android:layout_marginTop="@dimen/margin_top_hint">
-            <ImageView
-                android:id="@+id/no_history_image"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/ic_history_hint" />
+            android:lines="3"
+            android:maxWidth="@dimen/hint_max_width"
+            android:text="@string/title_no_translations"
+            android:drawableLeft="@drawable/ic_history_hint"
+            android:textColor="@color/colorHint"
+            android:textSize="@dimen/text_size_hint" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/margin_hint_text"
-                android:layout_marginLeft="@dimen/margin_hint_text"
-                android:layout_toRightOf="@id/no_history_image"
-                android:gravity="center"
-                android:textColor="@color/colorHint"
-                android:text="@string/title_no_translations"
-                android:textSize="@dimen/text_size_hint" />
-
-        </RelativeLayout>
+    </LinearLayout>
 
 
 </RelativeLayout>

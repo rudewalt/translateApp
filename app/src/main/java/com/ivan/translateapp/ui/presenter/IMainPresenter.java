@@ -4,9 +4,8 @@ import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.ui.view.main.IMainView;
 
 /**
- *  Презентер главного предсставления
+ * Презентер главного предсставления
  */
-
 public interface IMainPresenter extends IPresenter<IMainView> {
 
     void loadLanguages();

@@ -10,7 +10,7 @@ import android.net.NetworkInfo;
 
 public class ConnectivityUtils {
 
-    private Context context;
+    private final Context context;
 
     public ConnectivityUtils(Context context) {
         this.context = context;

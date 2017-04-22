@@ -10,9 +10,9 @@ import io.reactivex.Single;
 
 public class HistoryInteractor implements IHistoryInteractor {
 
-    private IHistoryRepository iHistoryRepository;
+    private final IHistoryRepository iHistoryRepository;
 
-    public HistoryInteractor(IHistoryRepository iHistoryRepository){
+    public HistoryInteractor(IHistoryRepository iHistoryRepository) {
         this.iHistoryRepository = iHistoryRepository;
     }
 
@@ -30,7 +30,6 @@ public class HistoryInteractor implements IHistoryInteractor {
     public Completable delete(Translation translation) {
         return iHistoryRepository.delete(translation);
     }
-
 
     @Override
     public Completable saveChanges(Translation translation) {

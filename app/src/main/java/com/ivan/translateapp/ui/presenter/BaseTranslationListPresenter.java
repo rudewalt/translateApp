@@ -14,20 +14,22 @@ import io.reactivex.schedulers.Schedulers;
 /**
  * Базовый презентер для управления фрагментами со списком переводов
  */
-
-public abstract class BaseTranslationListPresenter implements ITranslationListViewPresenter{
+abstract class BaseTranslationListPresenter implements ITranslationListViewPresenter {
 
     private ITranslationListView listView;
     private IHistoryInteractor iHistoryInteractor;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    protected BaseTranslationListPresenter(IHistoryInteractor iHistoryInteractor){
+    BaseTranslationListPresenter(IHistoryInteractor iHistoryInteractor) {
         this.iHistoryInteractor = iHistoryInteractor;
         compositeDisposable = new CompositeDisposable();
     }
 
     @Override
-    public void bindView(ITranslationListView view){
+    public void bindView(ITranslationListView view) {
+        if(this.listView != null)
+            throw new IllegalStateException("Already binded");
+
         this.listView = view;
     }
 
@@ -54,8 +56,8 @@ public abstract class BaseTranslationListPresenter implements ITranslationListVi
         listView.openMainView(translation);
     }
 
-    protected void loadHistory(){
-        Disposable disposable =  iHistoryInteractor.getHistory()
+    protected void loadHistory() {
+        Disposable disposable = iHistoryInteractor.getHistory()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::handleSuccessLoadTranslations, this::handleErrorLoadFavorites);
@@ -63,8 +65,8 @@ public abstract class BaseTranslationListPresenter implements ITranslationListVi
         compositeDisposable.add(disposable);
     }
 
-    protected void loadFavorites(){
-        Disposable disposable =  iHistoryInteractor.getFavorites()
+    protected void loadFavorites() {
+        Disposable disposable = iHistoryInteractor.getFavorites()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::handleSuccessLoadTranslations, this::handleErrorLoadFavorites);
@@ -72,11 +74,11 @@ public abstract class BaseTranslationListPresenter implements ITranslationListVi
         compositeDisposable.add(disposable);
     }
 
-    protected void handleSuccessLoadTranslations(List<Translation> translations){
+    private void handleSuccessLoadTranslations(List<Translation> translations) {
         listView.showTranslations(translations);
     }
 
-    protected void handleErrorLoadFavorites(Throwable throwable){
-        //listView.showError();
+    private void handleErrorLoadFavorites(Throwable throwable) {
+        listView.showError(throwable.getLocalizedMessage());
     }
 }

@@ -28,5 +28,7 @@ public class ApplicationModule {
 
     @Provides
     @Singleton
-    Locale provideLocale(){ return appLocale; }
+    Locale provideLocale() {
+        return appLocale;
+    }
 }

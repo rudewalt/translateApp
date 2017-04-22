@@ -8,12 +8,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 
 /**
- * Репозиторий, для сохранения настроек, начальных значений.
+ * Реализация репозитория для сохранения настроек, начальных значений.
  * Решил использовать для хранения SharedPreference по следующим причинам:
  * 1) малый объем сохраняемых данных
  * 2) не нужен поиск
@@ -23,7 +22,7 @@ public class SettingsRepository implements ISettingsRepository {
     private static final String SHARED_PREF_FILENAME = "translateAppSharedPref";
     private static final String EMPTY_STRING = "";
 
-    private SharedPreferences sharedPref;
+    private final SharedPreferences sharedPref;
 
     public SettingsRepository(@NonNull Context context) {
         sharedPref = context.getSharedPreferences(SHARED_PREF_FILENAME, Context.MODE_PRIVATE);
@@ -40,21 +39,21 @@ public class SettingsRepository implements ISettingsRepository {
                 Completable.fromAction(() -> {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putString(key, value);
-                    editor.commit();
+                    editor.apply();
                 });
     }
 
     @Override
-    public Completable putStringSet(String key, Set<String> stringSet){
+    public Completable putStringSet(String key, Set<String> stringSet) {
         return
                 Completable.fromAction(() -> {
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putStringSet(key, stringSet);
-                    editor.commit();
+                    editor.apply();
                 });
     }
 
-    public Single<Set<String>> getStringSet(String key){
+    public Single<Set<String>> getStringSet(String key) {
         return Single.fromCallable(() -> sharedPref.getStringSet(key, new HashSet<>()));
     }
 }

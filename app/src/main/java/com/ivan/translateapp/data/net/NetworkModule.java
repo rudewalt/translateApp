@@ -95,10 +95,8 @@ public class NetworkModule {
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create());
 
-        IYandexTranslateApiInterface apiInterface = builder.build()
+        return builder.build()
                 .create(IYandexTranslateApiInterface.class);
-
-        return apiInterface;
     }
 
     private Interceptor provideAddApiKeyInterceptor() {

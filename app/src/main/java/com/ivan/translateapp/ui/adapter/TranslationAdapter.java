@@ -20,13 +20,13 @@ import butterknife.ButterKnife;
 
 public class TranslationAdapter extends RecyclerView.Adapter<TranslationAdapter.ViewHolder> {
 
-    private List<Translation> translations;
-    private ISupportFavoritesPresenter iSupportFavoritesPresenter;
-    private int layout;
+    private final List<Translation> translations;
+    private final ISupportFavoritesPresenter iSupportFavoritesPresenter;
+    private final int layout;
 
     public TranslationAdapter(@NonNull List<Translation> translations,
                               @NonNull ISupportFavoritesPresenter iSupportFavoritesPresenter,
-                              @NonNull int layout) {
+                              int layout) {
         this.translations = translations;
         this.iSupportFavoritesPresenter = iSupportFavoritesPresenter;
         this.layout = layout;
@@ -36,8 +36,8 @@ public class TranslationAdapter extends RecyclerView.Adapter<TranslationAdapter.
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(layout, parent, false);
-        ViewHolder viewHolder = new ViewHolder(view);
-        return viewHolder;
+
+        return new ViewHolder(view);
     }
 
     @Override
@@ -58,9 +58,8 @@ public class TranslationAdapter extends RecyclerView.Adapter<TranslationAdapter.
                     iSupportFavoritesPresenter.isFavoriteCheckboxStateChanged(translation);
                 });
 
-        holder.itemView.setOnClickListener(v -> {
-            iSupportFavoritesPresenter.clickOnTranslation(holder.getTranslation());
-        });
+        holder.itemView.setOnClickListener(view ->
+                iSupportFavoritesPresenter.clickOnTranslation(holder.getTranslation()));
     }
 
     @Override
@@ -70,8 +69,6 @@ public class TranslationAdapter extends RecyclerView.Adapter<TranslationAdapter.
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        private Translation  translation;
-
         @BindView(R.id.template_addToFavorites)
         CheckBox isFavoriteCheckbox;
         @BindView(R.id.template_textView)
@@ -80,18 +77,19 @@ public class TranslationAdapter extends RecyclerView.Adapter<TranslationAdapter.
         TextView translated;
         @BindView(R.id.template_directionView)
         TextView direction;
+        private Translation translation;
 
         ViewHolder(View view) {
             super(view);
             ButterKnife.bind(this, view);
         }
 
-        public void bindTranslation(Translation  translation){
+        public void bindTranslation(Translation translation) {
             this.translation = translation;
 
         }
 
-        public Translation getTranslation(){
+        public Translation getTranslation() {
             return translation;
         }
     }

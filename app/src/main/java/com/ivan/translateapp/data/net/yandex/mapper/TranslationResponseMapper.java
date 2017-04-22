@@ -6,9 +6,6 @@ import com.ivan.translateapp.domain.Translation;
 import io.reactivex.annotations.NonNull;
 import io.reactivex.functions.Function;
 
-/**
- * Created by Ivan on 11.04.2017.
- */
 
 public class TranslationResponseMapper implements Function<TranslationResponse, Translation> {
 

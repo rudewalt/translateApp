@@ -9,7 +9,7 @@
     <string name="title_no_favorites">No favorite translations</string>
     <string name="title_no_translations">No translations</string>
 
-    <string name="title_button_ok">Ok</string>
+    <string name="title_button_ok">OK</string>
     <string name="title_error">Error</string>
 
     <string name="error_title_code_401">Api key blocked</string>

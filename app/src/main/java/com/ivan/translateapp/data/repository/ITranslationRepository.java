@@ -9,7 +9,7 @@ import io.reactivex.Single;
 
 
 /**
- * Created by Ivan on 28.03.2017.
+ * Репозиторий для вызова api для получения языков и переводов
  */
 
 public interface ITranslationRepository {

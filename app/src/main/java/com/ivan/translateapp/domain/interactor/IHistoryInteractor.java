@@ -7,7 +7,9 @@ import java.util.List;
 import io.reactivex.Completable;
 import io.reactivex.Single;
 
-
+/**
+ * Интерактор. Выполняет бизнес логику по работе с сохраненными переводами
+ */
 public interface IHistoryInteractor {
 
     Single<List<Translation>> getHistory();

@@ -1,8 +1,5 @@
 package com.ivan.translateapp.data.net.yandex;
 
-/**
- * Created by Ivan on 31.03.2017.
- */
 
 public class ErrorCodes {
 

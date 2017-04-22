@@ -52,7 +52,6 @@ public class HistoryFragment extends BaseFragment implements ITranslationListVie
                 .inject(this);
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {

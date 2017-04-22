@@ -6,12 +6,11 @@ import com.ivan.translateapp.domain.Translation;
 import java.util.List;
 
 import io.reactivex.Completable;
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 
 /**
- * Интерактор для хранения бизнес-логики, связанной с переводами
+ * Интерактор. Выполняет бизнес логику по работе с переводами
  */
 
 public interface IMainInteractor {

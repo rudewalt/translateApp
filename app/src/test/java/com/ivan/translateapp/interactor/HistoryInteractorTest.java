@@ -14,15 +14,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
-
-/**
- * Created by Ivan on 16.04.2017.
- */
+import static org.mockito.Mockito.verify;
 
 @RunWith(MockitoJUnitRunner.class)
 public class HistoryInteractorTest {
@@ -30,18 +26,18 @@ public class HistoryInteractorTest {
     private IHistoryInteractor historyInteractor;
 
     @Mock
-    HistoryRepository HistoryRepository;
+    HistoryRepository mockHistoryRepository;
 
     @Before
     public void setUp() {
-        historyInteractor = new HistoryInteractor(HistoryRepository);
+        historyInteractor = new HistoryInteractor(mockHistoryRepository);
     }
 
     @Test
     public void getHistory_shouldReturnTranslationHistory(){
         //given
         ArrayList<Translation> testTranslations = getTestTranslations();
-        given(HistoryRepository.getHistory()).willReturn(Single.just(testTranslations));
+        given(mockHistoryRepository.getHistory()).willReturn(Single.just(testTranslations));
 
         //when
         List<Translation> result =  historyInteractor.getHistory().blockingGet();
@@ -58,5 +54,29 @@ public class HistoryInteractorTest {
             add(new Translation());
             add(new Translation());
         }};
+    }
+
+    @Test
+    public void saveChanges_ShouldSaveTranslation(){
+        //given
+        Translation translation = new Translation();
+
+        //when
+        historyInteractor.saveChanges(translation);
+
+        //then
+        verify(mockHistoryRepository).update(translation);
+    }
+
+    @Test
+    public void delete_shouldDeleteTranslation(){
+        //given
+        Translation translation  = new Translation();
+
+        //when
+        historyInteractor.delete(translation);
+
+        //then
+        verify(mockHistoryRepository).delete(translation);
     }
 }

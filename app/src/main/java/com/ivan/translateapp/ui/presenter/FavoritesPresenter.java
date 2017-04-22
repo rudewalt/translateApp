@@ -5,7 +5,7 @@ import com.ivan.translateapp.domain.interactor.IHistoryInteractor;
 
 public class FavoritesPresenter extends BaseTranslationListPresenter {
 
-    public FavoritesPresenter(IHistoryInteractor iHistoryInteractor){
+    public FavoritesPresenter(IHistoryInteractor iHistoryInteractor) {
         super(iHistoryInteractor);
     }
 

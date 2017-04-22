@@ -1,9 +1,5 @@
 package com.ivan.translateapp.domain;
 
-/**
- * Created by Ivan on 26.03.2017.
- */
-
 public class Translation {
 
     private String text;
@@ -16,7 +12,8 @@ public class Translation {
     public Translation() {
     }
 
-    public Translation(String text, String translated, String fromLanguage, String toLanguage, boolean isHistory, boolean isFavorite) {
+    public Translation(String text, String translated, String fromLanguage,
+                       String toLanguage, boolean isHistory, boolean isFavorite) {
         this.text = text;
         this.translated = translated;
         this.fromLanguage = fromLanguage;

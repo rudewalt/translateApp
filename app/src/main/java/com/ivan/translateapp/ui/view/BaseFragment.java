@@ -30,12 +30,11 @@ public class BaseFragment extends Fragment {
         toast.show();
     }
 
-    private void openErrorDialog(String title, String description){
+    private void openErrorDialog(String title, String description) {
         AlertDialog.Builder alert = new AlertDialog.Builder(getActivity())
                 .setTitle(title)
                 .setMessage(description)
                 .setPositiveButton(getString(R.string.title_button_ok), (dialog, whichButton) -> {
-                    return;
                 });
 
         alert.show();

@@ -6,10 +6,6 @@ import com.ivan.translateapp.ui.view.main.MainFragment;
 
 import dagger.Subcomponent;
 
-/**
- * Created by Ivan on 28.03.2017.
- */
-
 
 @Subcomponent(modules = {MainModule.class})
 public interface IMainComponent {

@@ -8,7 +8,7 @@ import io.reactivex.Completable;
 import io.reactivex.Single;
 
 /**
- *  Репозиторий для сохранения переводов в историю
+ *  Репозиторий для сохранения переводов в локальной БД
  */
 
 public interface IHistoryRepository {

@@ -8,9 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Ivan on 26.03.2017.
- */
 
 public class SupportedLanguagesResponse extends BaseResponse {
 

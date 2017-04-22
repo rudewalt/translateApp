@@ -5,14 +5,14 @@ import java.util.Date;
 
 
 public class TranslationEntity {
-    private String text;
-    private String translated;
-    private String fromLanguage;
-    private String toLanguage;
-    private Date createDate;
-    private Date addToFavoriteDate;
-    private boolean isHistory;
-    private boolean isFavorite;
+    private final String text;
+    private final String translated;
+    private final String fromLanguage;
+    private final String toLanguage;
+    private final Date createDate;
+    private final Date addToFavoriteDate;
+    private final boolean isHistory;
+    private final boolean isFavorite;
 
     public TranslationEntity(String text, String translated, String fromLanguage,
                              String toLanguage, Date createDate, Date addToFavoriteDate,
@@ -31,11 +31,9 @@ public class TranslationEntity {
         return fromLanguage;
     }
 
-
     public String getToLanguage() {
         return toLanguage;
     }
-
 
     public String getText() {
         return text;

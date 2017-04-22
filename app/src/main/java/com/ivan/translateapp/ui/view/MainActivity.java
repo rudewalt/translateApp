@@ -7,6 +7,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.SparseArray;
 import android.view.ViewGroup;
 
 import com.ivan.translateapp.R;
@@ -14,9 +15,6 @@ import com.ivan.translateapp.domain.Translation;
 import com.ivan.translateapp.ui.view.favorites.FavoritesFragment;
 import com.ivan.translateapp.ui.view.history.HistoryFragment;
 import com.ivan.translateapp.ui.view.main.MainFragment;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -55,7 +53,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    protected void onStart(){
+    protected void onStart() {
         super.onStart();
         currentView = (IView) tabsPagerAdapter.getFragment(viewPager.getCurrentItem());
     }
@@ -71,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(mainFragmentPosition);
     }
 
-    private ViewPager.OnPageChangeListener createPageChangeListener(){
+    private ViewPager.OnPageChangeListener createPageChangeListener() {
         return new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
@@ -80,7 +78,7 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
-                if(currentView !=null)
+                if (currentView != null)
                     currentView.onHideView();
 
                 IView view = (IView) tabsPagerAdapter.getFragment(position);
@@ -105,14 +103,14 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static class TabsPagerAdapter extends FragmentPagerAdapter {
-        private Map<Integer, String> fragmentTags;
-        private FragmentManager fragmentManager;
+        private final SparseArray<String> fragmentTags;
+        private final FragmentManager fragmentManager;
 
 
         TabsPagerAdapter(FragmentManager fragmentManager) {
             super(fragmentManager);
             this.fragmentManager = fragmentManager;
-            this.fragmentTags = new HashMap<>(PAGE_COUNT);
+            this.fragmentTags = new SparseArray<>(PAGE_COUNT);
         }
 
         @Override

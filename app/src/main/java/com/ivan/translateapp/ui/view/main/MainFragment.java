@@ -37,7 +37,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.Unbinder;
 
 
 public class MainFragment extends BaseFragment implements IMainView {
@@ -295,8 +294,6 @@ public class MainFragment extends BaseFragment implements IMainView {
             return;
 
         iMainPresenter.listenText(text, fromLanguage, toLanguage);
-
-
     }
 
     private AdapterView.OnItemSelectedListener getChangeLanguageListener() {

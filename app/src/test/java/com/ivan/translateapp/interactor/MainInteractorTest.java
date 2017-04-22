@@ -19,21 +19,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-/**
- * Created by Ivan on 16.04.2017.
- */
-
 @RunWith(MockitoJUnitRunner.class)
 public class MainInteractorTest {
     private static final String UI = "en";
     private MainInteractor mainInteractor;
-    private Locale locale;
 
     @Mock
     private ITranslationRepository mockTranslationRepository;
@@ -47,7 +41,7 @@ public class MainInteractorTest {
 
     @Before
     public void setUp() {
-        locale = new Locale("en");
+        Locale locale = new Locale("en");
         mainInteractor = new MainInteractor(mockTranslationRepository, mockHistoryRepository, mockSettingsRepository, locale, connectivityUtils);
         given(connectivityUtils.isOnline()).willReturn(true);
     }

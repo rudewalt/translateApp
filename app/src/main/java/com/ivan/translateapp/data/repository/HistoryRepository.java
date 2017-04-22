@@ -14,12 +14,12 @@ import io.reactivex.Single;
 
 
 /**
- * Репозиторий для сохранения переводов в локальной БД
+ * Реализация репозитория для сохранения переводов в локальной БД
  */
 public class HistoryRepository implements IHistoryRepository {
 
-    private DbHelper dbOpenHelper;
-    private TranslationEntityMapper translationEntityMapper;
+    private final DbHelper dbOpenHelper;
+    private final TranslationEntityMapper translationEntityMapper;
 
     public HistoryRepository(DbHelper dbOpenHelper, TranslationEntityMapper translationEntityMapper) {
         this.dbOpenHelper = dbOpenHelper;

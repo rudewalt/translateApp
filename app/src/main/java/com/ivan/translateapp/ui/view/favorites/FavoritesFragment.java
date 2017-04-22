@@ -2,7 +2,6 @@ package com.ivan.translateapp.ui.view.favorites;
 
 
 import android.os.Bundle;
-import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -31,7 +30,8 @@ import butterknife.Unbinder;
 
 public class FavoritesFragment extends BaseFragment implements ITranslationListView {
 
-    @Inject @Named("favorites")
+    @Inject
+    @Named("favorites")
     ITranslationListViewPresenter iFavoritesPresenter;
 
     @BindView(R.id.favoritesRecyclerView)
@@ -81,14 +81,14 @@ public class FavoritesFragment extends BaseFragment implements ITranslationListV
                 translations, iFavoritesPresenter, R.layout.translation_list_item);
         favoritesRecyclerView.setAdapter(adapter);
 
-        getActivity().runOnUiThread(()->
+        getActivity().runOnUiThread(() ->
                 emptyView.setVisibility(translations.size() == 0 ? View.VISIBLE : View.INVISIBLE));
     }
 
     @Override
     public void openMainView(Translation translation) {
         MainActivity activity = (MainActivity) getActivity();
-        if(activity == null)
+        if (activity == null)
             return;
 
         activity.openMainFragment(translation);
@@ -96,7 +96,7 @@ public class FavoritesFragment extends BaseFragment implements ITranslationListV
 
     @Override
     public void onShowView() {
-            iFavoritesPresenter.loadTranslations();
+        iFavoritesPresenter.loadTranslations();
     }
 
     @Override

@@ -14,15 +14,11 @@ import org.mockito.junit.MockitoJUnitRunner;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
 
-/**
- * Created by Ivan on 16.04.2017.
- */
 
 @RunWith(MockitoJUnitRunner.class)
 public class TranslationRepositoryTest {

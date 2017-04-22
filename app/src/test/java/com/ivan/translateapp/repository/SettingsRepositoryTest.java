@@ -12,8 +12,12 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.BDDMockito.given;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -28,15 +32,19 @@ public class SettingsRepositoryTest {
     Context mockContext;
     @Mock
     SharedPreferences mockSharedPreferences;
+    @Mock
+    SharedPreferences.Editor mockEditor;
 
     @Before
     public void setUp(){
         when(mockContext.getSharedPreferences(SHARED_PREF_FILENAME, Context.MODE_PRIVATE)).thenReturn(mockSharedPreferences);
+        when(mockSharedPreferences.edit()).thenReturn(mockEditor);
+
         settingsRepository = new SettingsRepository(mockContext);
     }
 
     @Test
-    public void getValue_sholdReturnValue(){
+    public void getValue_shouldReturnValue(){
         //given
         String key = "test key";
         String value = "test value";
@@ -47,5 +55,47 @@ public class SettingsRepositoryTest {
 
         //then
         assertThat(result).isEqualTo(value);
+    }
+
+    @Test
+    public void setValue_shouldSaveValueToPreferences(){
+        //given
+        String key = "test key";
+        String value = "test value";
+
+        //when
+        settingsRepository.putValue(key,value).blockingGet();
+
+        //then
+        verify(mockEditor).putString(key, value);
+        verify(mockEditor).apply();
+    }
+
+    @Test
+    public void getStringSet_shouldReturnStringSet(){
+        //given
+        String key = "test key";
+        Set<String> stringSet = new HashSet<>();
+        given(mockSharedPreferences.getStringSet(key, new HashSet<>())).willReturn(stringSet);
+
+        //when
+        Set<String>  result = settingsRepository.getStringSet(key).blockingGet();
+
+        //then
+        assertThat(result).isSameAs(stringSet);
+    }
+
+    @Test
+    public void setStringSet_shouldSaveSetToPreferences(){
+        //given
+        String key = "test key";
+        Set<String> stringSet = new HashSet<>();
+
+        //when
+        settingsRepository.putStringSet(key,stringSet).blockingGet();
+
+        //then
+        verify(mockEditor).putStringSet(key,stringSet);
+        verify(mockEditor).apply();
     }
 }

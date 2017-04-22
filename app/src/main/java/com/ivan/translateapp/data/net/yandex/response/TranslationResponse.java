@@ -5,9 +5,6 @@ import com.google.gson.annotations.SerializedName;
 
 import java.util.List;
 
-/**
- * Created by Ivan on 26.03.2017.
- */
 
 public class TranslationResponse extends BaseResponse {
     @SerializedName("lang")

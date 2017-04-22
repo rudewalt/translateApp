@@ -1,15 +1,11 @@
 <resources>
     <dimen name="appbar_height">56dp</dimen>
-    <dimen name="activity_horizontal_margin">16dp</dimen>
-    <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="text_container_padding">10dp</dimen>
-    <dimen name="text_size_small">13sp</dimen>
     <dimen name="text_size_medium">15sp</dimen>
-    <dimen name="text_size_large">18sp</dimen>
     <dimen name="text_size_appbar">20sp</dimen>
     <dimen name="text_size_hint">25sp</dimen>
     <dimen name="margin_top_hint">60dp</dimen>
-    <dimen name="margin_hint_text">10dp</dimen>
-    <dimen name="margin_end_direction">10dp</dimen>
     <dimen name="translation_layout_width">60dp</dimen>
+    <dimen name="hint_max_width">220dp</dimen>
+    <dimen name="translation_item_text_height">30dp</dimen>
 </resources>

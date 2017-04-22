@@ -1,15 +1,16 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:tag="fragment_main"
     android:orientation="vertical"
+    android:tag="fragment_main"
     tools:context=".ui.view.main.MainFragment">
 
     <android.support.v7.widget.Toolbar
         android:id="@+id/mainAppBar"
         android:layout_width="match_parent"
         android:layout_height="@dimen/appbar_height"
+        android:layout_alignParentTop="true"
         android:background="@color/colorPrimary">
 
         <TextView
@@ -23,6 +24,7 @@
         android:id="@+id/selectLanguageContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_below="@id/mainAppBar"
         android:orientation="horizontal">
 
         <Spinner
@@ -56,26 +58,28 @@
         android:id="@+id/textToTranslateContainer"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:orientation="horizontal"
+        android:layout_above="@id/apiRequirementsTextView"
+        android:layout_below="@id/selectLanguageContainer"
         android:baselineAligned="false"
-        android:layout_weight="1">
+        android:orientation="horizontal">
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginLeft="15dp"
             android:layout_marginRight="15dp"
+            android:layout_weight="1"
             android:background="@drawable/translate_container_normal"
             android:clickable="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
-            android:layout_weight="1"
             android:orientation="vertical">
 
             <EditText
                 android:id="@+id/textToTranslate"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
+                android:layout_height="match_parent"
+                android:layout_above="@id/clearButton"
                 android:layout_columnWeight="0"
                 android:background="@drawable/edit_text_style"
                 android:gravity="top"
@@ -83,7 +87,6 @@
                 android:padding="10dp"
                 android:scrollbars="vertical"
                 android:selectAllOnFocus="false"
-                android:layout_weight="1"
                 android:textSize="@dimen/text_size_medium"
                 tools:text="@string/sample_text" />
 
@@ -91,12 +94,12 @@
                 android:id="@+id/clearButton"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="2dp"
+                android:layout_alignParentBottom="true"
                 android:background="@drawable/selector_ic_clear"
                 android:contentDescription="@string/clear_content_description"
                 android:visibility="invisible"
                 tools:visibility="visible" />
-        </LinearLayout>
+        </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/translateResultContainer"
@@ -111,8 +114,8 @@
                 android:id="@+id/progressBar"
                 style="?android:attr/progressBarStyle"
                 android:layout_width="match_parent"
-                android:visibility="invisible"
-                android:layout_height="wrap_content" />
+                android:layout_height="wrap_content"
+                android:visibility="invisible" />
 
             <TextView
                 android:id="@+id/translatedText"
@@ -128,22 +131,23 @@
                 android:id="@+id/isFavorite"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:saveEnabled="false"
                 android:layout_alignParentRight="true"
                 android:button="@drawable/selector_ic_star"
+                android:saveEnabled="false"
                 android:visibility="invisible" />
         </RelativeLayout>
     </LinearLayout>
 
     <TextView
         android:id="@+id/apiRequirementsTextView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginBottom="10dp"
         android:layout_marginStart="15dp"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="10dp"
         android:gravity="end"
-        android:layout_below="@id/textToTranslateContainer"
         android:linksClickable="true"
-        tools:text=""/>
-</LinearLayout>
+        tools:text="" />
+</RelativeLayout>

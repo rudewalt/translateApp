@@ -6,16 +6,15 @@ import com.ivan.translateapp.domain.Translation;
 
 import java.util.List;
 
-import io.reactivex.Observable;
 import io.reactivex.Single;
 
 /**
- * Репозиторий для вызова api для получения языков и переводов
+ * Реализация репозитория для вызова api для получения языков и переводов
  */
 
 public class TranslationRepository implements ITranslationRepository {
 
-    private ITranslateService translateService;
+    private final ITranslateService translateService;
 
     public TranslationRepository(ITranslateService translateService) {
         this.translateService = translateService;
