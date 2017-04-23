@@ -54,6 +54,7 @@ public class YandexTranslateService implements ITranslateService {
     @Override
     public Single<Translation> translate(String text, String fromLanguage, String toLanguage) {
         final int includeDetectedLanguage = 1;
+        final String delimiter = " ";
         String direction = fromLanguage == null || fromLanguage.isEmpty()
                 ? toLanguage
                 : String.format("%1$s-%2$s", fromLanguage, toLanguage);
@@ -62,7 +63,7 @@ public class YandexTranslateService implements ITranslateService {
                 .translate(text, direction, includeDetectedLanguage)
                 .map(this::checkResponseCode)
                 .map(translationResponse -> {
-                    String translatedText = TextUtils.join(" ", translationResponse.getText());
+                    String translatedText = TextUtils.join(delimiter, translationResponse.getText());
                     return new Translation(text, translatedText, toLanguage, fromLanguage, false, false);
                 });
     }

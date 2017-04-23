@@ -95,9 +95,9 @@ public class DbHelper extends SQLiteOpenHelper {
 
         if (translation.isFavorite()) {
             ContentValues contentValues = getTranslationContentValues(translation);
-            dataBase.update(TranslationsTable.TABLE, contentValues, "text=?", new String[]{translation.getText()});
+            dataBase.update(TranslationsTable.TABLE, contentValues, TranslationsTable.COLUMN_TEXT+"=?", new String[]{translation.getText()});
         } else {
-            dataBase.delete(TranslationsTable.TABLE, "text=?", new String[]{translation.getText()});
+            dataBase.delete(TranslationsTable.TABLE, TranslationsTable.COLUMN_TEXT+"=?", new String[]{translation.getText()});
         }
     }
 

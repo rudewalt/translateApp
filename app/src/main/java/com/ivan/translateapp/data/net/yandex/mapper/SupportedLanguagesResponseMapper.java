@@ -12,14 +12,14 @@ import io.reactivex.functions.Function;
 
 
 /**
- * Маппинг ответа api переводчика в список объектов
+ * Маппер ответа api переводчика в список объектов
  */
 public class SupportedLanguagesResponseMapper implements Function<SupportedLanguagesResponse, List<Language>> {
     @Override
-    public List<Language> apply(@NonNull SupportedLanguagesResponse supportedLanguagesDTO) throws Exception {
+    public List<Language> apply(@NonNull SupportedLanguagesResponse response) throws Exception {
         List<Language> result = new ArrayList<>();
 
-        for (Map.Entry<String, String> mapEntry : supportedLanguagesDTO.getLangs().entrySet()) {
+        for (Map.Entry<String, String> mapEntry : response.getLangs().entrySet()) {
             result.add(new Language(mapEntry.getValue(), mapEntry.getKey()));
         }
 
